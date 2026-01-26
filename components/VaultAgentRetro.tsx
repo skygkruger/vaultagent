@@ -602,19 +602,19 @@ export default function VaultAgentRetro() {
           <p className="text-xs text-center" style={{ color: '#6e6a86' }}>// INTEGRATIONS</p>
 
           <div className="flex justify-center" style={{ color: '#a8b2c3' }}>
-            <pre className="text-xs leading-tight">
-{`┌─────────────────────────────────────────────────────────────────────────────┐
-│                                                                             │
-│   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐       │
-│   │ CLAUDE CODE │  │   CURSOR    │  │   COPILOT   │  │   WINDSURF  │       │
-│   │   [/] ✓     │  │   [/] ✓     │  │   [~] soon  │  │   [~] soon  │       │
-│   └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘       │
-│                                                                             │
-│   $ npx vaultagent init                                                     │
-│   $ vaultagent add OPENAI_API_KEY                                           │
-│   $ vaultagent session create --agent claude-code --duration 1h             │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘`}
+            <pre className="text-xs leading-tight" style={{ fontFamily: 'Consolas, Monaco, "Courier New", monospace', overflow: 'visible' }}>
+{`+------------------------------------------------------------------------+
+|                                                                        |
+|  +-----------+ +-----------+ +-----------+ +-----------+               |
+|  |CLAUDE CODE| |  CURSOR   | |  COPILOT  | | WINDSURF  |               |
+|  |   [/]     | |   [/]     | | [~] soon  | | [~] soon  |               |
+|  +-----------+ +-----------+ +-----------+ +-----------+               |
+|                                                                        |
+|  $ npx vaultagent init                                                 |
+|  $ vaultagent add OPENAI_API_KEY                                       |
+|  $ vaultagent session create --agent claude-code --duration 1h         |
+|                                                                        |
++------------------------------------------------------------------------+`}
             </pre>
           </div>
         </div>

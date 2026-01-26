@@ -32,29 +32,26 @@ export default function DocsPage() {
   ];
 
   const Logo = () => (
-    <pre style={{
-      color: colors.mint,
-      fontSize: '9px',
-      lineHeight: '1.2',
-      fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-      margin: 0,
-      overflow: 'visible',
-    }}>
-{`╔══════════════════════════════════════════════════════════╗
-║                                                          ║
-║    ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗             ║
-║    ██║   ██║██╔══██╗██║   ██║██║  ╚══██╔══╝             ║
-║    ██║   ██║███████║██║   ██║██║     ██║                ║
-║    ╚██╗ ██╔╝██╔══██║██║   ██║██║     ██║                ║
-║     ╚████╔╝ ██║  ██║╚██████╔╝███████╗██║                ║
-║      ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝                ║
-║                                                          ║
-║         ┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐                   ║
-║         │ A ├─┤ G ├─┤ E ├─┤ N ├─┤ T │                   ║
-║         └───┘ └───┘ └───┘ └───┘ └───┘                   ║
-║                                                          ║
-╚══════════════════════════════════════════════════════════╝`}
-    </pre>
+    <div style={{ marginBottom: '8px', display: 'inline-block' }}>
+      <div style={{
+        color: colors.mint,
+        fontSize: '22px',
+        fontWeight: 'bold',
+        fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+        letterSpacing: '1px',
+      }}>
+        VAULTAGENT
+      </div>
+      <div style={{
+        color: colors.muted,
+        fontSize: '14px',
+        fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+        marginTop: '4px',
+        textAlign: 'center',
+      }}>
+        ::  ::
+      </div>
+    </div>
   );
 
   const CodeBlock = ({ children, title }: { children: React.ReactNode; title?: string }) => (
@@ -815,15 +812,16 @@ Enter new value: ****************************
       <div style={{ display: 'flex' }}>
         {/* Sidebar */}
         <aside style={{
-          width: '260px',
+          width: '240px',
+          flexShrink: 0,
           borderRight: `1px solid ${colors.muted}`,
           padding: '24px',
           minHeight: 'calc(100vh - 60px)',
         }}>
           <Logo />
 
-          <div style={{ marginTop: '32px' }}>
-            <div style={{ color: colors.muted, fontSize: '12px', marginBottom: '16px' }}>
+          <div style={{ marginTop: '28px' }}>
+            <div style={{ color: colors.muted, fontSize: '11px', marginBottom: '14px', letterSpacing: '1px' }}>
               DOCUMENTATION
             </div>
 
@@ -842,7 +840,7 @@ Enter new value: ****************************
                   textAlign: 'left',
                   cursor: 'pointer',
                   fontFamily: 'inherit',
-                  fontSize: '14px',
+                  fontSize: '13px',
                 }}
               >
                 {section.label}
@@ -851,15 +849,15 @@ Enter new value: ****************************
           </div>
 
           <div style={{
-            marginTop: '32px',
-            padding: '16px',
+            marginTop: '28px',
+            padding: '14px',
             background: colors.bgLight,
             border: `1px solid ${colors.muted}`,
           }}>
-            <div style={{ color: colors.mint, marginBottom: '8px', fontSize: '13px' }}>
+            <div style={{ color: colors.mint, marginBottom: '8px', fontSize: '12px' }}>
               [i] Security First
             </div>
-            <div style={{ color: colors.muted, fontSize: '12px', lineHeight: '1.5' }}>
+            <div style={{ color: colors.muted, fontSize: '11px', lineHeight: '1.5' }}>
               Your master password never leaves your machine. All encryption
               happens client-side. We can&apos;t read your secrets even if we wanted to.
             </div>
@@ -869,10 +867,13 @@ Enter new value: ****************************
         {/* Main Content */}
         <main style={{
           flex: 1,
-          padding: '32px 48px',
-          maxWidth: '800px',
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '32px 24px',
         }}>
-          {renderContent()}
+          <div style={{ maxWidth: '700px', width: '100%' }}>
+            {renderContent()}
+          </div>
         </main>
       </div>
 
