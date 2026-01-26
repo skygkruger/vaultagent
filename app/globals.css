@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════
+   VAULTAGENT - PASTEL RETRO TERMINAL BASE STYLES
+   Primary Accent: Mint (#a8d8b9)
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Base */
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16161a;
+  --bg-tertiary: #12121a;
+  
+  /* Text */
+  --text-primary: #e8e3e3;
+  --text-secondary: #a8b2c3;
+  --text-muted: #6e6a86;
+  
+  /* Accent Palette */
+  --accent-cyan: #7eb8da;
+  --accent-mint: #a8d8b9;
+  --accent-lavender: #c4a7e7;
+  --accent-rose: #f2cdcd;
+  --accent-cream: #ffe9b0;
+  --accent-peach: #f5a97f;
+  --accent-coral: #eb6f92;
+  
+  /* Semantic */
+  --color-success: var(--accent-mint);
+  --color-error: var(--accent-coral);
+  --color-warning: var(--accent-cream);
+  --color-info: var(--accent-cyan);
+  --color-pro: var(--accent-lavender);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SELECTION STYLES
+   ═══════════════════════════════════════════════════════════════ */
+
+::selection {
+  background-color: var(--accent-mint);
+  color: var(--bg-primary);
+}
+
+::-moz-selection {
+  background-color: var(--accent-mint);
+  color: var(--bg-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR STYLES (Webkit)
+   ═══════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-mint);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LINK STYLES
+   ═══════════════════════════════════════════════════════════════ */
+
+a {
+  color: var(--accent-mint);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-lavender);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CURSOR BLINK ANIMATION
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: cursor-blink 1.06s step-end infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FORM INPUT STYLES (Retro Terminal)
+   ═══════════════════════════════════════════════════════════════ */
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTON HOVER EFFECTS
+   ═══════════════════════════════════════════════════════════════ */
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DETAILS/SUMMARY (FAQ Accordion)
+   ═══════════════════════════════════════════════════════════════ */
+
+details summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] summary {
+  color: var(--accent-mint);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRE/CODE BLOCKS
+   ═══════════════════════════════════════════════════════════════ */
+
+pre {
+  font-family: inherit;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+code {
+  font-family: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════ */
+
+.text-accent { color: var(--accent-mint); }
+.text-success { color: var(--color-success); }
+.text-error { color: var(--color-error); }
+.text-warning { color: var(--color-warning); }
+.text-info { color: var(--color-info); }
+.text-pro { color: var(--color-pro); }
+
+.border-accent { border-color: var(--accent-mint); }
+.border-muted { border-color: var(--text-muted); }
+
+.bg-terminal { background-color: var(--bg-primary); }
+.bg-terminal-light { background-color: var(--bg-secondary); }
+.bg-terminal-dark { background-color: var(--bg-tertiary); }
