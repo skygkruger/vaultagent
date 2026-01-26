@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - PASTEL RETRO TERMINAL REDESIGN
@@ -72,11 +73,19 @@ export default function VaultAgentRetro() {
 
       <header className="border-b" style={{ borderColor: '#6e6a86' }}>
         <div className="flex justify-center px-4">
-          <pre className="text-xs py-2" style={{ color: '#a8d8b9' }}>
-{`╔════════════════════════════════════════════════════════════════════════════════╗
-║  VAULTAGENT                                  [DOCS]  [PRICING]  [GITHUB]  [@]  ║
-╚════════════════════════════════════════════════════════════════════════════════╝`}
-          </pre>
+          <div className="text-xs py-2" style={{ color: '#a8d8b9' }}>
+            <pre style={{ margin: 0, overflow: 'visible' }}>╔════════════════════════════════════════════════════════════════════════════════╗</pre>
+            <div style={{ display: 'flex', fontFamily: 'inherit', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>║  VAULTAGENT</span>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <Link href="/docs" className="hover:underline">[DOCS]</Link>
+                <Link href="/#pricing" className="hover:underline">[PRICING]</Link>
+                <a href="https://github.com/skygkruger/vaultagent" target="_blank" rel="noopener noreferrer" className="hover:underline">[GITHUB]</a>
+                <span>[@]  ║</span>
+              </div>
+            </div>
+            <pre style={{ margin: 0, overflow: 'visible' }}>╚════════════════════════════════════════════════════════════════════════════════╝</pre>
+          </div>
         </div>
       </header>
 
@@ -694,17 +703,22 @@ export default function VaultAgentRetro() {
 
       <footer className="border-t mt-16" style={{ borderColor: '#6e6a86' }}>
         <div className="px-4 py-8 flex justify-center">
-          <pre className="text-xs" style={{ color: '#6e6a86' }}>
-{`════════════════════════════════════════════════════════════════════════════════
-
-                          SECURED WITH <3 IN THE TERMINAL
-
-                               (c) 2025 VAULTAGENT
-
-              [HOME]  [DOCS]  [PRICING]  [GITHUB]  [TWITTER]  [CONTACT]
-
-════════════════════════════════════════════════════════════════════════════════`}
-          </pre>
+          <div className="text-xs" style={{ color: '#6e6a86', textAlign: 'center' }}>
+            <pre style={{ margin: 0, overflow: 'visible', textAlign: 'center' }}>════════════════════════════════════════════════════════════════════════════════</pre>
+            <div style={{ margin: '16px 0' }}>
+              <div>SECURED WITH &lt;3 IN THE TERMINAL</div>
+              <div style={{ marginTop: '16px' }}>(c) 2025 VAULTAGENT</div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', fontFamily: 'inherit', marginTop: '16px', marginBottom: '16px' }}>
+              <Link href="/" className="hover:text-[#a8d8b9] transition-colors">[HOME]</Link>
+              <Link href="/docs" className="hover:text-[#a8d8b9] transition-colors">[DOCS]</Link>
+              <Link href="/#pricing" className="hover:text-[#a8d8b9] transition-colors">[PRICING]</Link>
+              <a href="https://github.com/skygkruger/vaultagent" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] transition-colors">[GITHUB]</a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] transition-colors">[TWITTER]</a>
+              <a href="mailto:contact@vaultagent.dev" className="hover:text-[#a8d8b9] transition-colors">[CONTACT]</a>
+            </div>
+            <pre style={{ margin: 0, overflow: 'visible', textAlign: 'center' }}>════════════════════════════════════════════════════════════════════════════════</pre>
+          </div>
         </div>
       </footer>
     </div>
