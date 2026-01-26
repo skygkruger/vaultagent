@@ -808,7 +808,7 @@ Enter new value: ****************************
         <nav style={{ display: 'flex', gap: '24px' }}>
           <Link href="/" style={{ color: colors.muted, textDecoration: 'none' }}>[~] Home</Link>
           <span style={{ color: colors.mint }}>[?] Docs</span>
-          <Link href="/#pricing" style={{ color: colors.muted, textDecoration: 'none' }}>[$] Pricing</Link>
+          <Link href="/pricing" style={{ color: colors.muted, textDecoration: 'none' }}>[$] Pricing</Link>
         </nav>
       </header>
 

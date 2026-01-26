@@ -79,7 +79,7 @@ export default function VaultAgentRetro() {
               <span>║  VAULTAGENT</span>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <Link href="/docs" className="hover:underline">[DOCS]</Link>
-                <Link href="/#pricing" className="hover:underline">[PRICING]</Link>
+                <Link href="/pricing" className="hover:underline">[PRICING]</Link>
                 <a href="https://github.com/skygkruger" target="_blank" rel="noopener noreferrer" className="hover:underline">[GITHUB]</a>
                 <a href="https://x.com/run_veridian" target="_blank" rel="noopener noreferrer" className="hover:underline">[@]</a>
                 <span>  ║</span>
@@ -713,7 +713,7 @@ export default function VaultAgentRetro() {
             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', fontFamily: 'inherit', marginTop: '16px', marginBottom: '16px' }}>
               <Link href="/" className="hover:text-[#a8d8b9] transition-colors">[HOME]</Link>
               <Link href="/docs" className="hover:text-[#a8d8b9] transition-colors">[DOCS]</Link>
-              <Link href="/#pricing" className="hover:text-[#a8d8b9] transition-colors">[PRICING]</Link>
+              <Link href="/pricing" className="hover:text-[#a8d8b9] transition-colors">[PRICING]</Link>
               <a href="https://github.com/skygkruger" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] transition-colors">[GITHUB]</a>
               <a href="https://x.com/run_veridian" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] transition-colors">[X]</a>
               <a href="mailto:sky@veridian.run" className="hover:text-[#a8d8b9] transition-colors">[CONTACT]</a>
