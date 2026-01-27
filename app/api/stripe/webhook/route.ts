@@ -117,7 +117,9 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const customerId = session.customer as string
   const userId = session.client_reference_id
+  const subscriptionId = session.subscription as string
   const supabase = getSupabaseAdmin() as any
+  const PRICE_TO_TIER = getPriceToTier()
 
   if (userId && customerId) {
     // Link Stripe customer to user profile
@@ -127,6 +129,31 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .eq('id', userId)
 
     console.log(`Linked Stripe customer ${customerId} to user ${userId}`)
+
+    // Also update the tier immediately from the subscription
+    if (subscriptionId) {
+      try {
+        const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
+        const priceId = subscription.items.data[0]?.price.id
+        const tier = PRICE_TO_TIER[priceId] || 'pro' // Default to pro if price not found
+        const limits = TIER_LIMITS[tier]
+
+        await supabase
+          .from('profiles')
+          .update({
+            tier,
+            vault_limit: limits.vault_limit,
+            secret_limit: limits.secret_limit,
+            session_limit: limits.session_limit,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', userId)
+
+        console.log(`Checkout completed: Updated user ${userId} to tier ${tier}`)
+      } catch (err) {
+        console.error('Error updating tier on checkout:', err)
+      }
+    }
   }
 }
 

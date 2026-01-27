@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         // Set a timeout to prevent infinite loading
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Auth timeout')), 10000)
+          setTimeout(() => reject(new Error('Auth timeout')), 5000)
         )
 
         const sessionPromise = supabase.auth.getSession()
