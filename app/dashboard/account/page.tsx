@@ -399,7 +399,7 @@ export default function AccountPage() {
                   backgroundColor: 'transparent',
                 }}
               >
-                [>] UPGRADE TO PRO - $9/mo
+                {`[>] UPGRADE TO PRO - $9/mo`}
               </button>
               <button
                 onClick={() => handleUpgrade('team')}
@@ -411,7 +411,7 @@ export default function AccountPage() {
                   backgroundColor: 'transparent',
                 }}
               >
-                [>] UPGRADE TO TEAM - $29/mo
+                {`[>] UPGRADE TO TEAM - $29/mo`}
               </button>
               <button
                 onClick={() => handleUpgrade('enterprise')}
@@ -423,7 +423,7 @@ export default function AccountPage() {
                   backgroundColor: 'transparent',
                 }}
               >
-                [>] UPGRADE TO ENTERPRISE - $99/mo
+                {`[>] UPGRADE TO ENTERPRISE - $99/mo`}
               </button>
             </div>
           </div>

@@ -228,7 +228,7 @@ export default function SessionsPage() {
             [~] Agent Sessions
           </h1>
           <p className="text-xs" style={{ color: '#6e6a86' }}>
-            // time-limited access tokens for AI agents
+            {`// time-limited access tokens for AI agents`}
           </p>
         </div>
         <button

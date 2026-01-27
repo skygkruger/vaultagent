@@ -269,7 +269,7 @@ export default function DashboardPage() {
             [/] Your Vault
           </h1>
           <p className="text-xs" style={{ color: '#6e6a86' }}>
-            // encrypted secrets, zero-knowledge storage
+            {`// encrypted secrets, zero-knowledge storage`}
           </p>
         </div>
 
@@ -503,7 +503,7 @@ export default function DashboardPage() {
             </div>
             <div className="flex justify-between items-center">
               <p className="text-xs" style={{ color: '#6e6a86' }}>
-                // encrypted client-side before upload
+                {`// encrypted client-side before upload`}
               </p>
               <button
                 type="submit"

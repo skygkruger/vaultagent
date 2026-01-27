@@ -175,7 +175,7 @@ export default function AuditPage() {
             [&gt;] Audit Log
           </h1>
           <p className="text-xs" style={{ color: '#6e6a86' }}>
-            // security event trail
+            {`// security event trail`}
             {retentionDays !== null && retentionDays !== -1 && (
               <span> ({retentionDays} day retention)</span>
             )}

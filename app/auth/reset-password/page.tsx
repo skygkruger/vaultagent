@@ -133,7 +133,7 @@ export default function ResetPasswordPage() {
             />
           </div>
           <p className="text-xs mt-1" style={{ color: '#6e6a86' }}>
-            // 12+ chars, uppercase, lowercase, number, special char
+            {`// 12+ chars, uppercase, lowercase, number, special char`}
           </p>
         </div>
 
