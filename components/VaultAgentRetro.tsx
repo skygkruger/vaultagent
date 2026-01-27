@@ -643,28 +643,32 @@ export default function VaultAgentRetro() {
         </div>
 
         {/* ═══════════════════════════════════════════════════════ */}
-        {/*                    TESTIMONIALS                         */}
+        {/*                    THREAT MODEL                         */}
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// WHAT DEVELOPERS SAY`}</p>
+          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// THREAT MODEL`}</p>
 
           <div className="flex justify-center" style={{ color: '#a8b2c3' }}>
             <pre className="text-xs leading-tight">
 {`┌─────────────────────────────────────────────────────────────────────────────┐
+│  WITHOUT VAULTAGENT                    WITH VAULTAGENT                      │
+├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  "Finally I can use Claude Code without worrying about my API keys          │
-│   ending up in git history."                                 - @dev_anon    │
+│  [!] API keys in .env files            [/] Keys encrypted client-side       │
+│      Risk: leaked in git, logs             Never stored in plaintext        │
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  "The audit log saved us during a security review. We could show            │
-│   exactly when each secret was accessed."                   - CTO at YC co  │
+│  [!] Agent has permanent access        [/] Time-scoped sessions             │
+│      Risk: compromised agent =             Access auto-revokes              │
+│      compromised secrets forever           Blast radius contained           │
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  "Session expiry is genius. Even if the agent goes rogue,                   │
-│   access automatically revokes."                          - HN commenter    │
+│  [!] No visibility into usage          [/] Full audit trail                 │
+│      Risk: can't detect misuse             Every access logged              │
+│      or prove compliance                   Exportable for audits            │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘`}
             </pre>
