@@ -5,11 +5,14 @@ import { createBrowserClient } from '@supabase/ssr'
 //  Browser-side client for authentication and data operations
 // ═══════════════════════════════════════════════════════════════
 
-// Provide fallback values for build time (won't be used at runtime)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
-
 export function createClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.')
+  }
+
   return createBrowserClient(supabaseUrl, supabaseAnonKey)
 }
 

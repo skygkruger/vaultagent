@@ -41,10 +41,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
+  const [configError, setConfigError] = useState<string | null>(null)
 
   // Initialize Supabase client only on the client side
   useEffect(() => {
-    setSupabase(createClient())
+    try {
+      setSupabase(createClient())
+    } catch (error) {
+      console.error('Failed to initialize Supabase:', error)
+      setConfigError(error instanceof Error ? error.message : 'Failed to initialize authentication')
+      setLoading(false)
+    }
   }, [])
 
   // Fetch user profile from database
@@ -152,6 +159,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
     })
     return { error: error as Error | null }
+  }
+
+  // Show configuration error if Supabase couldn't be initialized
+  if (configError) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#1a1a2e',
+        color: '#eb6f92',
+        padding: '2rem',
+        textAlign: 'center',
+        fontFamily: 'monospace',
+      }}>
+        <div>
+          <pre style={{ color: '#a8d8b9', marginBottom: '1rem' }}>
+{`+------------------------------------------+
+|                                          |
+|        [!] CONFIGURATION ERROR           |
+|                                          |
++------------------------------------------+`}
+          </pre>
+          <p style={{ marginBottom: '1rem' }}>{configError}</p>
+          <p style={{ color: '#6e6a86', fontSize: '0.875rem' }}>
+            Please ensure environment variables are set in your deployment.
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
