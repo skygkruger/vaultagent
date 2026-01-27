@@ -28,7 +28,8 @@ export default function DashboardLayout({
 
   const handleSignOut = async () => {
     await signOut()
-    router.push('/')
+    // Clear any cached state by doing a full page navigation
+    window.location.href = '/'
   }
 
   // Redirect to sign-in if not authenticated (after loading completes)
