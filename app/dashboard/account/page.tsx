@@ -166,7 +166,7 @@ export default function AccountPage() {
           [@] Account Settings
         </h1>
         <p className="text-xs" style={{ color: '#6e6a86' }}>
-          // manage your account and subscription
+          {`// manage your account and subscription`}
         </p>
       </div>
 
