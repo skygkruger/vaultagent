@@ -1,7 +1,7 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { User, Session } from '@supabase/supabase-js'
+import { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react'
+import { User, Session, SupabaseClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase'
 
 // ═══════════════════════════════════════════════════════════════
@@ -40,12 +40,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
 
-  const supabase = createClient()
+  // Initialize Supabase client only on the client side
+  useEffect(() => {
+    setSupabase(createClient())
+  }, [])
 
   // Fetch user profile from database
-  const fetchProfile = async (userId: string) => {
-    const { data, error } = await supabase
+  const fetchProfile = async (userId: string, client: SupabaseClient) => {
+    const { data, error } = await client
       .from('profiles')
       .select('*')
       .eq('id', userId)
@@ -60,13 +64,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Refresh profile data
   const refreshProfile = async () => {
-    if (user) {
-      const profileData = await fetchProfile(user.id)
+    if (user && supabase) {
+      const profileData = await fetchProfile(user.id, supabase)
       setProfile(profileData)
     }
   }
 
   useEffect(() => {
+    if (!supabase) return
+
     // Get initial session
     const initAuth = async () => {
       const { data: { session: currentSession } } = await supabase.auth.getSession()
@@ -74,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (currentSession) {
         setSession(currentSession)
         setUser(currentSession.user)
-        const profileData = await fetchProfile(currentSession.user.id)
+        const profileData = await fetchProfile(currentSession.user.id, supabase)
         setProfile(profileData)
       }
       setLoading(false)
@@ -89,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(currentSession?.user ?? null)
 
         if (currentSession?.user) {
-          const profileData = await fetchProfile(currentSession.user.id)
+          const profileData = await fetchProfile(currentSession.user.id, supabase)
           setProfile(profileData)
         } else {
           setProfile(null)
@@ -101,9 +107,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       subscription.unsubscribe()
     }
-  }, [])
+  }, [supabase])
 
   const signUp = async (email: string, password: string) => {
+    if (!supabase) return { error: new Error('Not initialized') }
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -115,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signIn = async (email: string, password: string) => {
+    if (!supabase) return { error: new Error('Not initialized') }
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -123,6 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signOut = async () => {
+    if (!supabase) return
     await supabase.auth.signOut()
     setUser(null)
     setProfile(null)
@@ -130,6 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const resetPassword = async (email: string) => {
+    if (!supabase) return { error: new Error('Not initialized') }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/reset-password`,
     })
@@ -137,6 +147,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const updatePassword = async (password: string) => {
+    if (!supabase) return { error: new Error('Not initialized') }
     const { error } = await supabase.auth.updateUser({
       password,
     })
