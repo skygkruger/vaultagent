@@ -28,6 +28,12 @@ const PRICE_IDS: Record<string, Record<string, string>> = {
 }
 
 export async function POST(request: NextRequest) {
+  // Validate required env vars
+  if (!process.env.NEXT_PUBLIC_APP_URL) {
+    console.error('CRITICAL: NEXT_PUBLIC_APP_URL not configured')
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+  }
+
   const userProfile = await getUserProfile()
   if (!userProfile) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -84,8 +90,8 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard?checkout=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/pricing?checkout=canceled`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?checkout=success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?checkout=canceled`,
       subscription_data: {
         metadata: {
           supabase_user_id: user.id,

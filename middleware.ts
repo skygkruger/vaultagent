@@ -74,8 +74,9 @@ export async function middleware(request: NextRequest) {
 
     return supabaseResponse
   } catch (error) {
-    // If anything fails, just pass through without auth checks
-    console.error('Middleware error:', error)
+    // Log error but still allow request (don't block site on auth errors)
+    // Protected routes will still be protected by individual page/API checks
+    console.error('Middleware auth error (non-blocking):', error)
     return response
   }
 }

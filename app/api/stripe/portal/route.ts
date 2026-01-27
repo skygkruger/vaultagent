@@ -12,6 +12,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 })
 
 export async function POST() {
+  // Validate required env vars
+  if (!process.env.NEXT_PUBLIC_APP_URL) {
+    console.error('CRITICAL: NEXT_PUBLIC_APP_URL not configured')
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+  }
+
   const userProfile = await getUserProfile()
   if (!userProfile) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -29,7 +35,7 @@ export async function POST() {
   try {
     const session = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id,
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/account`,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/account`,
     })
 
     return NextResponse.json({ url: session.url })

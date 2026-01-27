@@ -16,8 +16,11 @@ export async function GET(request: NextRequest) {
   const { user, profile } = userProfile
   const { searchParams } = new URL(request.url)
 
-  const limit = parseInt(searchParams.get('limit') || '50')
-  const offset = parseInt(searchParams.get('offset') || '0')
+  // Validate and sanitize query params
+  const rawLimit = parseInt(searchParams.get('limit') || '50', 10)
+  const rawOffset = parseInt(searchParams.get('offset') || '0', 10)
+  const limit = Math.min(Math.max(1, isNaN(rawLimit) ? 50 : rawLimit), 1000)
+  const offset = Math.max(0, isNaN(rawOffset) ? 0 : rawOffset)
   const action = searchParams.get('action')
   const agent = searchParams.get('agent')
 

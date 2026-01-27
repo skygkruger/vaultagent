@@ -156,7 +156,12 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       console.log('Retrieved subscription, priceId:', priceId)
       console.log('Available price mappings:', PRICE_TO_TIER)
 
-      const tier = PRICE_TO_TIER[priceId] || 'pro' // Default to pro if price not found
+      const tier = PRICE_TO_TIER[priceId]
+      if (!tier) {
+        console.error('CRITICAL: Unknown price ID, cannot determine tier:', priceId)
+        console.error('Available mappings:', PRICE_TO_TIER)
+        return // Don't update tier if we can't determine it
+      }
       const limits = TIER_LIMITS[tier]
 
       console.log(`Updating user ${userId} to tier ${tier} with limits:`, limits)
@@ -181,25 +186,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       console.error('Error updating tier on checkout:', err)
     }
   } else {
-    console.log('No subscriptionId in session, defaulting to pro tier')
-    // No subscription ID - this might be a one-time payment, default to pro
-    const limits = TIER_LIMITS['pro']
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({
-        tier: 'pro',
-        vault_limit: limits.vault_limit,
-        secret_limit: limits.secret_limit,
-        session_limit: limits.session_limit,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', userId)
-
-    if (updateError) {
-      console.error('Error updating user tier (default pro):', updateError)
-    } else {
-      console.log(`Updated user ${userId} to pro tier (no subscription)`)
-    }
+    // No subscription ID in checkout session - this shouldn't happen for subscription checkouts
+    // Log error but don't update tier to avoid giving free upgrades
+    console.error('CRITICAL: No subscriptionId in checkout session for user:', userId)
+    console.error('Session data:', { customerId, userId, subscriptionId })
   }
 }
 
