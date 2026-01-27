@@ -142,10 +142,10 @@ export default function VaultAgentRetro() {
 
         <div className="text-center space-y-2">
           <p style={{ color: '#e8e3e3' }}>
-            AI agents need secrets. They shouldn't see them.
+            AI agents need secrets. They shouldn&apos;t see them.
           </p>
           <p className="text-xs" style={{ color: '#6e6a86' }}>
-            // zero-knowledge encryption, scoped sessions, full audit trails
+            {`// zero-knowledge encryption, scoped sessions, full audit trails`}
           </p>
         </div>
 
@@ -324,8 +324,8 @@ export default function VaultAgentRetro() {
                   className="px-4 py-3 border-l border-r space-y-2"
                   style={{ borderColor: '#e8e3e3' }}
                 >
-                  <p className="text-xs" style={{ color: '#6e6a86' }}>// select session duration</p>
-                  {durations.map((dur, i) => (
+                  <p className="text-xs" style={{ color: '#6e6a86' }}>{`// select session duration`}</p>
+                  {durations.map((dur) => (
                     <button
                       key={dur.label}
                       onClick={() => setSessionDuration(dur.value)}
@@ -336,7 +336,7 @@ export default function VaultAgentRetro() {
                     >
                       <span className="w-6">{sessionDuration === dur.value ? '[x]' : '[ ]'}</span>
                       <span className="w-16">{dur.label}</span>
-                      <span className="text-xs" style={{ color: '#6e6a86' }}>// {dur.desc}</span>
+                      <span className="text-xs" style={{ color: '#6e6a86' }}>{`// ${dur.desc}`}</span>
                     </button>
                   ))}
                 </div>
@@ -435,7 +435,7 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>// HOW IT WORKS</p>
+          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// HOW IT WORKS`}</p>
 
           <div className="flex justify-center" style={{ color: '#a8b2c3' }}>
             <pre className="text-xs leading-tight">
@@ -468,7 +468,7 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>// FEATURES</p>
+          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// FEATURES`}</p>
 
           <div className="flex flex-col md:flex-row justify-center gap-4">
             <div style={{ color: '#a8d8b9' }}>
@@ -520,7 +520,7 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>// PRICING</p>
+          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// PRICING`}</p>
 
           <div className="flex flex-col md:flex-row justify-center gap-6">
             {/* Free Tier */}
@@ -599,7 +599,7 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>// INTEGRATIONS</p>
+          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// INTEGRATIONS`}</p>
 
           <div className="flex justify-center" style={{ color: '#a8b2c3' }}>
             <pre className="text-xs leading-tight" style={{ fontFamily: 'Consolas, Monaco, "Courier New", monospace', overflow: 'visible' }}>
@@ -624,7 +624,7 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>// WHAT DEVELOPERS SAY</p>
+          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// WHAT DEVELOPERS SAY`}</p>
 
           <div className="flex justify-center" style={{ color: '#a8b2c3' }}>
             <pre className="text-xs leading-tight">
@@ -653,7 +653,7 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>// FAQ</p>
+          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// FAQ`}</p>
 
           <div className="flex justify-center">
             <div className="space-y-2" style={{ color: '#a8b2c3' }}>

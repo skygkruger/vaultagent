@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - PRICING PAGE
@@ -10,6 +12,53 @@ import Link from 'next/link';
 
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const [loading, setLoading] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user, profile } = useAuth();
+
+  // Check for checkout canceled status
+  useEffect(() => {
+    if (searchParams.get('checkout') === 'canceled') {
+      setError('Checkout was canceled. You can try again anytime.');
+    }
+  }, [searchParams]);
+
+  // Handle upgrade click
+  const handleUpgrade = async (plan: string) => {
+    if (!user) {
+      // Redirect to sign up with return URL
+      router.push(`/auth/sign-up?redirect=/pricing&plan=${plan}&billing=${billingCycle}`);
+      return;
+    }
+
+    setLoading(plan);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan,
+          billing: billingCycle,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Failed to start checkout');
+      } else if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch {
+      setError('Failed to start checkout. Please try again.');
+    }
+
+    setLoading(null);
+  };
 
   const colors = {
     bg: '#1a1a2e',
@@ -23,9 +72,13 @@ export default function PricingPage() {
     cream: '#ffe9b0',
   };
 
+  // Determine user's current plan
+  const currentTier = profile?.tier || 'free';
+
   const plans = [
     {
       name: 'FREE',
+      key: 'free',
       icon: 'F',
       price: { monthly: 0, yearly: 0 },
       description: 'Perfect for personal projects',
@@ -39,12 +92,11 @@ export default function PricingPage() {
         { text: 'Team features', included: false },
         { text: 'Priority support', included: false },
       ],
-      cta: 'CURRENT PLAN',
       ctaStyle: 'muted',
-      stripeLink: null,
     },
     {
       name: 'PRO',
+      key: 'pro',
       icon: 'PRO',
       price: { monthly: 9, yearly: 90 },
       description: 'For professional developers',
@@ -59,12 +111,11 @@ export default function PricingPage() {
         { text: 'Team features', included: false },
         { text: 'Email support', included: true },
       ],
-      cta: 'UPGRADE TO PRO',
       ctaStyle: 'primary',
-      stripeLink: '#stripe-pro-link', // TODO: Replace with actual Stripe link
     },
     {
       name: 'TEAM',
+      key: 'team',
       icon: 'T',
       price: { monthly: 29, yearly: 290 },
       description: 'For growing teams',
@@ -79,12 +130,11 @@ export default function PricingPage() {
         { text: 'Role-based access', included: true },
         { text: 'Priority support', included: true },
       ],
-      cta: 'START TEAM PLAN',
       ctaStyle: 'secondary',
-      stripeLink: '#stripe-team-link', // TODO: Replace with actual Stripe link
     },
     {
       name: 'ENTERPRISE',
+      key: 'enterprise',
       icon: 'E',
       price: { monthly: 99, yearly: 990 },
       description: 'For large organizations',
@@ -99,11 +149,17 @@ export default function PricingPage() {
         { text: 'Dedicated support', included: true },
         { text: 'Self-hosted option', included: true },
       ],
-      cta: 'CONTACT SALES',
       ctaStyle: 'enterprise',
-      stripeLink: null, // Contact sales instead
     },
   ];
+
+  // Get CTA text based on user's current plan
+  const getCtaText = (planKey: string) => {
+    if (planKey === currentTier) return 'CURRENT PLAN';
+    if (planKey === 'free') return 'DOWNGRADE';
+    if (planKey === 'enterprise') return 'CONTACT SALES';
+    return `UPGRADE TO ${planKey.toUpperCase()}`;
+  };
 
   const faqs = [
     {
@@ -158,6 +214,23 @@ export default function PricingPage() {
       </header>
 
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
+        {/* Error Message */}
+        {error && (
+          <div
+            style={{
+              padding: '12px 16px',
+              marginBottom: '24px',
+              border: `1px solid ${colors.coral}`,
+              background: '#2a1a2e',
+              color: colors.coral,
+              fontSize: '12px',
+              textAlign: 'center',
+            }}
+          >
+            [!] {error}
+          </div>
+        )}
+
         {/* Hero Section */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <pre style={{
@@ -325,27 +398,23 @@ export default function PricingPage() {
                 </div>
 
                 {/* CTA Button */}
-                {plan.stripeLink ? (
-                  <a
-                    href={plan.stripeLink}
+                {plan.key === currentTier ? (
+                  <div
                     style={{
                       display: 'block',
                       width: '100%',
                       padding: '12px',
                       textAlign: 'center',
-                      textDecoration: 'none',
                       fontFamily: 'inherit',
                       fontSize: '12px',
-                      cursor: 'pointer',
-                      border: `1px solid ${plan.color}`,
-                      background: plan.ctaStyle === 'primary' ? plan.color : 'transparent',
-                      color: plan.ctaStyle === 'primary' ? colors.bg : plan.color,
-                      transition: 'all 0.2s ease',
+                      border: `1px solid ${colors.muted}`,
+                      background: 'transparent',
+                      color: colors.muted,
                     }}
                   >
-                    [&gt;] {plan.cta}
-                  </a>
-                ) : plan.name === 'ENTERPRISE' ? (
+                    CURRENT PLAN
+                  </div>
+                ) : plan.key === 'enterprise' ? (
                   <a
                     href="mailto:sky@veridian.run?subject=VaultAgent Enterprise Inquiry"
                     style={{
@@ -363,10 +432,32 @@ export default function PricingPage() {
                       transition: 'all 0.2s ease',
                     }}
                   >
-                    [&gt;] {plan.cta}
+                    [&gt;] CONTACT SALES
                   </a>
+                ) : plan.key === 'free' ? (
+                  <Link
+                    href={user ? '/dashboard' : '/auth/sign-up'}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      padding: '12px',
+                      textAlign: 'center',
+                      textDecoration: 'none',
+                      fontFamily: 'inherit',
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      border: `1px solid ${colors.muted}`,
+                      background: 'transparent',
+                      color: colors.muted,
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    [&gt;] {user ? 'GO TO DASHBOARD' : 'GET STARTED FREE'}
+                  </Link>
                 ) : (
-                  <div
+                  <button
+                    onClick={() => handleUpgrade(plan.key)}
+                    disabled={loading === plan.key}
                     style={{
                       display: 'block',
                       width: '100%',
@@ -374,13 +465,16 @@ export default function PricingPage() {
                       textAlign: 'center',
                       fontFamily: 'inherit',
                       fontSize: '12px',
-                      border: `1px solid ${colors.muted}`,
-                      background: 'transparent',
-                      color: colors.muted,
+                      cursor: loading === plan.key ? 'wait' : 'pointer',
+                      border: `1px solid ${plan.color}`,
+                      background: plan.ctaStyle === 'primary' ? plan.color : 'transparent',
+                      color: plan.ctaStyle === 'primary' ? colors.bg : plan.color,
+                      transition: 'all 0.2s ease',
+                      opacity: loading === plan.key ? 0.7 : 1,
                     }}
                   >
-                    {plan.cta}
-                  </div>
+                    {loading === plan.key ? '[~] LOADING...' : `[>] ${getCtaText(plan.key)}`}
+                  </button>
                 )}
               </div>
             </div>
@@ -521,7 +615,13 @@ export default function PricingPage() {
             margin: '0 0 24px 0',
             overflow: 'visible',
           }}>
-{`╔═══════════════════════════════════════════════════════════════╗
+{user ? `╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║     Ready to unlock more features?                            ║
+║                                                               ║
+║     Upgrade your plan to access more vaults and secrets       ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝` : `╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
 ║     Ready to secure your AI agent's secrets?                  ║
 ║                                                               ║
@@ -532,7 +632,7 @@ export default function PricingPage() {
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
             <Link
-              href="/"
+              href={user ? '/dashboard' : '/auth/sign-up'}
               style={{
                 display: 'inline-block',
                 padding: '12px 24px',
@@ -543,7 +643,7 @@ export default function PricingPage() {
                 fontSize: '12px',
               }}
             >
-              [&gt;] GET STARTED FREE
+              [&gt;] {user ? 'GO TO DASHBOARD' : 'GET STARTED FREE'}
             </Link>
             <Link
               href="/docs"
