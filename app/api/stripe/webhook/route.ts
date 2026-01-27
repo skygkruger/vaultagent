@@ -8,26 +8,41 @@ import { TIER_LIMITS } from '@/lib/supabase-server'
 //  Handle subscription events and update user tiers
 // ═══════════════════════════════════════════════════════════════
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-12-15.clover',
-})
+// Lazy initialization to avoid build-time errors
+let stripe: Stripe | null = null
+let supabaseAdmin: ReturnType<typeof createClient> | null = null
 
-// Use service role key to bypass RLS for webhook operations
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getStripe() {
+  if (!stripe) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-12-15.clover',
+    })
+  }
+  return stripe
+}
 
-// Map Stripe price IDs to tiers (loaded from environment variables)
-const PRICE_TO_TIER: Record<string, keyof typeof TIER_LIMITS> = {
-  // Monthly prices
-  [process.env.STRIPE_PRICE_PRO_MONTHLY || '']: 'pro',
-  [process.env.STRIPE_PRICE_TEAM_MONTHLY || '']: 'team',
-  [process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || '']: 'enterprise',
-  // Annual prices
-  [process.env.STRIPE_PRICE_PRO_YEARLY || '']: 'pro',
-  [process.env.STRIPE_PRICE_TEAM_YEARLY || '']: 'team',
-  [process.env.STRIPE_PRICE_ENTERPRISE_YEARLY || '']: 'enterprise',
+function getSupabaseAdmin() {
+  if (!supabaseAdmin) {
+    supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+  }
+  return supabaseAdmin
+}
+
+// Map Stripe price IDs to tiers (loaded at runtime)
+function getPriceToTier(): Record<string, keyof typeof TIER_LIMITS> {
+  return {
+    // Monthly prices
+    [process.env.STRIPE_PRICE_PRO_MONTHLY || '']: 'pro',
+    [process.env.STRIPE_PRICE_TEAM_MONTHLY || '']: 'team',
+    [process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || '']: 'enterprise',
+    // Annual prices
+    [process.env.STRIPE_PRICE_PRO_YEARLY || '']: 'pro',
+    [process.env.STRIPE_PRICE_TEAM_YEARLY || '']: 'team',
+    [process.env.STRIPE_PRICE_ENTERPRISE_YEARLY || '']: 'enterprise',
+  }
 }
 
 async function updateUserTier(
@@ -35,10 +50,10 @@ async function updateUserTier(
   tier: keyof typeof TIER_LIMITS
 ) {
   const limits = TIER_LIMITS[tier]
+  const supabase = getSupabaseAdmin()
 
   // Find user by Stripe customer ID
-  // First, check if we have a customers table or stored in profiles
-  const { data: profile, error } = await supabaseAdmin
+  const { data: profile, error } = await supabase
     .from('profiles')
     .update({
       tier,
@@ -62,6 +77,7 @@ async function updateUserTier(
 async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
   const priceId = subscription.items.data[0]?.price.id
+  const PRICE_TO_TIER = getPriceToTier()
 
   const tier = PRICE_TO_TIER[priceId] || 'free'
   await updateUserTier(customerId, tier)
@@ -72,6 +88,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
   const priceId = subscription.items.data[0]?.price.id
+  const PRICE_TO_TIER = getPriceToTier()
 
   // Check if subscription is still active
   if (subscription.status === 'active' || subscription.status === 'trialing') {
@@ -100,10 +117,11 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const customerId = session.customer as string
   const userId = session.client_reference_id
+  const supabase = getSupabaseAdmin()
 
   if (userId && customerId) {
     // Link Stripe customer to user profile
-    await supabaseAdmin
+    await supabase
       .from('profiles')
       .update({ stripe_customer_id: customerId })
       .eq('id', userId)
@@ -123,7 +141,7 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(
+    event = getStripe().webhooks.constructEvent(
       body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
