@@ -15,20 +15,23 @@ const TIER_INFO: Record<
     name: string
     color: string
     features: string[]
-    price: string
+    monthlyPrice: number
+    yearlyPrice: number
   }
 > = {
   free: {
     name: 'Free',
     color: '#6e6a86',
     features: ['1 vault', '10 secrets', '50 sessions/day', '7-day audit retention'],
-    price: '$0/month',
+    monthlyPrice: 0,
+    yearlyPrice: 0,
   },
   pro: {
     name: 'Pro',
     color: '#a8d8b9',
     features: ['5 vaults', '100 secrets', 'Unlimited sessions', '30-day audit retention', 'Audit export'],
-    price: '$9/month',
+    monthlyPrice: 9,
+    yearlyPrice: 90, // 2 months free
   },
   team: {
     name: 'Team',
@@ -41,7 +44,8 @@ const TIER_INFO: Record<
       'Audit export',
       'Team members',
     ],
-    price: '$29/month',
+    monthlyPrice: 29,
+    yearlyPrice: 290, // 2 months free
   },
   enterprise: {
     name: 'Enterprise',
@@ -55,7 +59,8 @@ const TIER_INFO: Record<
       'SSO/SAML',
       'Priority support',
     ],
-    price: '$99/month',
+    monthlyPrice: 99,
+    yearlyPrice: 990, // 2 months free
   },
 }
 
@@ -66,6 +71,9 @@ export default function AccountPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 
+  // Billing toggle
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly')
+
   // Password change
   const [showPasswordForm, setShowPasswordForm] = useState(false)
   const [newPassword, setNewPassword] = useState('')
@@ -73,6 +81,27 @@ export default function AccountPage() {
   const [changingPassword, setChangingPassword] = useState(false)
 
   const tierInfo = TIER_INFO[profile?.tier || 'free']
+
+  // Get display price based on billing period
+  const getPrice = (tier: string) => {
+    const info = TIER_INFO[tier]
+    if (billingPeriod === 'yearly') {
+      return `$${info.yearlyPrice}/year`
+    }
+    return `$${info.monthlyPrice}/mo`
+  }
+
+  // Get savings text for yearly
+  const getSavings = (tier: string) => {
+    const info = TIER_INFO[tier]
+    const monthlyCost = info.monthlyPrice * 12
+    const yearlyCost = info.yearlyPrice
+    const savings = monthlyCost - yearlyCost
+    if (savings > 0) {
+      return `Save $${savings}/year`
+    }
+    return null
+  }
 
   // Handle upgrade
   const handleUpgrade = async (plan: string) => {
@@ -85,7 +114,7 @@ export default function AccountPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           plan,
-          billing: 'monthly',
+          billing: billingPeriod,
         }),
       })
 
@@ -363,7 +392,7 @@ export default function AccountPage() {
                 color: tierInfo.color,
               }}
             >
-              {tierInfo.price}
+              {tierInfo.monthlyPrice === 0 ? 'Free' : `$${tierInfo.monthlyPrice}/month`}
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -384,11 +413,44 @@ export default function AccountPage() {
 
         {/* Upgrade Options or Manage */}
         {profile?.tier === 'free' ? (
-          <div className="space-y-3">
-            <p className="text-xs mb-4" style={{ color: '#6e6a86' }}>
+          <div className="space-y-4">
+            <p className="text-xs" style={{ color: '#6e6a86' }}>
               Upgrade for more vaults, secrets, and longer audit retention:
             </p>
-            <div className="flex flex-wrap gap-2">
+
+            {/* Billing Toggle */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setBillingPeriod('monthly')}
+                className="text-xs px-3 py-1 transition-all"
+                style={{
+                  backgroundColor: billingPeriod === 'monthly' ? '#a8d8b9' : 'transparent',
+                  color: billingPeriod === 'monthly' ? '#1a1a2e' : '#6e6a86',
+                  border: '1px solid #a8d8b9',
+                }}
+              >
+                MONTHLY
+              </button>
+              <button
+                onClick={() => setBillingPeriod('yearly')}
+                className="text-xs px-3 py-1 transition-all"
+                style={{
+                  backgroundColor: billingPeriod === 'yearly' ? '#a8d8b9' : 'transparent',
+                  color: billingPeriod === 'yearly' ? '#1a1a2e' : '#6e6a86',
+                  border: '1px solid #a8d8b9',
+                }}
+              >
+                YEARLY
+              </button>
+              {billingPeriod === 'yearly' && (
+                <span className="text-xs px-2 py-1" style={{ color: '#a8d8b9', backgroundColor: '#1a2e1a' }}>
+                  2 MONTHS FREE
+                </span>
+              )}
+            </div>
+
+            {/* Upgrade Buttons */}
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => handleUpgrade('pro')}
                 disabled={loading}
@@ -399,7 +461,10 @@ export default function AccountPage() {
                   backgroundColor: 'transparent',
                 }}
               >
-                {`[>] UPGRADE TO PRO - $9/mo`}
+                <span>{`[>] PRO - ${getPrice('pro')}`}</span>
+                {billingPeriod === 'yearly' && getSavings('pro') && (
+                  <span className="ml-2 opacity-70">({getSavings('pro')})</span>
+                )}
               </button>
               <button
                 onClick={() => handleUpgrade('team')}
@@ -411,7 +476,10 @@ export default function AccountPage() {
                   backgroundColor: 'transparent',
                 }}
               >
-                {`[>] UPGRADE TO TEAM - $29/mo`}
+                <span>{`[>] TEAM - ${getPrice('team')}`}</span>
+                {billingPeriod === 'yearly' && getSavings('team') && (
+                  <span className="ml-2 opacity-70">({getSavings('team')})</span>
+                )}
               </button>
               <button
                 onClick={() => handleUpgrade('enterprise')}
@@ -423,7 +491,10 @@ export default function AccountPage() {
                   backgroundColor: 'transparent',
                 }}
               >
-                {`[>] UPGRADE TO ENTERPRISE - $99/mo`}
+                <span>{`[>] ENTERPRISE - ${getPrice('enterprise')}`}</span>
+                {billingPeriod === 'yearly' && getSavings('enterprise') && (
+                  <span className="ml-2 opacity-70">({getSavings('enterprise')})</span>
+                )}
               </button>
             </div>
           </div>
