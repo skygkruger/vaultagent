@@ -18,17 +18,16 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-// Map Stripe price IDs to tiers
-// TODO: Update these with your actual Stripe price IDs
+// Map Stripe price IDs to tiers (loaded from environment variables)
 const PRICE_TO_TIER: Record<string, keyof typeof TIER_LIMITS> = {
   // Monthly prices
-  'price_pro_monthly': 'pro',
-  'price_team_monthly': 'team',
-  'price_enterprise_monthly': 'enterprise',
+  [process.env.STRIPE_PRICE_PRO_MONTHLY || '']: 'pro',
+  [process.env.STRIPE_PRICE_TEAM_MONTHLY || '']: 'team',
+  [process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || '']: 'enterprise',
   // Annual prices
-  'price_pro_annual': 'pro',
-  'price_team_annual': 'team',
-  'price_enterprise_annual': 'enterprise',
+  [process.env.STRIPE_PRICE_PRO_YEARLY || '']: 'pro',
+  [process.env.STRIPE_PRICE_TEAM_YEARLY || '']: 'team',
+  [process.env.STRIPE_PRICE_ENTERPRISE_YEARLY || '']: 'enterprise',
 }
 
 async function updateUserTier(
