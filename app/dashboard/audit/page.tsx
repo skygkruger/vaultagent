@@ -167,11 +167,11 @@ export default function AuditPage() {
   const currentPage = Math.floor(offset / limit) + 1
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
-      <div className="flex justify-between items-start mb-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-xl mb-2" style={{ color: '#a8d8b9' }}>
+          <h1 className="text-lg sm:text-xl mb-2" style={{ color: '#a8d8b9' }}>
             [&gt;] Audit Log
           </h1>
           <p className="text-xs" style={{ color: '#6e6a86' }}>
@@ -195,7 +195,7 @@ export default function AuditPage() {
               backgroundColor: 'transparent',
             }}
           >
-            {exporting ? '[~]' : '[>] EXPORT CSV'}
+            {exporting ? '[~]' : '[>] CSV'}
           </button>
           <button
             onClick={() => handleExport('json')}
@@ -207,7 +207,7 @@ export default function AuditPage() {
               backgroundColor: 'transparent',
             }}
           >
-            {exporting ? '[~]' : '[>] EXPORT JSON'}
+            {exporting ? '[~]' : '[>] JSON'}
           </button>
         </div>
       </div>
@@ -227,8 +227,8 @@ export default function AuditPage() {
       )}
 
       {/* Filters */}
-      <div className="flex gap-4 mb-6">
-        <div>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
+        <div className="flex-1 sm:flex-initial">
           <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
             ACTION
           </label>
@@ -238,7 +238,7 @@ export default function AuditPage() {
               setActionFilter(e.target.value)
               setOffset(0)
             }}
-            className="px-3 py-2 text-xs"
+            className="w-full sm:w-auto px-3 py-2 text-xs"
             style={{
               backgroundColor: '#252542',
               border: '1px solid #6e6a86',
@@ -254,7 +254,7 @@ export default function AuditPage() {
             ))}
           </select>
         </div>
-        <div>
+        <div className="flex-1 sm:flex-initial">
           <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
             AGENT
           </label>
@@ -264,7 +264,7 @@ export default function AuditPage() {
               setAgentFilter(e.target.value)
               setOffset(0)
             }}
-            className="px-3 py-2 text-xs"
+            className="w-full sm:w-auto px-3 py-2 text-xs"
             style={{
               backgroundColor: '#252542',
               border: '1px solid #6e6a86',
@@ -284,8 +284,9 @@ export default function AuditPage() {
 
       {/* Logs Table */}
       <div style={{ border: '1px solid #6e6a86' }}>
+        {/* Desktop Header - Hidden on Mobile */}
         <div
-          className="px-4 py-3 grid grid-cols-12 gap-4"
+          className="hidden lg:grid px-4 py-3 grid-cols-12 gap-4"
           style={{
             backgroundColor: '#252542',
             borderBottom: '1px solid #6e6a86',
@@ -308,14 +309,27 @@ export default function AuditPage() {
           </span>
         </div>
 
+        {/* Mobile Header */}
+        <div
+          className="lg:hidden px-4 py-3"
+          style={{
+            backgroundColor: '#252542',
+            borderBottom: '1px solid #6e6a86',
+          }}
+        >
+          <span className="text-xs" style={{ color: '#6e6a86' }}>
+            EVENTS
+          </span>
+        </div>
+
         {loading ? (
-          <div className="p-8 text-center">
+          <div className="p-6 sm:p-8 text-center">
             <p className="text-xs" style={{ color: '#6e6a86' }}>
               [~] Loading audit logs...
             </p>
           </div>
         ) : logs.length === 0 ? (
-          <div className="p-8 text-center">
+          <div className="p-6 sm:p-8 text-center">
             <p className="text-xs" style={{ color: '#6e6a86' }}>
               No audit logs found.
             </p>
@@ -325,31 +339,63 @@ export default function AuditPage() {
             {logs.map((log, i) => (
               <div
                 key={log.id}
-                className="px-4 py-3 grid grid-cols-12 gap-4 items-center"
+                className="px-3 sm:px-4 py-3"
                 style={{
                   borderBottom: i < logs.length - 1 ? '1px solid #2a2a3e' : 'none',
                 }}
               >
-                <span className="text-xs col-span-2" style={{ color: '#6e6a86' }}>
-                  {formatTimestamp(log.created_at)}
-                </span>
-                <span className="text-xs col-span-2 flex items-center gap-2">
-                  <span style={{ color: ACTION_COLORS[log.action] || '#6e6a86' }}>
-                    {ACTION_ICONS[log.action] || '[?]'}
+                {/* Desktop View */}
+                <div className="hidden lg:grid grid-cols-12 gap-4 items-center">
+                  <span className="text-xs col-span-2" style={{ color: '#6e6a86' }}>
+                    {formatTimestamp(log.created_at)}
                   </span>
-                  <span style={{ color: ACTION_COLORS[log.action] || '#a8b2c3' }}>
-                    {log.action}
+                  <span className="text-xs col-span-2 flex items-center gap-2">
+                    <span style={{ color: ACTION_COLORS[log.action] || '#6e6a86' }}>
+                      {ACTION_ICONS[log.action] || '[?]'}
+                    </span>
+                    <span style={{ color: ACTION_COLORS[log.action] || '#a8b2c3' }}>
+                      {log.action}
+                    </span>
                   </span>
-                </span>
-                <span className="text-xs col-span-3 truncate" style={{ color: '#e8e3e3' }}>
-                  {log.target || '-'}
-                </span>
-                <span className="text-xs col-span-2" style={{ color: '#c4a7e7' }}>
-                  {log.agent_name || '-'}
-                </span>
-                <span className="text-xs col-span-3" style={{ color: '#6e6a86' }}>
-                  {log.ip_address || '-'}
-                </span>
+                  <span className="text-xs col-span-3 truncate" style={{ color: '#e8e3e3' }}>
+                    {log.target || '-'}
+                  </span>
+                  <span className="text-xs col-span-2" style={{ color: '#c4a7e7' }}>
+                    {log.agent_name || '-'}
+                  </span>
+                  <span className="text-xs col-span-3" style={{ color: '#6e6a86' }}>
+                    {log.ip_address || '-'}
+                  </span>
+                </div>
+
+                {/* Mobile View - Card Layout */}
+                <div className="lg:hidden space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs flex items-center gap-2">
+                      <span style={{ color: ACTION_COLORS[log.action] || '#6e6a86' }}>
+                        {ACTION_ICONS[log.action] || '[?]'}
+                      </span>
+                      <span style={{ color: ACTION_COLORS[log.action] || '#a8b2c3' }}>
+                        {log.action}
+                      </span>
+                    </span>
+                    <span className="text-xs" style={{ color: '#6e6a86' }}>
+                      {formatTimestamp(log.created_at)}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
+                    {log.target && (
+                      <span style={{ color: '#e8e3e3' }}>
+                        {log.target}
+                      </span>
+                    )}
+                    {log.agent_name && (
+                      <span style={{ color: '#c4a7e7' }}>
+                        {log.agent_name}
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

@@ -203,10 +203,10 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-xl mb-2" style={{ color: '#a8d8b9' }}>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-lg sm:text-xl mb-2" style={{ color: '#a8d8b9' }}>
           [@] Account Settings
         </h1>
         <p className="text-xs" style={{ color: '#6e6a86' }}>
@@ -584,7 +584,7 @@ export default function AccountPage() {
         >
           Current Usage
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div>
             <div className="text-xs mb-1" style={{ color: '#6e6a86' }}>
               VAULTS

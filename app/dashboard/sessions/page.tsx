@@ -219,11 +219,11 @@ export default function SessionsPage() {
   const expiredSessions = sessions.filter((s) => isExpired(s.expires_at))
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
-      <div className="flex justify-between items-start mb-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-xl mb-2" style={{ color: '#a8d8b9' }}>
+          <h1 className="text-lg sm:text-xl mb-2" style={{ color: '#a8d8b9' }}>
             [~] Agent Sessions
           </h1>
           <p className="text-xs" style={{ color: '#6e6a86' }}>
@@ -232,7 +232,7 @@ export default function SessionsPage() {
         </div>
         <button
           onClick={() => setShowCreateSession(!showCreateSession)}
-          className="text-xs px-4 py-2"
+          className="text-xs px-4 py-2 w-full sm:w-auto"
           style={{
             border: '1px solid #a8d8b9',
             color: '#a8d8b9',
@@ -413,7 +413,7 @@ export default function SessionsPage() {
         </div>
 
         {activeSessions.length === 0 ? (
-          <div className="p-8 text-center">
+          <div className="p-6 sm:p-8 text-center">
             <p className="text-xs" style={{ color: '#6e6a86' }}>
               No active sessions. Create one to grant agent access.
             </p>
@@ -423,14 +423,15 @@ export default function SessionsPage() {
             {activeSessions.map((session, i) => (
               <div
                 key={session.id}
-                className="px-4 py-3"
+                className="px-3 sm:px-4 py-3"
                 style={{
                   borderBottom:
                     i < activeSessions.length - 1 ? '1px solid #2a2a3e' : 'none',
                 }}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-3">
+                {/* Session Header - Mobile Stack */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-2">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                     <span style={{ color: '#a8d8b9' }}>[~]</span>
                     <span style={{ color: '#e8e3e3' }}>{session.agent_name}</span>
                     <span
@@ -443,33 +444,36 @@ export default function SessionsPage() {
                       {session.vaults?.name || 'Unknown Vault'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                     <span
                       className="text-xs"
                       style={{ color: '#a8d8b9' }}
                     >
                       {formatTimeRemaining(session.expires_at)} remaining
                     </span>
-                    <button
-                      onClick={() => handleCopyToken(session.token)}
-                      className="text-xs px-2 py-1"
-                      style={{
-                        border: '1px solid #6e6a86',
-                        color: copiedToken === session.token ? '#a8d8b9' : '#6e6a86',
-                      }}
-                    >
-                      {copiedToken === session.token ? '[✓] COPIED' : '[>] COPY TOKEN'}
-                    </button>
-                    <button
-                      onClick={() => handleRevokeSession(session.id, session.agent_name)}
-                      className="text-xs px-2 py-1"
-                      style={{ color: '#eb6f92' }}
-                    >
-                      [x] REVOKE
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleCopyToken(session.token)}
+                        className="text-xs px-2 py-1"
+                        style={{
+                          border: '1px solid #6e6a86',
+                          color: copiedToken === session.token ? '#a8d8b9' : '#6e6a86',
+                        }}
+                      >
+                        {copiedToken === session.token ? '[✓] COPIED' : '[>] COPY'}
+                      </button>
+                      <button
+                        onClick={() => handleRevokeSession(session.id, session.agent_name)}
+                        className="text-xs px-2 py-1"
+                        style={{ color: '#eb6f92' }}
+                      >
+                        [x] REVOKE
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="flex gap-2 ml-8">
+                {/* Secrets Tags */}
+                <div className="flex flex-wrap gap-2 ml-0 sm:ml-8">
                   {session.allowed_secrets.map((secretId) => {
                     const secret = secrets.find((s) => s.id === secretId)
                     return (

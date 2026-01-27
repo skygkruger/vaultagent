@@ -24,10 +24,10 @@ export default function AuthLayout({
           <Link href="/" style={{ color: '#a8d8b9', fontSize: '18px', textDecoration: 'none' }}>
             VaultAgent
           </Link>
-          <nav className="flex gap-6 text-xs">
-            <Link href="/" style={{ color: '#6e6a86' }}>[~] Home</Link>
-            <Link href="/docs" style={{ color: '#6e6a86' }}>[?] Docs</Link>
-            <Link href="/pricing" style={{ color: '#6e6a86' }}>[$] Pricing</Link>
+          <nav className="flex gap-3 sm:gap-6 text-xs">
+            <Link href="/" style={{ color: '#6e6a86' }}>[~]<span className="hidden sm:inline"> Home</span></Link>
+            <Link href="/docs" style={{ color: '#6e6a86' }}>[?]<span className="hidden sm:inline"> Docs</span></Link>
+            <Link href="/pricing" style={{ color: '#6e6a86' }}>[$]<span className="hidden sm:inline"> Pricing</span></Link>
           </nav>
         </div>
       </header>

@@ -359,11 +359,11 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
-      <div className="flex justify-between items-start mb-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-xl mb-2" style={{ color: '#a8d8b9' }}>
+          <h1 className="text-lg sm:text-xl mb-2" style={{ color: '#a8d8b9' }}>
             [/] Your Vault
           </h1>
           <p className="text-xs" style={{ color: '#6e6a86' }}>
@@ -372,12 +372,12 @@ export default function DashboardPage() {
         </div>
 
         {/* Vault Selector and Create */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
           {vaults.length > 0 && (
             <select
               value={selectedVault || ''}
               onChange={(e) => setSelectedVault(e.target.value)}
-              className="px-3 py-2 text-xs"
+              className="px-3 py-2 text-xs w-full sm:w-auto"
               style={{
                 backgroundColor: '#252542',
                 border: '1px solid #6e6a86',
@@ -393,7 +393,7 @@ export default function DashboardPage() {
           )}
           <button
             onClick={() => setShowAddVault(!showAddVault)}
-            className="text-xs px-3 py-2"
+            className="text-xs px-3 py-2 whitespace-nowrap"
             style={{
               border: '1px solid #a8d8b9',
               color: '#a8d8b9',
@@ -627,7 +627,7 @@ export default function DashboardPage() {
 
         {/* Secrets Table */}
         {secrets.length === 0 ? (
-          <div className="p-8 text-center">
+          <div className="p-6 sm:p-8 text-center">
             <p className="text-xs" style={{ color: '#6e6a86' }}>
               No secrets yet. Click [+] ADD to store your first secret.
             </p>
@@ -637,31 +637,36 @@ export default function DashboardPage() {
             {secrets.map((secret, i) => (
               <div
                 key={secret.id}
-                className="px-4 py-3 flex items-center justify-between"
+                className="px-3 sm:px-4 py-3"
                 style={{
                   borderBottom: i < secrets.length - 1 ? '1px solid #2a2a3e' : 'none',
                 }}
               >
-                <div className="flex items-center gap-4">
-                  <span style={{ color: '#a8d8b9' }}>[/]</span>
-                  <span style={{ color: '#e8e3e3' }}>{secret.name}</span>
-                </div>
-                <div className="flex items-center gap-6">
-                  <span className="text-xs" style={{ color: '#6e6a86' }}>
-                    {maskSecret(secret.encrypted_value.substring(0, 20))}
-                  </span>
-                  <span className="text-xs" style={{ color: '#6e6a86' }}>
-                    {secret.last_accessed_at
-                      ? new Date(secret.last_accessed_at).toLocaleDateString()
-                      : 'never accessed'}
-                  </span>
-                  <button
-                    onClick={() => handleDeleteSecret(secret.id, secret.name)}
-                    className="text-xs px-2 py-1"
-                    style={{ color: '#eb6f92' }}
-                  >
-                    [x]
-                  </button>
+                {/* Mobile: Stack layout */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                  <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+                    <span style={{ color: '#a8d8b9' }}>[/]</span>
+                    <span className="truncate" style={{ color: '#e8e3e3' }}>{secret.name}</span>
+                  </div>
+                  <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-6 pl-6 sm:pl-0">
+                    <div className="flex items-center gap-3 sm:gap-6 text-xs" style={{ color: '#6e6a86' }}>
+                      <span className="hidden sm:inline">
+                        {maskSecret(secret.encrypted_value.substring(0, 20))}
+                      </span>
+                      <span>
+                        {secret.last_accessed_at
+                          ? new Date(secret.last_accessed_at).toLocaleDateString()
+                          : 'never'}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteSecret(secret.id, secret.name)}
+                      className="text-xs px-2 py-1 flex-shrink-0"
+                      style={{ color: '#eb6f92' }}
+                    >
+                      [x]
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

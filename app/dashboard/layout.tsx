@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
@@ -25,6 +25,7 @@ export default function DashboardLayout({
   const pathname = usePathname()
   const router = useRouter()
   const { user, profile, signOut, loading } = useAuth()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleSignOut = async () => {
     await signOut()
@@ -72,12 +73,43 @@ export default function DashboardLayout({
 
   return (
     <div
-      className="min-h-screen font-mono text-sm flex"
+      className="min-h-screen font-mono text-sm flex flex-col lg:flex-row"
       style={{ backgroundColor: '#1a1a2e', color: '#a8b2c3' }}
     >
+      {/* Mobile Header */}
+      <div
+        className="lg:hidden flex items-center justify-between p-4 border-b"
+        style={{ borderColor: '#6e6a86', backgroundColor: '#16161a' }}
+      >
+        <Link href="/" style={{ color: '#a8d8b9', textDecoration: 'none' }}>
+          <div className="text-lg font-bold">VAULTAGENT</div>
+        </Link>
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 text-xs"
+          style={{ color: '#a8d8b9' }}
+        >
+          {sidebarOpen ? '[x] CLOSE' : '[=] MENU'}
+        </button>
+      </div>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
-        className="w-56 flex-shrink-0 border-r flex flex-col"
+        className={`
+          fixed lg:static inset-y-0 left-0 z-50
+          w-64 lg:w-56 flex-shrink-0 border-r flex flex-col
+          transform transition-transform duration-200 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
         style={{ borderColor: '#6e6a86', backgroundColor: '#16161a' }}
       >
         {/* Logo */}
@@ -115,6 +147,7 @@ export default function DashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setSidebarOpen(false)}
                 className="block px-3 py-2 text-xs mb-1 transition-all hover-border-glow"
                 style={{
                   backgroundColor: isActive ? '#252542' : 'transparent',
@@ -154,6 +187,7 @@ export default function DashboardLayout({
           <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
             <Link
               href="/dashboard/account"
+              onClick={() => setSidebarOpen(false)}
               className="block w-full text-center text-xs px-3 py-2 transition-all hover-glow hover-lift"
               style={{
                 backgroundColor: '#a8d8b9',
@@ -173,6 +207,7 @@ export default function DashboardLayout({
           <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
             <Link
               href="/dashboard/account"
+              onClick={() => setSidebarOpen(false)}
               className="block w-full text-center text-xs px-3 py-2 transition-all hover-border-glow hover-text-glow"
               style={{
                 border: `1px solid ${tierColors[profile.tier]}`,
@@ -197,7 +232,7 @@ export default function DashboardLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto min-h-0">
         {children}
       </main>
     </div>

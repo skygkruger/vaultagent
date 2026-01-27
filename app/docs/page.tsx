@@ -10,6 +10,7 @@ import Link from 'next/link';
 
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState('getting-started');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const colors = {
     bg: '#1a1a2e',
@@ -799,26 +800,59 @@ Enter new value: ****************************
           <Link href="/" style={{ color: colors.mint, fontSize: '18px', textDecoration: 'none' }}>
             VaultAgent
           </Link>
-          <span style={{ color: colors.muted }}>|</span>
-          <span style={{ color: colors.muted }}>Documentation</span>
+          <span className="hidden sm:inline" style={{ color: colors.muted }}>|</span>
+          <span className="hidden sm:inline" style={{ color: colors.muted }}>Documentation</span>
         </div>
-        <nav style={{ display: 'flex', gap: '24px' }}>
-          <Link href="/" style={{ color: colors.muted, textDecoration: 'none' }}>[~] Home</Link>
-          <span style={{ color: colors.mint }}>[?] Docs</span>
-          <Link href="/pricing" style={{ color: colors.muted, textDecoration: 'none' }}>[$] Pricing</Link>
-        </nav>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <nav className="hidden md:flex" style={{ gap: '24px' }}>
+            <Link href="/" style={{ color: colors.muted, textDecoration: 'none' }}>[~] Home</Link>
+            <span style={{ color: colors.mint }}>[?] Docs</span>
+            <Link href="/pricing" style={{ color: colors.muted, textDecoration: 'none' }}>[$] Pricing</Link>
+          </nav>
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{ color: colors.mint, fontSize: '12px' }}
+          >
+            {sidebarOpen ? '[x] CLOSE' : '[=] MENU'}
+          </button>
+        </div>
       </header>
 
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', position: 'relative' }}>
+        {/* Mobile Overlay */}
+        {sidebarOpen && (
+          <div
+            className="lg:hidden fixed inset-0 z-40"
+            style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <aside style={{
-          width: '240px',
-          flexShrink: 0,
-          borderRight: `1px solid ${colors.muted}`,
-          padding: '24px',
-          minHeight: 'calc(100vh - 60px)',
-        }}>
+        <aside
+          className={`
+            fixed lg:static inset-y-0 left-0 z-50
+            transform transition-transform duration-200 ease-in-out
+            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          `}
+          style={{
+            width: '280px',
+            flexShrink: 0,
+            borderRight: `1px solid ${colors.muted}`,
+            padding: '24px',
+            minHeight: 'calc(100vh - 60px)',
+            backgroundColor: colors.bg,
+          }}
+        >
           <Logo />
+
+          {/* Mobile Nav Links */}
+          <div className="lg:hidden" style={{ marginTop: '16px', marginBottom: '16px', paddingBottom: '16px', borderBottom: `1px solid ${colors.muted}` }}>
+            <Link href="/" style={{ display: 'block', color: colors.muted, textDecoration: 'none', padding: '8px 0', fontSize: '13px' }}>[~] Home</Link>
+            <Link href="/pricing" style={{ display: 'block', color: colors.muted, textDecoration: 'none', padding: '8px 0', fontSize: '13px' }}>[$] Pricing</Link>
+          </div>
 
           <div style={{ marginTop: '28px' }}>
             <div style={{ color: colors.muted, fontSize: '11px', marginBottom: '14px', letterSpacing: '1px' }}>
@@ -828,7 +862,10 @@ Enter new value: ****************************
             {sections.map(section => (
               <button
                 key={section.id}
-                onClick={() => setActiveSection(section.id)}
+                onClick={() => {
+                  setActiveSection(section.id);
+                  setSidebarOpen(false);
+                }}
                 style={{
                   display: 'block',
                   width: '100%',
@@ -869,7 +906,7 @@ Enter new value: ****************************
           flex: 1,
           display: 'flex',
           justifyContent: 'center',
-          padding: '32px 24px',
+          padding: '24px 16px',
         }}>
           <div style={{ maxWidth: '700px', width: '100%' }}>
             {renderContent()}

@@ -203,17 +203,22 @@ function PricingContent() {
           <Link href="/" style={{ color: colors.mint, fontSize: '18px', textDecoration: 'none' }}>
             VaultAgent
           </Link>
-          <span style={{ color: colors.muted }}>|</span>
-          <span style={{ color: colors.muted }}>Pricing</span>
+          <span className="hidden sm:inline" style={{ color: colors.muted }}>|</span>
+          <span className="hidden sm:inline" style={{ color: colors.muted }}>Pricing</span>
         </div>
-        <nav style={{ display: 'flex', gap: '24px' }}>
+        <nav className="hidden sm:flex" style={{ gap: '24px' }}>
           <Link href="/" style={{ color: colors.muted, textDecoration: 'none' }}>[~] Home</Link>
           <Link href="/docs" style={{ color: colors.muted, textDecoration: 'none' }}>[?] Docs</Link>
           <span style={{ color: colors.mint }}>[$] Pricing</span>
         </nav>
+        <nav className="sm:hidden flex" style={{ gap: '12px', fontSize: '12px' }}>
+          <Link href="/" style={{ color: colors.muted, textDecoration: 'none' }}>[~]</Link>
+          <Link href="/docs" style={{ color: colors.muted, textDecoration: 'none' }}>[?]</Link>
+          <span style={{ color: colors.mint }}>[$]</span>
+        </nav>
       </header>
 
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px 16px' }} className="sm:py-12 sm:px-6">
         {/* Error Message */}
         {error && (
           <div
@@ -232,8 +237,9 @@ function PricingContent() {
         )}
 
         {/* Hero Section */}
-        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <pre style={{
+        <div style={{ textAlign: 'center', marginBottom: '32px' }} className="sm:mb-12">
+          {/* Desktop ASCII Banner */}
+          <pre className="hidden sm:block" style={{
             color: colors.mint,
             fontSize: '14px',
             lineHeight: '1.2',
@@ -248,6 +254,11 @@ function PricingContent() {
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝`}
           </pre>
+          {/* Mobile Title */}
+          <div className="sm:hidden mb-6">
+            <h1 style={{ color: colors.mint, fontSize: '18px', marginBottom: '8px' }}>[$] PRICING</h1>
+            <p style={{ color: colors.text, fontSize: '14px' }}>Secure your secrets at any scale</p>
+          </div>
 
           {/* Billing Toggle */}
           <div style={{
@@ -482,8 +493,9 @@ function PricingContent() {
         </div>
 
         {/* Feature Comparison */}
-        <div style={{ marginBottom: '64px' }}>
-          <pre style={{
+        <div style={{ marginBottom: '48px' }} className="sm:mb-16">
+          <h2 className="sm:hidden text-center mb-4" style={{ color: colors.mint, fontSize: '14px' }}>[~] FEATURE COMPARISON</h2>
+          <pre className="hidden sm:block" style={{
             color: colors.mint,
             fontSize: '12px',
             textAlign: 'center',
@@ -497,7 +509,8 @@ function PricingContent() {
 
           <div style={{
             border: `1px solid ${colors.muted}`,
-            overflow: 'auto',
+            overflowX: 'auto',
+            WebkitOverflowScrolling: 'touch',
           }}>
             <table style={{
               width: '100%',
@@ -562,8 +575,9 @@ function PricingContent() {
         </div>
 
         {/* FAQ Section */}
-        <div style={{ marginBottom: '64px' }}>
-          <pre style={{
+        <div style={{ marginBottom: '48px' }} className="sm:mb-16">
+          <h2 className="sm:hidden text-center mb-4" style={{ color: colors.mint, fontSize: '14px' }}>[?] FAQ</h2>
+          <pre className="hidden sm:block" style={{
             color: colors.mint,
             fontSize: '12px',
             textAlign: 'center',
@@ -609,7 +623,17 @@ function PricingContent() {
 
         {/* CTA Section */}
         <div style={{ textAlign: 'center' }}>
-          <pre style={{
+          {/* Mobile CTA */}
+          <div className="sm:hidden mb-6 p-4" style={{ border: `1px solid ${colors.lavender}` }}>
+            <p style={{ color: colors.lavender, marginBottom: '8px' }}>
+              {user ? 'Ready to unlock more features?' : "Ready to secure your AI agent's secrets?"}
+            </p>
+            <p style={{ color: colors.muted, fontSize: '12px' }}>
+              {user ? 'Upgrade your plan to access more vaults and secrets' : 'Start with our free tier - no credit card required'}
+            </p>
+          </div>
+          {/* Desktop CTA */}
+          <pre className="hidden sm:block" style={{
             color: colors.lavender,
             fontSize: '12px',
             margin: '0 0 24px 0',
