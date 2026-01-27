@@ -28,7 +28,7 @@ export async function deriveKey(
   return crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
-      salt: salt,
+      salt: salt.buffer as ArrayBuffer,
       iterations: 100000,  // High iteration count for security
       hash: 'SHA-256'
     },
@@ -59,7 +59,7 @@ export async function encryptSecret(
   const plaintextBuffer = encoder.encode(plaintext)
   
   const encryptedBuffer = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv: iv },
+    { name: 'AES-GCM', iv: iv.buffer as ArrayBuffer },
     key,
     plaintextBuffer
   )
@@ -92,7 +92,7 @@ export async function decryptSecret(
   
   // Decrypt
   const decryptedBuffer = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: new Uint8Array(ivBuffer) },
+    { name: 'AES-GCM', iv: ivBuffer },
     key,
     encryptedBuffer
   )
