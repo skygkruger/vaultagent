@@ -127,6 +127,41 @@ export default function DashboardLayout({
           </div>
         </div>
 
+        {/* Upgrade Prompt - Only show for free tier */}
+        {(profile?.tier === 'free' || !profile?.tier) && (
+          <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
+            <Link
+              href="/dashboard/account"
+              className="block w-full text-center text-xs px-3 py-2 transition-all hover:opacity-80"
+              style={{
+                backgroundColor: '#a8d8b9',
+                color: '#1a1a2e',
+              }}
+            >
+              [*] UPGRADE PLAN
+            </Link>
+            <p className="text-xs mt-2 text-center" style={{ color: '#6e6a86' }}>
+              Get more vaults & secrets
+            </p>
+          </div>
+        )}
+
+        {/* Manage Subscription - Show for paid tiers */}
+        {profile?.tier && profile.tier !== 'free' && (
+          <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
+            <Link
+              href="/dashboard/account"
+              className="block w-full text-center text-xs px-3 py-2 transition-all hover:opacity-80"
+              style={{
+                border: `1px solid ${tierColors[profile.tier]}`,
+                color: tierColors[profile.tier],
+              }}
+            >
+              [~] MANAGE PLAN
+            </Link>
+          </div>
+        )}
+
         {/* Sign Out */}
         <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
           <button
