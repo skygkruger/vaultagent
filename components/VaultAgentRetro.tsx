@@ -72,7 +72,7 @@ export default function VaultAgentRetro() {
       {/* ═══════════════════════════════════════════════════════ */}
 
       <header className="border-b" style={{ borderColor: '#6e6a86' }}>
-        <div className="flex justify-center px-4">
+        <div className="flex justify-between items-center px-4">
           <div className="text-xs py-2" style={{ color: '#a8d8b9' }}>
             <pre style={{ margin: 0, overflow: 'visible' }}>╔════════════════════════════════════════════════════════════════════════════════╗</pre>
             <div style={{ display: 'flex', fontFamily: 'inherit', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -87,6 +87,17 @@ export default function VaultAgentRetro() {
             </div>
             <pre style={{ margin: 0, overflow: 'visible' }}>╚════════════════════════════════════════════════════════════════════════════════╝</pre>
           </div>
+          <Link
+            href="/auth/sign-in"
+            className="text-sm font-bold px-4 py-2 transition-all hover:opacity-80"
+            style={{
+              color: '#1a1a2e',
+              backgroundColor: '#a8d8b9',
+              marginLeft: '24px'
+            }}
+          >
+            LOGIN
+          </Link>
         </div>
       </header>
 
@@ -565,11 +576,17 @@ export default function VaultAgentRetro() {
 ║      [/] Unlimited sessions     ║
 ║      [/] Audit export           ║
 ║      [x] Team features          ║
-║                                 ║
-║     ╔═════════════════════╗     ║
+║                                 ║`}
+              </pre>
+              <Link href="/pricing" className="block hover:opacity-80 transition-opacity">
+                <pre className="text-xs leading-tight">
+{`║     ╔═════════════════════╗     ║
 ║     ║  [>] UPGRADE NOW    ║     ║
-║     ╚═════════════════════╝     ║
-║                                 ║
+║     ╚═════════════════════╝     ║`}
+                </pre>
+              </Link>
+              <pre className="text-xs leading-tight">
+{`║                                 ║
 ╚═════════════════════════════════╝`}
               </pre>
             </div>
@@ -586,9 +603,15 @@ export default function VaultAgentRetro() {
 ║  [/] 500 secrets                       [/] Unlimited secrets                ║
 ║  [/] Team sharing                      [/] SSO integration                  ║
 ║  [/] Role-based access                 [/] Compliance reports               ║
-║                                                                             ║
-║                          [>] CONTACT SALES                                  ║
-╚═════════════════════════════════════════════════════════════════════════════╝`}
+║                                                                             ║`}
+              </pre>
+              <Link href="/pricing" className="block hover:opacity-80 transition-opacity">
+                <pre className="text-xs leading-tight">
+{`║                           [>] SEE PRICING                                   ║`}
+                </pre>
+              </Link>
+              <pre className="text-xs leading-tight">
+{`╚═════════════════════════════════════════════════════════════════════════════╝`}
               </pre>
             </div>
           </div>
