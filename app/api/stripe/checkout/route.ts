@@ -50,6 +50,15 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // Validate price ID is a real Stripe price (not a placeholder)
+    if (priceId.startsWith('price_') && !priceId.startsWith('price_1')) {
+      console.error('Invalid price ID - appears to be placeholder:', priceId)
+      return NextResponse.json(
+        { error: `Price ID not configured for ${plan} ${billing}. Check Vercel environment variables.` },
+        { status: 500 }
+      )
+    }
+
     // Create or get Stripe customer
     let customerId = profile.stripe_customer_id
 
@@ -88,6 +97,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: session.url })
   } catch (err) {
     console.error('Stripe checkout error:', err)
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+    return NextResponse.json(
+      { error: `Failed to create checkout session: ${errorMessage}` },
+      { status: 500 }
+    )
   }
 }
