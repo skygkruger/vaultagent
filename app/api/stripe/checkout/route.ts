@@ -15,15 +15,15 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const PRICE_IDS: Record<string, Record<string, string>> = {
   pro: {
     monthly: process.env.STRIPE_PRICE_PRO_MONTHLY || 'price_pro_monthly',
-    yearly: process.env.STRIPE_PRICE_PRO_YEARLY || 'price_pro_yearly',
+    yearly: process.env.STRIPE_PRICE_PRO_ANNUAL || process.env.STRIPE_PRICE_PRO_YEARLY || 'price_pro_yearly',
   },
   team: {
     monthly: process.env.STRIPE_PRICE_TEAM_MONTHLY || 'price_team_monthly',
-    yearly: process.env.STRIPE_PRICE_TEAM_YEARLY || 'price_team_yearly',
+    yearly: process.env.STRIPE_PRICE_TEAM_ANNUAL || process.env.STRIPE_PRICE_TEAM_YEARLY || 'price_team_yearly',
   },
   enterprise: {
     monthly: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || 'price_enterprise_monthly',
-    yearly: process.env.STRIPE_PRICE_ENTERPRISE_YEARLY || 'price_enterprise_yearly',
+    yearly: process.env.STRIPE_PRICE_ENTERPRISE_ANNUAL || process.env.STRIPE_PRICE_ENTERPRISE_YEARLY || 'price_enterprise_yearly',
   },
 }
 

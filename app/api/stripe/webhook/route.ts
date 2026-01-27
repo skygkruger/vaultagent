@@ -38,7 +38,10 @@ function getPriceToTier(): Record<string, keyof typeof TIER_LIMITS> {
     [process.env.STRIPE_PRICE_PRO_MONTHLY || '']: 'pro',
     [process.env.STRIPE_PRICE_TEAM_MONTHLY || '']: 'team',
     [process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || '']: 'enterprise',
-    // Annual prices
+    // Annual prices (support both ANNUAL and YEARLY naming)
+    [process.env.STRIPE_PRICE_PRO_ANNUAL || '']: 'pro',
+    [process.env.STRIPE_PRICE_TEAM_ANNUAL || '']: 'team',
+    [process.env.STRIPE_PRICE_ENTERPRISE_ANNUAL || '']: 'enterprise',
     [process.env.STRIPE_PRICE_PRO_YEARLY || '']: 'pro',
     [process.env.STRIPE_PRICE_TEAM_YEARLY || '']: 'team',
     [process.env.STRIPE_PRICE_ENTERPRISE_YEARLY || '']: 'enterprise',
@@ -121,38 +124,81 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const supabase = getSupabaseAdmin() as any
   const PRICE_TO_TIER = getPriceToTier()
 
-  if (userId && customerId) {
-    // Link Stripe customer to user profile
-    await supabase
+  console.log('Checkout completed webhook received:', { customerId, userId, subscriptionId })
+
+  if (!userId) {
+    console.error('No userId (client_reference_id) in checkout session!')
+    return
+  }
+
+  if (!customerId) {
+    console.error('No customerId in checkout session!')
+    return
+  }
+
+  // Link Stripe customer to user profile
+  const { error: linkError } = await supabase
+    .from('profiles')
+    .update({ stripe_customer_id: customerId })
+    .eq('id', userId)
+
+  if (linkError) {
+    console.error('Error linking Stripe customer:', linkError)
+  } else {
+    console.log(`Linked Stripe customer ${customerId} to user ${userId}`)
+  }
+
+  // Also update the tier immediately from the subscription
+  if (subscriptionId) {
+    try {
+      const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
+      const priceId = subscription.items.data[0]?.price.id
+      console.log('Retrieved subscription, priceId:', priceId)
+      console.log('Available price mappings:', PRICE_TO_TIER)
+
+      const tier = PRICE_TO_TIER[priceId] || 'pro' // Default to pro if price not found
+      const limits = TIER_LIMITS[tier]
+
+      console.log(`Updating user ${userId} to tier ${tier} with limits:`, limits)
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({
+          tier,
+          vault_limit: limits.vault_limit,
+          secret_limit: limits.secret_limit,
+          session_limit: limits.session_limit,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', userId)
+
+      if (updateError) {
+        console.error('Error updating user tier:', updateError)
+      } else {
+        console.log(`Checkout completed: Updated user ${userId} to tier ${tier}`)
+      }
+    } catch (err) {
+      console.error('Error updating tier on checkout:', err)
+    }
+  } else {
+    console.log('No subscriptionId in session, defaulting to pro tier')
+    // No subscription ID - this might be a one-time payment, default to pro
+    const limits = TIER_LIMITS['pro']
+    const { error: updateError } = await supabase
       .from('profiles')
-      .update({ stripe_customer_id: customerId })
+      .update({
+        tier: 'pro',
+        vault_limit: limits.vault_limit,
+        secret_limit: limits.secret_limit,
+        session_limit: limits.session_limit,
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', userId)
 
-    console.log(`Linked Stripe customer ${customerId} to user ${userId}`)
-
-    // Also update the tier immediately from the subscription
-    if (subscriptionId) {
-      try {
-        const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
-        const priceId = subscription.items.data[0]?.price.id
-        const tier = PRICE_TO_TIER[priceId] || 'pro' // Default to pro if price not found
-        const limits = TIER_LIMITS[tier]
-
-        await supabase
-          .from('profiles')
-          .update({
-            tier,
-            vault_limit: limits.vault_limit,
-            secret_limit: limits.secret_limit,
-            session_limit: limits.session_limit,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', userId)
-
-        console.log(`Checkout completed: Updated user ${userId} to tier ${tier}`)
-      } catch (err) {
-        console.error('Error updating tier on checkout:', err)
-      }
+    if (updateError) {
+      console.error('Error updating user tier (default pro):', updateError)
+    } else {
+      console.log(`Updated user ${userId} to pro tier (no subscription)`)
     }
   }
 }
