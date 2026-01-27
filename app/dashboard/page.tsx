@@ -172,6 +172,16 @@ export default function DashboardPage() {
     fetchSecrets()
   }, [selectedVault])
 
+  // Auto-dismiss errors after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null)
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [error])
+
   // Add new secret
   const handleAddSecret = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -397,14 +407,21 @@ export default function DashboardPage() {
 
       {error && (
         <div
-          className="p-3 mb-6 text-xs"
+          className="p-3 mb-6 text-xs flex justify-between items-center"
           style={{
             backgroundColor: '#2a1a2e',
             border: '1px solid #eb6f92',
             color: '#eb6f92',
           }}
         >
-          [!] {error}
+          <span>[!] {error}</span>
+          <button
+            onClick={() => setError(null)}
+            className="ml-4 hover:opacity-70"
+            style={{ color: '#eb6f92' }}
+          >
+            [x]
+          </button>
         </div>
       )}
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 
@@ -81,6 +81,21 @@ export default function AccountPage() {
   const [changingPassword, setChangingPassword] = useState(false)
 
   const tierInfo = TIER_INFO[profile?.tier || 'free']
+
+  // Auto-dismiss alerts after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [error])
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(null), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [success])
 
   // Get display price based on billing period
   const getPrice = (tier: string) => {
@@ -202,27 +217,39 @@ export default function AccountPage() {
       {/* Alerts */}
       {error && (
         <div
-          className="p-3 mb-6 text-xs"
+          className="p-3 mb-6 text-xs flex justify-between items-center"
           style={{
             backgroundColor: '#2a1a2e',
             border: '1px solid #eb6f92',
             color: '#eb6f92',
           }}
         >
-          [!] {error}
+          <span>[!] {error}</span>
+          <button
+            onClick={() => setError(null)}
+            className="ml-4 hover:opacity-70"
+          >
+            [x]
+          </button>
         </div>
       )}
 
       {success && (
         <div
-          className="p-3 mb-6 text-xs"
+          className="p-3 mb-6 text-xs flex justify-between items-center"
           style={{
             backgroundColor: '#1a2e1a',
             border: '1px solid #a8d8b9',
             color: '#a8d8b9',
           }}
         >
-          [✓] {success}
+          <span>[✓] {success}</span>
+          <button
+            onClick={() => setSuccess(null)}
+            className="ml-4 hover:opacity-70"
+          >
+            [x]
+          </button>
         </div>
       )}
 
