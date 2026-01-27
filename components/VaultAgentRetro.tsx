@@ -78,10 +78,10 @@ export default function VaultAgentRetro() {
             <div style={{ display: 'flex', fontFamily: 'inherit', justifyContent: 'space-between', alignItems: 'center' }}>
               <span>║  VAULTAGENT</span>
               <div style={{ display: 'flex', gap: '8px' }}>
-                <Link href="/docs" className="hover:underline">[DOCS]</Link>
-                <Link href="/pricing" className="hover:underline">[PRICING]</Link>
-                <a href="https://github.com/skygkruger" target="_blank" rel="noopener noreferrer" className="hover:underline">[GITHUB]</a>
-                <a href="https://x.com/run_veridian" target="_blank" rel="noopener noreferrer" className="hover:underline">[@]</a>
+                <Link href="/docs" className="hover-text-glow transition-all">[DOCS]</Link>
+                <Link href="/pricing" className="hover-text-glow transition-all">[PRICING]</Link>
+                <a href="https://github.com/skygkruger" target="_blank" rel="noopener noreferrer" className="hover-text-glow transition-all">[GITHUB]</a>
+                <a href="https://x.com/run_veridian" target="_blank" rel="noopener noreferrer" className="hover-text-glow transition-all">[@]</a>
                 <span>  ║</span>
               </div>
             </div>
@@ -89,7 +89,7 @@ export default function VaultAgentRetro() {
           </div>
           <Link
             href="/auth/sign-in"
-            className="text-sm font-bold px-4 py-2 transition-all hover:opacity-80"
+            className="text-sm font-bold px-4 py-2 transition-all hover-glow hover-lift"
             style={{
               color: '#1a1a2e',
               backgroundColor: '#a8d8b9',
@@ -174,7 +174,7 @@ export default function VaultAgentRetro() {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(i)}
-                  className="flex-1 text-center py-1 text-xs transition-colors"
+                  className="flex-1 text-center py-1 text-xs transition-all hover-text-glow"
                   style={{
                     color: activeTab === i ? '#a8d8b9' : '#6e6a86',
                     width: '18ch',
@@ -299,7 +299,7 @@ export default function VaultAgentRetro() {
               <button
                 onClick={handleCreateSecret}
                 disabled={isCreating || !secretName.trim() || !secretValue.trim()}
-                className="transition-all hover:translate-y-px disabled:opacity-50"
+                className="transition-all hover-glow hover-lift disabled:opacity-50"
                 style={{ color: '#a8d8b9' }}
               >
                 <pre className="text-xs leading-tight">
@@ -384,7 +384,7 @@ export default function VaultAgentRetro() {
             {/* Create Session Button */}
             <div className="flex justify-center">
               <button
-                className="transition-all hover:translate-y-px"
+                className="transition-all hover-glow hover-lift"
                 style={{ color: '#a8d8b9' }}
               >
                 <pre className="text-xs leading-tight">
@@ -482,7 +482,7 @@ export default function VaultAgentRetro() {
           <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// FEATURES`}</p>
 
           <div className="flex flex-col md:flex-row justify-center gap-4">
-            <div style={{ color: '#a8d8b9' }}>
+            <div style={{ color: '#a8d8b9' }} className="hover-border-glow hover-lift transition-all cursor-default">
               <pre className="text-xs leading-tight">
 {`┌───────────────────────────┐
 │                           │
@@ -496,7 +496,7 @@ export default function VaultAgentRetro() {
               </pre>
             </div>
 
-            <div style={{ color: '#c4a7e7' }}>
+            <div style={{ color: '#c4a7e7' }} className="hover-border-glow hover-lift transition-all cursor-default">
               <pre className="text-xs leading-tight">
 {`┌───────────────────────────┐
 │                           │
@@ -510,7 +510,7 @@ export default function VaultAgentRetro() {
               </pre>
             </div>
 
-            <div style={{ color: '#7eb8da' }}>
+            <div style={{ color: '#7eb8da' }} className="hover-border-glow hover-lift transition-all cursor-default">
               <pre className="text-xs leading-tight">
 {`┌───────────────────────────┐
 │                           │
@@ -578,7 +578,7 @@ export default function VaultAgentRetro() {
 ║      [x] Team features          ║
 ║                                 ║`}
               </pre>
-              <Link href="/pricing" className="block hover:opacity-80 transition-opacity">
+              <Link href="/pricing" className="block hover-glow hover-scale transition-all">
                 <pre className="text-xs leading-tight">
 {`║     ╔═════════════════════╗     ║
 ║     ║  [>] UPGRADE NOW    ║     ║
@@ -605,7 +605,7 @@ export default function VaultAgentRetro() {
 ║  [/] Role-based access                 [/] Compliance reports               ║
 ║                                                                             ║`}
               </pre>
-              <Link href="/pricing" className="block hover:opacity-80 transition-opacity">
+              <Link href="/pricing" className="block hover-glow hover-text-glow transition-all">
                 <pre className="text-xs leading-tight">
 {`║                           [>] SEE PRICING                                   ║`}
                 </pre>
@@ -734,12 +734,12 @@ export default function VaultAgentRetro() {
               <div style={{ marginTop: '16px' }}>(c) 2025 VAULTAGENT</div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', fontFamily: 'inherit', marginTop: '16px', marginBottom: '16px' }}>
-              <Link href="/" className="hover:text-[#a8d8b9] transition-colors">[HOME]</Link>
-              <Link href="/docs" className="hover:text-[#a8d8b9] transition-colors">[DOCS]</Link>
-              <Link href="/pricing" className="hover:text-[#a8d8b9] transition-colors">[PRICING]</Link>
-              <a href="https://github.com/skygkruger" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] transition-colors">[GITHUB]</a>
-              <a href="https://x.com/run_veridian" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] transition-colors">[X]</a>
-              <a href="mailto:sky@veridian.run" className="hover:text-[#a8d8b9] transition-colors">[CONTACT]</a>
+              <Link href="/" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[HOME]</Link>
+              <Link href="/docs" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[DOCS]</Link>
+              <Link href="/pricing" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[PRICING]</Link>
+              <a href="https://github.com/skygkruger" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[GITHUB]</a>
+              <a href="https://x.com/run_veridian" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[X]</a>
+              <a href="mailto:sky@veridian.run" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[CONTACT]</a>
             </div>
             <pre style={{ margin: 0, overflow: 'visible', textAlign: 'center' }}>════════════════════════════════════════════════════════════════════════════════</pre>
           </div>

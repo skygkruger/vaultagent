@@ -93,7 +93,7 @@ export default function DashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className="block px-3 py-2 text-xs mb-1 transition-all"
+                className="block px-3 py-2 text-xs mb-1 transition-all hover-border-glow"
                 style={{
                   backgroundColor: isActive ? '#252542' : 'transparent',
                   color: isActive ? '#a8d8b9' : '#a8b2c3',
@@ -132,7 +132,7 @@ export default function DashboardLayout({
           <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
             <Link
               href="/dashboard/account"
-              className="block w-full text-center text-xs px-3 py-2 transition-all hover:opacity-80"
+              className="block w-full text-center text-xs px-3 py-2 transition-all hover-glow hover-lift"
               style={{
                 backgroundColor: '#a8d8b9',
                 color: '#1a1a2e',
@@ -151,7 +151,7 @@ export default function DashboardLayout({
           <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
             <Link
               href="/dashboard/account"
-              className="block w-full text-center text-xs px-3 py-2 transition-all hover:opacity-80"
+              className="block w-full text-center text-xs px-3 py-2 transition-all hover-border-glow hover-text-glow"
               style={{
                 border: `1px solid ${tierColors[profile.tier]}`,
                 color: tierColors[profile.tier],
@@ -166,7 +166,7 @@ export default function DashboardLayout({
         <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
           <button
             onClick={handleSignOut}
-            className="w-full text-left text-xs px-3 py-2 transition-all hover:bg-[#252542]"
+            className="w-full text-left text-xs px-3 py-2 transition-all hover:bg-[#252542] hover-text-glow"
             style={{ color: '#eb6f92' }}
           >
             [x] Sign Out

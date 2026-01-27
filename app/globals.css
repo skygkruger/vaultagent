@@ -198,3 +198,155 @@ code {
 .bg-terminal { background-color: var(--bg-primary); }
 .bg-terminal-light { background-color: var(--bg-secondary); }
 .bg-terminal-dark { background-color: var(--bg-tertiary); }
+
+/* ═══════════════════════════════════════════════════════════════
+   HOVER EFFECTS - Terminal Style
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Glow effect for primary buttons */
+.hover-glow {
+  transition: all 0.2s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 12px rgba(168, 216, 185, 0.4);
+  text-shadow: 0 0 8px rgba(168, 216, 185, 0.6);
+}
+
+/* Subtle lift effect */
+.hover-lift {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Terminal flicker on hover */
+@keyframes terminal-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+}
+
+.hover-flicker:hover {
+  animation: terminal-flicker 0.15s ease-in-out;
+}
+
+/* Border glow effect */
+.hover-border-glow {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-border-glow:hover {
+  border-color: var(--accent-mint) !important;
+  box-shadow: 0 0 8px rgba(168, 216, 185, 0.3), inset 0 0 8px rgba(168, 216, 185, 0.1);
+}
+
+/* Text glow effect */
+.hover-text-glow {
+  transition: text-shadow 0.2s ease, color 0.2s ease;
+}
+
+.hover-text-glow:hover {
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* Scale effect for cards */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Underline sweep effect */
+.hover-underline {
+  position: relative;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--accent-mint);
+  transition: width 0.3s ease;
+}
+
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* Bracket highlight effect for nav items */
+.hover-bracket {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.hover-bracket::before,
+.hover-bracket::after {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.hover-bracket::before {
+  content: '[';
+  left: -12px;
+  transform: translateX(4px);
+}
+
+.hover-bracket::after {
+  content: ']';
+  right: -12px;
+  transform: translateX(-4px);
+}
+
+.hover-bracket:hover::before,
+.hover-bracket:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.hover-bracket:hover {
+  color: var(--accent-mint);
+}
+
+/* Pulse effect for important CTAs */
+@keyframes subtle-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(168, 216, 185, 0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(168, 216, 185, 0); }
+}
+
+.hover-pulse:hover {
+  animation: subtle-pulse 1s ease-in-out infinite;
+}
+
+/* Background slide effect */
+.hover-bg-slide {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hover-bg-slide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(168, 216, 185, 0.1), transparent);
+  transition: left 0.5s ease;
+  z-index: -1;
+}
+
+.hover-bg-slide:hover::before {
+  left: 100%;
+}

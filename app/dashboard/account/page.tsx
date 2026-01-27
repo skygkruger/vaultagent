@@ -253,7 +253,7 @@ export default function AccountPage() {
         {!showPasswordForm ? (
           <button
             onClick={() => setShowPasswordForm(true)}
-            className="text-xs px-4 py-2"
+            className="text-xs px-4 py-2 transition-all hover-border-glow hover-text-glow"
             style={{
               border: '1px solid #6e6a86',
               color: '#a8b2c3',
@@ -306,7 +306,7 @@ export default function AccountPage() {
               <button
                 type="submit"
                 disabled={changingPassword}
-                className="text-xs px-4 py-2 disabled:opacity-50"
+                className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-glow hover-lift"
                 style={{
                   backgroundColor: '#a8d8b9',
                   color: '#1a1a2e',
@@ -321,7 +321,7 @@ export default function AccountPage() {
                   setNewPassword('')
                   setConfirmPassword('')
                 }}
-                className="text-xs px-4 py-2"
+                className="text-xs px-4 py-2 transition-all hover-border-glow hover-text-glow"
                 style={{
                   border: '1px solid #6e6a86',
                   color: '#6e6a86',
@@ -392,7 +392,7 @@ export default function AccountPage() {
               <button
                 onClick={() => handleUpgrade('pro')}
                 disabled={loading}
-                className="text-xs px-4 py-2 disabled:opacity-50"
+                className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow hover-lift"
                 style={{
                   border: '1px solid #a8d8b9',
                   color: '#a8d8b9',
@@ -404,7 +404,7 @@ export default function AccountPage() {
               <button
                 onClick={() => handleUpgrade('team')}
                 disabled={loading}
-                className="text-xs px-4 py-2 disabled:opacity-50"
+                className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow hover-lift"
                 style={{
                   border: '1px solid #c4a7e7',
                   color: '#c4a7e7',
@@ -416,7 +416,7 @@ export default function AccountPage() {
               <button
                 onClick={() => handleUpgrade('enterprise')}
                 disabled={loading}
-                className="text-xs px-4 py-2 disabled:opacity-50"
+                className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow hover-lift"
                 style={{
                   border: '1px solid #7eb8da',
                   color: '#7eb8da',
@@ -431,7 +431,7 @@ export default function AccountPage() {
           <button
             onClick={handleManageSubscription}
             disabled={loading}
-            className="text-xs px-4 py-2 disabled:opacity-50"
+            className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow"
             style={{
               border: '1px solid #6e6a86',
               color: '#a8b2c3',
@@ -516,7 +516,7 @@ export default function AccountPage() {
               alert('Account deletion coming soon. Contact support@vaultagent.dev')
             }
           }}
-          className="text-xs px-4 py-2"
+          className="text-xs px-4 py-2 transition-all hover:bg-[#eb6f92] hover:text-[#1a1a2e]"
           style={{
             border: '1px solid #eb6f92',
             color: '#eb6f92',
