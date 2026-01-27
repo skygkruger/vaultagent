@@ -29,7 +29,7 @@ export async function GET(
     .eq('user_id', userProfile.user.id)
     .single()
 
-  if (error) {
+  if (error || !data) {
     return NextResponse.json({ error: 'Vault not found' }, { status: 404 })
   }
 
@@ -60,8 +60,8 @@ export async function PATCH(
     .select()
     .single()
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error || !data) {
+    return NextResponse.json({ error: 'Vault not found' }, { status: 404 })
   }
 
   return NextResponse.json({ vault: data })
@@ -104,11 +104,15 @@ export async function DELETE(
   }
 
   // Log the action
-  await supabase.from('audit_logs').insert({
+  const { error: auditError } = await supabase.from('audit_logs').insert({
     user_id: userProfile.user.id,
     action: 'VAULT_DELETE',
     target: vault.name,
   })
+
+  if (auditError) {
+    console.error('Audit log failed:', auditError)
+  }
 
   return NextResponse.json({ success: true })
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { createClient } from '@supabase/supabase-js'
 import { getUserProfile } from '@/lib/supabase-server'
 
 // ═══════════════════════════════════════════════════════════════
@@ -23,24 +24,57 @@ export async function POST() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { profile } = userProfile
+  const { user, profile } = userProfile
 
-  if (!profile.stripe_customer_id) {
+  // Try to get customer ID, or search by email if not linked
+  let customerId = profile.stripe_customer_id
+
+  if (!customerId && user.email) {
+    console.log('Portal: No customer ID, searching by email:', user.email)
+    try {
+      const customers = await stripe.customers.list({
+        email: user.email,
+        limit: 1,
+      })
+      if (customers.data.length > 0) {
+        customerId = customers.data[0].id
+        console.log('Portal: Found customer by email:', customerId)
+
+        // Link the customer ID for future use
+        if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+          const supabaseAdmin = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_ROLE_KEY
+          )
+          await supabaseAdmin
+            .from('profiles')
+            .update({ stripe_customer_id: customerId })
+            .eq('id', user.id)
+          console.log('Portal: Linked customer ID to profile')
+        }
+      }
+    } catch (err) {
+      console.error('Error searching for customer:', err)
+    }
+  }
+
+  if (!customerId) {
     return NextResponse.json(
-      { error: 'No active subscription found' },
+      { error: 'No Stripe customer found. Please contact support if you have an active subscription.' },
       { status: 400 }
     )
   }
 
   try {
     const session = await stripe.billingPortal.sessions.create({
-      customer: profile.stripe_customer_id,
+      customer: customerId,
       return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/account`,
     })
 
     return NextResponse.json({ url: session.url })
   } catch (err) {
     console.error('Stripe portal error:', err)
-    return NextResponse.json({ error: 'Failed to create portal session' }, { status: 500 })
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+    return NextResponse.json({ error: `Failed to create portal session: ${errorMessage}` }, { status: 500 })
   }
 }

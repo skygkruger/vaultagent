@@ -82,9 +82,13 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   const priceId = subscription.items.data[0]?.price.id
   const PRICE_TO_TIER = getPriceToTier()
 
-  const tier = PRICE_TO_TIER[priceId] || 'free'
-  await updateUserTier(customerId, tier)
+  const tier = PRICE_TO_TIER[priceId]
+  if (!tier) {
+    console.error('Unknown price ID in subscription created:', priceId)
+    throw new Error(`Unknown price ID: ${priceId}`)
+  }
 
+  await updateUserTier(customerId, tier)
   console.log(`Subscription created: ${customerId} -> ${tier}`)
 }
 
@@ -95,7 +99,11 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 
   // Check if subscription is still active
   if (subscription.status === 'active' || subscription.status === 'trialing') {
-    const tier = PRICE_TO_TIER[priceId] || 'free'
+    const tier = PRICE_TO_TIER[priceId]
+    if (!tier) {
+      console.error('Unknown price ID in subscription updated:', priceId)
+      throw new Error(`Unknown price ID: ${priceId}`)
+    }
     await updateUserTier(customerId, tier)
     console.log(`Subscription updated: ${customerId} -> ${tier}`)
   } else if (
@@ -128,72 +136,88 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   if (!userId) {
     console.error('No userId (client_reference_id) in checkout session!')
-    return
+    throw new Error('Missing client_reference_id in checkout session')
   }
 
   if (!customerId) {
     console.error('No customerId in checkout session!')
-    return
+    throw new Error('Missing customer in checkout session')
   }
 
-  // Link Stripe customer to user profile
-  const { error: linkError } = await supabase
-    .from('profiles')
-    .update({ stripe_customer_id: customerId })
-    .eq('id', userId)
-
-  if (linkError) {
-    console.error('Error linking Stripe customer:', linkError)
-  } else {
-    console.log(`Linked Stripe customer ${customerId} to user ${userId}`)
+  if (!subscriptionId) {
+    console.error('CRITICAL: No subscriptionId in checkout session for user:', userId)
+    throw new Error('Missing subscription in checkout session')
   }
 
-  // Also update the tier immediately from the subscription
-  if (subscriptionId) {
-    try {
-      const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
-      const priceId = subscription.items.data[0]?.price.id
-      console.log('Retrieved subscription, priceId:', priceId)
-      console.log('Available price mappings:', PRICE_TO_TIER)
+  // Get subscription details to determine tier
+  try {
+    const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
+    const priceId = subscription.items.data[0]?.price.id
+    console.log('Retrieved subscription, priceId:', priceId)
+    console.log('Available price mappings:', PRICE_TO_TIER)
 
-      const tier = PRICE_TO_TIER[priceId]
-      if (!tier) {
-        console.error('CRITICAL: Unknown price ID, cannot determine tier:', priceId)
-        console.error('Available mappings:', PRICE_TO_TIER)
-        return // Don't update tier if we can't determine it
-      }
-      const limits = TIER_LIMITS[tier]
-
-      console.log(`Updating user ${userId} to tier ${tier} with limits:`, limits)
-
-      const { error: updateError } = await supabase
+    const tier = PRICE_TO_TIER[priceId]
+    if (!tier) {
+      console.error('CRITICAL: Unknown price ID, cannot determine tier:', priceId)
+      console.error('Available price mappings:', JSON.stringify(PRICE_TO_TIER))
+      // Still link the customer ID so we can fix manually
+      await supabase
         .from('profiles')
         .update({
-          tier,
-          vault_limit: limits.vault_limit,
-          secret_limit: limits.secret_limit,
-          session_limit: limits.session_limit,
+          stripe_customer_id: customerId,
           updated_at: new Date().toISOString(),
         })
         .eq('id', userId)
 
-      if (updateError) {
-        console.error('Error updating user tier:', updateError)
-      } else {
-        console.log(`Checkout completed: Updated user ${userId} to tier ${tier}`)
-      }
-    } catch (err) {
-      console.error('Error updating tier on checkout:', err)
+      // Throw error so Stripe knows to alert us
+      throw new Error(`Unknown price ID: ${priceId}. Customer linked but tier not set.`)
     }
-  } else {
-    // No subscription ID in checkout session - this shouldn't happen for subscription checkouts
-    // Log error but don't update tier to avoid giving free upgrades
-    console.error('CRITICAL: No subscriptionId in checkout session for user:', userId)
-    console.error('Session data:', { customerId, userId, subscriptionId })
+
+    const limits = TIER_LIMITS[tier]
+    console.log(`Updating user ${userId} to tier ${tier} with limits:`, limits)
+
+    // SINGLE ATOMIC UPDATE: Link customer ID AND update tier together
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        stripe_customer_id: customerId,
+        tier,
+        vault_limit: limits.vault_limit,
+        secret_limit: limits.secret_limit,
+        session_limit: limits.session_limit,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', userId)
+
+    if (updateError) {
+      console.error('Error updating user profile:', updateError)
+      throw new Error(`Failed to update profile: ${updateError.message}`)
+    }
+
+    console.log(`Checkout completed: Linked customer ${customerId} and updated user ${userId} to tier ${tier}`)
+  } catch (err) {
+    console.error('Error processing checkout completion:', err)
+    throw err // Re-throw so webhook returns 500 and Stripe retries
   }
 }
 
 export async function POST(request: NextRequest) {
+  // Validate required env vars upfront
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    console.error('CRITICAL: STRIPE_WEBHOOK_SECRET not configured')
+    return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
+  }
+
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.error('CRITICAL: STRIPE_SECRET_KEY not configured')
+    return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
+  }
+
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.error('CRITICAL: Supabase env vars not configured')
+    return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
+  }
+
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 
@@ -207,7 +231,7 @@ export async function POST(request: NextRequest) {
     event = getStripe().webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_SECRET
     )
   } catch (err) {
     console.error('Webhook signature verification failed:', err)

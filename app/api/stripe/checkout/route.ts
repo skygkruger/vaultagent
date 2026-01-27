@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { createClient } from '@supabase/supabase-js'
 import { getUserProfile } from '@/lib/supabase-server'
 
 // ═══════════════════════════════════════════════════════════════
@@ -11,20 +12,22 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover',
 })
 
-// Price IDs - Update these with your actual Stripe price IDs
-const PRICE_IDS: Record<string, Record<string, string>> = {
-  pro: {
-    monthly: process.env.STRIPE_PRICE_PRO_MONTHLY || 'price_pro_monthly',
-    yearly: process.env.STRIPE_PRICE_PRO_ANNUAL || process.env.STRIPE_PRICE_PRO_YEARLY || 'price_pro_yearly',
-  },
-  team: {
-    monthly: process.env.STRIPE_PRICE_TEAM_MONTHLY || 'price_team_monthly',
-    yearly: process.env.STRIPE_PRICE_TEAM_ANNUAL || process.env.STRIPE_PRICE_TEAM_YEARLY || 'price_team_yearly',
-  },
-  enterprise: {
-    monthly: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || 'price_enterprise_monthly',
-    yearly: process.env.STRIPE_PRICE_ENTERPRISE_ANNUAL || process.env.STRIPE_PRICE_ENTERPRISE_YEARLY || 'price_enterprise_yearly',
-  },
+// Price IDs - loaded from environment variables at runtime
+function getPriceIds(): Record<string, Record<string, string | undefined>> {
+  return {
+    pro: {
+      monthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
+      yearly: process.env.STRIPE_PRICE_PRO_ANNUAL || process.env.STRIPE_PRICE_PRO_YEARLY,
+    },
+    team: {
+      monthly: process.env.STRIPE_PRICE_TEAM_MONTHLY,
+      yearly: process.env.STRIPE_PRICE_TEAM_ANNUAL || process.env.STRIPE_PRICE_TEAM_YEARLY,
+    },
+    enterprise: {
+      monthly: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY,
+      yearly: process.env.STRIPE_PRICE_ENTERPRISE_ANNUAL || process.env.STRIPE_PRICE_ENTERPRISE_YEARLY,
+    },
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -50,32 +53,69 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  const PRICE_IDS = getPriceIds()
   const priceId = PRICE_IDS[plan]?.[billing]
+
+  // Validate price ID exists and is a real Stripe price
   if (!priceId) {
-    return NextResponse.json({ error: 'Invalid plan or billing period' }, { status: 400 })
+    console.error(`Price ID not configured for ${plan} ${billing}`)
+    return NextResponse.json(
+      { error: `Price not configured for ${plan} ${billing}. Contact support.` },
+      { status: 500 }
+    )
+  }
+
+  if (!priceId.startsWith('price_1')) {
+    console.error('Invalid price ID format:', priceId)
+    return NextResponse.json(
+      { error: 'Invalid price configuration. Contact support.' },
+      { status: 500 }
+    )
   }
 
   try {
-    // Validate price ID is a real Stripe price (not a placeholder)
-    if (priceId.startsWith('price_') && !priceId.startsWith('price_1')) {
-      console.error('Invalid price ID - appears to be placeholder:', priceId)
-      return NextResponse.json(
-        { error: `Price ID not configured for ${plan} ${billing}. Check Vercel environment variables.` },
-        { status: 500 }
-      )
-    }
 
     // Create or get Stripe customer
     let customerId = profile.stripe_customer_id
 
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      // First check if customer already exists by email
+      const existingCustomers = await stripe.customers.list({
         email: user.email!,
-        metadata: {
-          supabase_user_id: user.id,
-        },
+        limit: 1,
       })
-      customerId = customer.id
+
+      if (existingCustomers.data.length > 0) {
+        customerId = existingCustomers.data[0].id
+        console.log('Found existing Stripe customer:', customerId)
+      } else {
+        const customer = await stripe.customers.create({
+          email: user.email!,
+          metadata: {
+            supabase_user_id: user.id,
+          },
+        })
+        customerId = customer.id
+        console.log('Created new Stripe customer:', customerId)
+      }
+
+      // Immediately link customer ID to profile (don't wait for webhook)
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        const supabaseAdmin = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL,
+          process.env.SUPABASE_SERVICE_ROLE_KEY
+        )
+        const { error: linkError } = await supabaseAdmin
+          .from('profiles')
+          .update({ stripe_customer_id: customerId })
+          .eq('id', user.id)
+
+        if (linkError) {
+          console.error('Error linking customer ID:', linkError)
+        } else {
+          console.log('Linked customer ID to profile before checkout')
+        }
+      }
     }
 
     // Create checkout session

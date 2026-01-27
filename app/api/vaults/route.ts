@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     .select('*', { count: 'exact', head: true })
     .eq('user_id', user.id)
 
-  const tierLimits = TIER_LIMITS[profile.tier as keyof typeof TIER_LIMITS]
+  const tierLimits = TIER_LIMITS[profile.tier as keyof typeof TIER_LIMITS] || TIER_LIMITS.free
   if (tierLimits.vault_limit !== -1 && (count || 0) >= tierLimits.vault_limit) {
     return NextResponse.json(
       {
@@ -82,11 +82,15 @@ export async function POST(request: NextRequest) {
   }
 
   // Log the action
-  await supabase.from('audit_logs').insert({
+  const { error: auditError } = await supabase.from('audit_logs').insert({
     user_id: user.id,
     action: 'VAULT_CREATE',
     target: name,
   })
+
+  if (auditError) {
+    console.error('Audit log failed:', auditError)
+  }
 
   return NextResponse.json({ vault: data }, { status: 201 })
 }

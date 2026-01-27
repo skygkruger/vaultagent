@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Check session limit (daily limit for free tier)
-  const tierLimits = TIER_LIMITS[profile.tier as keyof typeof TIER_LIMITS]
+  const tierLimits = TIER_LIMITS[profile.tier as keyof typeof TIER_LIMITS] || TIER_LIMITS.free
   if (tierLimits.session_limit !== -1) {
     // Count sessions created today
     const today = new Date()

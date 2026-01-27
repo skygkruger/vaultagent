@@ -37,11 +37,15 @@ export async function GET(
     .eq('id', id)
 
   // Log the access
-  await supabase.from('audit_logs').insert({
+  const { error: auditError } = await supabase.from('audit_logs').insert({
     user_id: userProfile.user.id,
     action: 'SECRET_ACCESS',
     target: data.name,
   })
+
+  if (auditError) {
+    console.error('Audit log failed:', auditError)
+  }
 
   return NextResponse.json({ secret: data })
 }
@@ -80,16 +84,20 @@ export async function PATCH(
     .select('id, vault_id, name, created_at, updated_at')
     .single()
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error || !data) {
+    return NextResponse.json({ error: 'Secret not found' }, { status: 404 })
   }
 
   // Log the action
-  await supabase.from('audit_logs').insert({
+  const { error: auditError } = await supabase.from('audit_logs').insert({
     user_id: userProfile.user.id,
     action: 'SECRET_UPDATE',
     target: data.name,
   })
+
+  if (auditError) {
+    console.error('Audit log failed:', auditError)
+  }
 
   return NextResponse.json({ secret: data })
 }
@@ -131,11 +139,15 @@ export async function DELETE(
   }
 
   // Log the action
-  await supabase.from('audit_logs').insert({
+  const { error: auditError } = await supabase.from('audit_logs').insert({
     user_id: userProfile.user.id,
     action: 'SECRET_DELETE',
     target: secret.name,
   })
+
+  if (auditError) {
+    console.error('Audit log failed:', auditError)
+  }
 
   return NextResponse.json({ success: true })
 }
