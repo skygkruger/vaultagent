@@ -412,7 +412,7 @@ export default function AccountPage() {
         </div>
 
         {/* Upgrade Options or Manage */}
-        {profile?.tier === 'free' ? (
+        {(!profile?.tier || profile?.tier === 'free') ? (
           <div className="space-y-4">
             <p className="text-xs" style={{ color: '#6e6a86' }}>
               Upgrade for more vaults, secrets, and longer audit retention:
@@ -499,18 +499,47 @@ export default function AccountPage() {
             </div>
           </div>
         ) : (
-          <button
-            onClick={handleManageSubscription}
-            disabled={loading}
-            className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow"
-            style={{
-              border: '1px solid #6e6a86',
-              color: '#a8b2c3',
-              backgroundColor: 'transparent',
-            }}
-          >
-            {loading ? '[~] LOADING...' : '[>] MANAGE SUBSCRIPTION'}
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={handleManageSubscription}
+              disabled={loading}
+              className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow"
+              style={{
+                border: '1px solid #6e6a86',
+                color: '#a8b2c3',
+                backgroundColor: 'transparent',
+              }}
+            >
+              {loading ? '[~] LOADING...' : '[>] MANAGE SUBSCRIPTION'}
+            </button>
+            <button
+              onClick={async () => {
+                setLoading(true)
+                try {
+                  const res = await fetch('/api/stripe/sync', { method: 'POST' })
+                  const data = await res.json()
+                  if (data.synced) {
+                    setSuccess(`Synced: ${data.tier} tier`)
+                    window.location.reload()
+                  } else {
+                    setError(data.error || data.message || 'Sync failed')
+                  }
+                } catch {
+                  setError('Failed to sync')
+                }
+                setLoading(false)
+              }}
+              disabled={loading}
+              className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow"
+              style={{
+                border: '1px solid #a8d8b9',
+                color: '#a8d8b9',
+                backgroundColor: 'transparent',
+              }}
+            >
+              {loading ? '[~] SYNCING...' : '[~] SYNC FROM STRIPE'}
+            </button>
+          </div>
         )}
       </div>
 
@@ -531,7 +560,7 @@ export default function AccountPage() {
               VAULTS
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
-              0 / {profile?.vault_limit === -1 ? '∞' : profile?.vault_limit}
+              0 / {profile?.vault_limit === -1 ? '∞' : (profile?.vault_limit ?? 1)}
             </div>
           </div>
           <div>
@@ -539,7 +568,7 @@ export default function AccountPage() {
               SECRETS
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
-              0 / {profile?.secret_limit === -1 ? '∞' : profile?.secret_limit}
+              0 / {profile?.secret_limit === -1 ? '∞' : (profile?.secret_limit ?? 10)}
             </div>
           </div>
           <div>
@@ -547,7 +576,7 @@ export default function AccountPage() {
               SESSIONS TODAY
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
-              0 / {profile?.session_limit === -1 ? '∞' : profile?.session_limit}
+              0 / {profile?.session_limit === -1 ? '∞' : (profile?.session_limit ?? 50)}
             </div>
           </div>
           <div>
