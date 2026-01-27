@@ -61,7 +61,7 @@ async function updateUserTier(
       secret_limit: limits.secret_limit,
       session_limit: limits.session_limit,
       updated_at: new Date().toISOString(),
-    })
+    } as Record<string, unknown>)
     .eq('stripe_customer_id', customerId)
     .select()
     .single()
@@ -123,7 +123,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // Link Stripe customer to user profile
     await supabase
       .from('profiles')
-      .update({ stripe_customer_id: customerId })
+      .update({ stripe_customer_id: customerId } as Record<string, unknown>)
       .eq('id', userId)
 
     console.log(`Linked Stripe customer ${customerId} to user ${userId}`)
