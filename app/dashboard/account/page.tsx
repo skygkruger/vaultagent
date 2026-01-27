@@ -65,7 +65,7 @@ const TIER_INFO: Record<
 }
 
 export default function AccountPage() {
-  const { user, profile, updatePassword } = useAuth()
+  const { user, profile, updatePassword, refreshProfile } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -542,12 +542,15 @@ export default function AccountPage() {
             <button
               onClick={async () => {
                 setLoading(true)
+                setError(null)
                 try {
                   const res = await fetch('/api/stripe/sync', { method: 'POST' })
                   const data = await res.json()
                   if (data.synced) {
                     setSuccess(`Synced: ${data.tier} tier`)
-                    window.location.reload()
+                    // Wait a moment for database to propagate, then refresh profile
+                    await new Promise(resolve => setTimeout(resolve, 500))
+                    await refreshProfile()
                   } else {
                     setError(data.error || data.message || 'Sync failed')
                   }
