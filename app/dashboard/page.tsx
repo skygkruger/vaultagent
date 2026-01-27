@@ -58,26 +58,43 @@ export default function DashboardPage() {
   const [newVaultDescription, setNewVaultDescription] = useState('')
   const [creatingVault, setCreatingVault] = useState(false)
 
-  // Fetch vaults
+  // Fetch vaults - simplified with hard timeout
   useEffect(() => {
+    let isMounted = true
+
+    // Hard timeout for this page's loading state
+    const timeout = setTimeout(() => {
+      if (isMounted && loading) {
+        setLoading(false)
+      }
+    }, 2000)
+
     const fetchVaults = async () => {
-      // Wait for auth to finish loading
+      // Don't fetch if auth is still loading
       if (authLoading) return
 
-      // If no user after auth loaded, stop loading
+      // Don't fetch if no user
       if (!user) {
         setLoading(false)
         return
       }
 
       try {
-        const supabase = createClient()
+        const supabase = getSupabase()
+        if (!supabase) {
+          setLoading(false)
+          return
+        }
+
         const { data, error: fetchError } = await supabase
           .from('vaults')
           .select('*')
           .order('created_at', { ascending: true })
 
+        if (!isMounted) return
+
         if (fetchError) {
+          console.error('Vault fetch error:', fetchError)
           setError(fetchError.message)
         } else {
           setVaults(data || [])
@@ -86,14 +103,19 @@ export default function DashboardPage() {
           }
         }
       } catch (err) {
-        setError('Failed to load vaults')
-        console.error('Vault fetch error:', err)
+        console.error('Vault fetch exception:', err)
+        if (isMounted) setError('Failed to load vaults')
       } finally {
-        setLoading(false)
+        if (isMounted) setLoading(false)
       }
     }
 
     fetchVaults()
+
+    return () => {
+      isMounted = false
+      clearTimeout(timeout)
+    }
   }, [user, authLoading])
 
   // Fetch secrets when vault changes
