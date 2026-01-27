@@ -50,7 +50,8 @@ async function updateUserTier(
   tier: keyof typeof TIER_LIMITS
 ) {
   const limits = TIER_LIMITS[tier]
-  const supabase = getSupabaseAdmin()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = getSupabaseAdmin() as any
 
   // Find user by Stripe customer ID
   const { data: profile, error } = await supabase
@@ -61,7 +62,7 @@ async function updateUserTier(
       secret_limit: limits.secret_limit,
       session_limit: limits.session_limit,
       updated_at: new Date().toISOString(),
-    } as Record<string, unknown>)
+    })
     .eq('stripe_customer_id', customerId)
     .select()
     .single()
@@ -117,13 +118,14 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const customerId = session.customer as string
   const userId = session.client_reference_id
-  const supabase = getSupabaseAdmin()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = getSupabaseAdmin() as any
 
   if (userId && customerId) {
     // Link Stripe customer to user profile
     await supabase
       .from('profiles')
-      .update({ stripe_customer_id: customerId } as Record<string, unknown>)
+      .update({ stripe_customer_id: customerId })
       .eq('id', userId)
 
     console.log(`Linked Stripe customer ${customerId} to user ${userId}`)
