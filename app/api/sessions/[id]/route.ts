@@ -85,11 +85,14 @@ export async function DELETE(
   }
 
   // Log the action
+  const vaultName = session.vaults && typeof session.vaults === 'object' && 'name' in session.vaults
+    ? (session.vaults as { name: string }).name
+    : 'unknown'
   await supabase.from('audit_logs').insert({
     user_id: userProfile.user.id,
     session_id: id,
     action: 'SESSION_REVOKE',
-    target: (session.vaults as { name: string })?.name || 'unknown',
+    target: vaultName,
     agent_name: session.agent_name,
   })
 
