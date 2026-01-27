@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase'
 import { encryptSecret, maskSecret } from '@/lib/encryption'
@@ -38,12 +39,15 @@ interface Secret {
 }
 
 export default function DashboardPage() {
-  const { user, profile, loading: authLoading } = useAuth()
+  const { user, profile, loading: authLoading, refreshProfile } = useAuth()
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [vaults, setVaults] = useState<Vault[]>([])
   const [secrets, setSecrets] = useState<Secret[]>([])
   const [selectedVault, setSelectedVault] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [syncingStripe, setSyncingStripe] = useState(false)
 
   // New secret form
   const [showAddSecret, setShowAddSecret] = useState(false)
@@ -57,6 +61,28 @@ export default function DashboardPage() {
   const [newVaultName, setNewVaultName] = useState('')
   const [newVaultDescription, setNewVaultDescription] = useState('')
   const [creatingVault, setCreatingVault] = useState(false)
+
+  // Sync Stripe subscription when returning from checkout
+  useEffect(() => {
+    const checkoutStatus = searchParams.get('checkout')
+    if (checkoutStatus === 'success' && user && !syncingStripe) {
+      setSyncingStripe(true)
+
+      fetch('/api/stripe/sync', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          console.log('Stripe sync result:', data)
+          if (data.synced) {
+            // Refresh the profile to get updated tier
+            refreshProfile()
+            // Remove query param
+            router.replace('/dashboard', { scroll: false })
+          }
+        })
+        .catch(err => console.error('Stripe sync error:', err))
+        .finally(() => setSyncingStripe(false))
+    }
+  }, [searchParams, user, syncingStripe, refreshProfile, router])
 
   // Fetch vaults - simplified with hard timeout
   useEffect(() => {
