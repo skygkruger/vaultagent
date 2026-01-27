@@ -80,28 +80,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!supabase) return
 
-    // Get initial session with timeout
+    let mounted = true
+
+    // Get initial user with timeout
     const initAuth = async () => {
       try {
-        // Set a timeout to prevent infinite loading
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Auth timeout')), 5000)
-        )
+        // Use getUser() which validates with the server directly
+        // This is more reliable than getSession() which can fail on token refresh
+        const { data: { user: currentUser }, error } = await supabase.auth.getUser()
 
-        const sessionPromise = supabase.auth.getSession()
-        const result = await Promise.race([sessionPromise, timeoutPromise]) as Awaited<typeof sessionPromise>
-        const { data: { session: currentSession } } = result
+        if (!mounted) return
 
-        if (currentSession) {
-          setSession(currentSession)
-          setUser(currentSession.user)
-          const profileData = await fetchProfile(currentSession.user.id, supabase)
-          setProfile(profileData)
+        if (error) {
+          console.error('Auth error:', error.message)
+          // Clear any corrupted session state
+          if (error.message.includes('refresh_token') || error.status === 400) {
+            await supabase.auth.signOut()
+          }
+          setLoading(false)
+          return
+        }
+
+        if (currentUser) {
+          setUser(currentUser)
+          // Get session for completeness
+          const { data: { session: currentSession } } = await supabase.auth.getSession()
+          if (mounted && currentSession) {
+            setSession(currentSession)
+          }
+          // Fetch profile
+          const profileData = await fetchProfile(currentUser.id, supabase)
+          if (mounted) {
+            setProfile(profileData)
+          }
         }
       } catch (error) {
         console.error('Auth initialization error:', error)
       } finally {
-        setLoading(false)
+        if (mounted) {
+          setLoading(false)
+        }
       }
     }
 
@@ -110,12 +128,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
+        if (!mounted) return
+
+        console.log('Auth state changed:', event)
         setSession(currentSession)
         setUser(currentSession?.user ?? null)
 
         if (currentSession?.user) {
           const profileData = await fetchProfile(currentSession.user.id, supabase)
-          setProfile(profileData)
+          if (mounted) {
+            setProfile(profileData)
+          }
         } else {
           setProfile(null)
         }
@@ -124,6 +147,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     )
 
     return () => {
+      mounted = false
       subscription.unsubscribe()
     }
   }, [supabase])

@@ -30,6 +30,7 @@ export default function DashboardLayout({
     router.push('/')
   }
 
+  // Show loading state
   if (loading) {
     return (
       <div
@@ -37,6 +38,19 @@ export default function DashboardLayout({
         style={{ backgroundColor: '#1a1a2e', color: '#a8d8b9' }}
       >
         <p className="text-xs">[~] Loading...</p>
+      </div>
+    )
+  }
+
+  // Redirect to sign-in if not authenticated
+  if (!user) {
+    router.push('/auth/sign-in')
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center font-mono"
+        style={{ backgroundColor: '#1a1a2e', color: '#a8d8b9' }}
+      >
+        <p className="text-xs">[~] Redirecting to sign in...</p>
       </div>
     )
   }
