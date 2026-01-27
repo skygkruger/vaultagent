@@ -1,4 +1,3 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 // ═══════════════════════════════════════════════════════════════
@@ -27,6 +26,9 @@ export async function middleware(request: NextRequest) {
       return response
     }
 
+    // Dynamic import to avoid Edge Runtime initialization issues
+    const { createServerClient } = await import('@supabase/ssr')
+
     let supabaseResponse = response
 
     const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
@@ -34,7 +36,7 @@ export async function middleware(request: NextRequest) {
           getAll() {
             return request.cookies.getAll()
           },
-          setAll(cookiesToSet: { name: string; value: string; options?: CookieOptions }[]) {
+          setAll(cookiesToSet: { name: string; value: string; options: Record<string, unknown> }[]) {
             cookiesToSet.forEach(({ name, value }) =>
               request.cookies.set(name, value)
             )
@@ -44,7 +46,7 @@ export async function middleware(request: NextRequest) {
               },
             })
             cookiesToSet.forEach(({ name, value, options }) =>
-              supabaseResponse.cookies.set(name, value, options)
+              supabaseResponse.cookies.set(name, value, options as Parameters<typeof supabaseResponse.cookies.set>[2])
             )
           },
         },
