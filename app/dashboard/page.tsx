@@ -1,9 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase'
 import { encryptSecret, maskSecret } from '@/lib/encryption'
+
+// Helper to safely create Supabase client
+function getSupabase() {
+  try {
+    return createClient()
+  } catch {
+    return null
+  }
+}
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - DASHBOARD (VAULT VIEW)
@@ -29,7 +38,7 @@ interface Secret {
 }
 
 export default function DashboardPage() {
-  const { user, profile } = useAuth()
+  const { user, profile, loading: authLoading } = useAuth()
   const [vaults, setVaults] = useState<Vault[]>([])
   const [secrets, setSecrets] = useState<Secret[]>([])
   const [selectedVault, setSelectedVault] = useState<string | null>(null)
@@ -49,47 +58,66 @@ export default function DashboardPage() {
   const [newVaultDescription, setNewVaultDescription] = useState('')
   const [creatingVault, setCreatingVault] = useState(false)
 
-  const supabase = createClient()
-
   // Fetch vaults
   useEffect(() => {
     const fetchVaults = async () => {
-      if (!user) return
+      // Wait for auth to finish loading
+      if (authLoading) return
 
-      const { data, error } = await supabase
-        .from('vaults')
-        .select('*')
-        .order('created_at', { ascending: true })
-
-      if (error) {
-        setError(error.message)
-      } else {
-        setVaults(data || [])
-        if (data && data.length > 0 && !selectedVault) {
-          setSelectedVault(data[0].id)
-        }
+      // If no user after auth loaded, stop loading
+      if (!user) {
+        setLoading(false)
+        return
       }
-      setLoading(false)
+
+      try {
+        const supabase = createClient()
+        const { data, error: fetchError } = await supabase
+          .from('vaults')
+          .select('*')
+          .order('created_at', { ascending: true })
+
+        if (fetchError) {
+          setError(fetchError.message)
+        } else {
+          setVaults(data || [])
+          if (data && data.length > 0 && !selectedVault) {
+            setSelectedVault(data[0].id)
+          }
+        }
+      } catch (err) {
+        setError('Failed to load vaults')
+        console.error('Vault fetch error:', err)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchVaults()
-  }, [user])
+  }, [user, authLoading])
 
   // Fetch secrets when vault changes
   useEffect(() => {
     const fetchSecrets = async () => {
       if (!selectedVault) return
 
-      const { data, error } = await supabase
-        .from('secrets')
-        .select('*')
-        .eq('vault_id', selectedVault)
-        .order('created_at', { ascending: false })
+      try {
+        const supabase = getSupabase()
+        if (!supabase) return
 
-      if (error) {
-        setError(error.message)
-      } else {
-        setSecrets(data || [])
+        const { data, error: fetchError } = await supabase
+          .from('secrets')
+          .select('*')
+          .eq('vault_id', selectedVault)
+          .order('created_at', { ascending: false })
+
+        if (fetchError) {
+          setError(fetchError.message)
+        } else {
+          setSecrets(data || [])
+        }
+      } catch (err) {
+        console.error('Failed to fetch secrets:', err)
       }
     }
 
@@ -100,6 +128,12 @@ export default function DashboardPage() {
   const handleAddSecret = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedVault || !masterPassword) return
+
+    const supabase = getSupabase()
+    if (!supabase) {
+      setError('Database connection failed')
+      return
+    }
 
     setError(null)
     setSaving(true)
@@ -228,6 +262,12 @@ export default function DashboardPage() {
   // Delete secret
   const handleDeleteSecret = async (secretId: string, secretName: string) => {
     if (!confirm(`Delete secret "${secretName}"? This cannot be undone.`)) return
+
+    const supabase = getSupabase()
+    if (!supabase) {
+      setError('Database connection failed')
+      return
+    }
 
     const { error: deleteError } = await supabase
       .from('secrets')

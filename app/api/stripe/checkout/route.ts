@@ -87,7 +87,6 @@ export async function POST(request: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard?checkout=success`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/pricing?checkout=canceled`,
       subscription_data: {
-        trial_period_days: 14, // 14-day free trial
         metadata: {
           supabase_user_id: user.id,
         },
