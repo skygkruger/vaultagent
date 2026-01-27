@@ -156,22 +156,24 @@ export default function VaultAgentRetro() {
             <h1 className="text-2xl font-bold" style={{ color: '#a8d8b9' }}>VAULT</h1>
             <h1 className="text-2xl font-bold" style={{ color: '#a8d8b9' }}>AGENT</h1>
           </div>
-          <pre className="hidden sm:block" style={{
-            fontSize: '12px',
-            lineHeight: 1.05,
-            fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-            textAlign: 'left',
-            color: '#a8d8b9',
-            marginTop: '8px',
-            padding: 0,
-            border: 'none',
-            background: 'none',
-            overflow: 'visible'
-          }}>
+          <div className="hidden sm:flex justify-center w-full" style={{ marginTop: '8px' }}>
+            <pre style={{
+              fontSize: '12px',
+              lineHeight: 1.05,
+              fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+              textAlign: 'left',
+              color: '#a8d8b9',
+              margin: 0,
+              padding: 0,
+              border: 'none',
+              background: 'none',
+              overflow: 'visible'
+            }}>
 {`┌───┐ ┌───┐ ┌───┐ ┌───┐ ┌───┐
 │ A ├─┤ G ├─┤ E ├─┤ N ├─┤ T │
 └───┘ └───┘ └───┘ └───┘ └───┘`}
-          </pre>
+            </pre>
+          </div>
           <p className="text-xs tracking-widest mt-4" style={{ color: '#c4a7e7' }}>
             ·:·:· SECURE SECRET MANAGEMENT ·:·:·
           </p>
@@ -245,10 +247,10 @@ export default function VaultAgentRetro() {
         {activeTab === 0 && (
           <div className="space-y-4">
             {/* Secret List */}
-            <div className="overflow-x-auto">
-              <div style={{ color: '#a8d8b9', minWidth: '320px' }}>
+            <div className="sm:flex sm:justify-center">
+              <div className="w-full sm:w-auto" style={{ color: '#a8d8b9' }}>
                 {/* Desktop header */}
-                <pre className="hidden sm:block text-xs">
+                <pre className="hidden sm:block text-xs" style={{ margin: 0 }}>
 {`┌─────────────────────────────────────────────────────────────────────────────┐
 │  YOUR SECRETS                                                      [+] ADD  │
 ├─────────────────────────────────────────────────────────────────────────────┤`}
@@ -260,7 +262,7 @@ export default function VaultAgentRetro() {
                 </div>
 
                 <div
-                  className="px-3 sm:px-4 py-2 border-l border-r space-y-1"
+                  className="w-full px-3 sm:px-4 py-2 border-l border-r space-y-1"
                   style={{ borderColor: '#a8d8b9' }}
                 >
                   {demoVault.map((secret, i) => (
@@ -285,7 +287,7 @@ export default function VaultAgentRetro() {
                   ))}
                 </div>
 
-                <pre className="hidden sm:block text-xs">
+                <pre className="hidden sm:block text-xs" style={{ margin: 0 }}>
 {`└─────────────────────────────────────────────────────────────────────────────┘`}
                 </pre>
                 <div className="sm:hidden border-t" style={{ borderColor: '#a8d8b9' }}></div>
@@ -293,9 +295,9 @@ export default function VaultAgentRetro() {
             </div>
 
             {/* Add Secret Form */}
-            <div className="overflow-x-auto">
-              <div style={{ color: '#a8d8b9', minWidth: '320px' }}>
-                <pre className="hidden sm:block text-xs">
+            <div className="sm:flex sm:justify-center">
+              <div className="w-full sm:w-auto" style={{ color: '#a8d8b9' }}>
+                <pre className="hidden sm:block text-xs" style={{ margin: 0 }}>
 {`┌─────────────────────────────────────────────────────────────────────────────┐
 │  ADD NEW SECRET                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤`}
@@ -305,7 +307,7 @@ export default function VaultAgentRetro() {
                 </div>
 
                 <div
-                  className="px-3 sm:px-4 py-4 border-l border-r space-y-3"
+                  className="w-full px-3 sm:px-4 py-4 border-l border-r space-y-3"
                   style={{ borderColor: '#a8d8b9' }}
                 >
                   <div className="flex items-center gap-2">
@@ -346,7 +348,7 @@ export default function VaultAgentRetro() {
                   </div>
                 </div>
 
-                <pre className="hidden sm:block text-xs">
+                <pre className="hidden sm:block text-xs" style={{ margin: 0 }}>
 {`└─────────────────────────────────────────────────────────────────────────────┘`}
                 </pre>
                 <div className="sm:hidden border-t" style={{ borderColor: '#a8d8b9' }}></div>
