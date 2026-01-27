@@ -50,7 +50,6 @@ async function updateUserTier(
   tier: keyof typeof TIER_LIMITS
 ) {
   const limits = TIER_LIMITS[tier]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = getSupabaseAdmin() as any
 
   // Find user by Stripe customer ID
@@ -118,7 +117,6 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const customerId = session.customer as string
   const userId = session.client_reference_id
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = getSupabaseAdmin() as any
 
   if (userId && customerId) {
