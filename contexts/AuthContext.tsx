@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { User, Session, SupabaseClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase'
 
@@ -41,35 +41,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
-  const [configError, setConfigError] = useState<string | null>(null)
 
-  // Initialize Supabase client only on the client side
+  // Initialize Supabase client
   useEffect(() => {
     try {
-      setSupabase(createClient())
+      const client = createClient()
+      setSupabase(client)
     } catch (error) {
-      console.error('Failed to initialize Supabase:', error)
-      setConfigError(error instanceof Error ? error.message : 'Failed to initialize authentication')
+      console.error('Failed to create Supabase client:', error)
       setLoading(false)
     }
   }, [])
 
-  // Fetch user profile from database
-  const fetchProfile = async (userId: string, client: SupabaseClient) => {
-    const { data, error } = await client
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
+  // Fetch profile helper
+  const fetchProfile = async (userId: string, client: SupabaseClient): Promise<Profile | null> => {
+    try {
+      const { data, error } = await client
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
 
-    if (error) {
-      console.error('Error fetching profile:', error)
+      if (error) {
+        console.error('Profile fetch error:', error)
+        return null
+      }
+      return data as Profile
+    } catch (err) {
+      console.error('Profile fetch exception:', err)
       return null
     }
-    return data as Profile
   }
 
-  // Refresh profile data
+  // Refresh profile
   const refreshProfile = async () => {
     if (user && supabase) {
       const profileData = await fetchProfile(user.id, supabase)
@@ -77,77 +81,81 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  // Main auth initialization
   useEffect(() => {
     if (!supabase) return
 
-    let mounted = true
+    let isMounted = true
 
-    // Get initial user with timeout
     const initAuth = async () => {
       try {
-        // Use getUser() which validates with the server directly
-        // This is more reliable than getSession() which can fail on token refresh
+        // Simple getUser call - no complex Promise.race needed
         const { data: { user: currentUser }, error } = await supabase.auth.getUser()
 
-        if (!mounted) return
+        if (!isMounted) return
 
-        if (error) {
-          console.error('Auth error:', error.message)
-          // Clear any corrupted session state
-          if (error.message.includes('refresh_token') || error.status === 400) {
-            await supabase.auth.signOut()
-          }
+        if (error || !currentUser) {
+          // No valid user - that's fine, just stop loading
           setLoading(false)
           return
         }
 
-        if (currentUser) {
-          setUser(currentUser)
-          // Get session for completeness
-          const { data: { session: currentSession } } = await supabase.auth.getSession()
-          if (mounted && currentSession) {
-            setSession(currentSession)
+        // We have a user
+        setUser(currentUser)
+
+        // Try to get session (non-blocking for the UI)
+        supabase.auth.getSession().then(({ data: { session: sess } }) => {
+          if (isMounted && sess) {
+            setSession(sess)
           }
-          // Fetch profile
-          const profileData = await fetchProfile(currentUser.id, supabase)
-          if (mounted) {
-            setProfile(profileData)
-          }
+        })
+
+        // Fetch profile
+        const profileData = await fetchProfile(currentUser.id, supabase)
+        if (isMounted) {
+          setProfile(profileData)
         }
-      } catch (error) {
-        console.error('Auth initialization error:', error)
+      } catch (err) {
+        console.error('Auth init error:', err)
       } finally {
-        if (mounted) {
+        if (isMounted) {
           setLoading(false)
         }
       }
     }
+
+    // Hard timeout - loading WILL stop after 3 seconds no matter what
+    const timeout = setTimeout(() => {
+      if (isMounted && loading) {
+        console.warn('Auth timeout - forcing loading to stop')
+        setLoading(false)
+      }
+    }, 3000)
 
     initAuth()
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
-        if (!mounted) return
+        if (!isMounted) return
 
-        console.log('Auth state changed:', event)
         setSession(currentSession)
         setUser(currentSession?.user ?? null)
 
         if (currentSession?.user) {
           const profileData = await fetchProfile(currentSession.user.id, supabase)
-          if (mounted) {
+          if (isMounted) {
             setProfile(profileData)
           }
         } else {
           setProfile(null)
         }
-        setLoading(false)
       }
     )
 
     return () => {
-      mounted = false
+      isMounted = false
+      clearTimeout(timeout)
       subscription.unsubscribe()
     }
   }, [supabase])
@@ -195,37 +203,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
     })
     return { error: error as Error | null }
-  }
-
-  // Show configuration error if Supabase couldn't be initialized
-  if (configError) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#1a1a2e',
-        color: '#eb6f92',
-        padding: '2rem',
-        textAlign: 'center',
-        fontFamily: 'monospace',
-      }}>
-        <div>
-          <pre style={{ color: '#a8d8b9', marginBottom: '1rem' }}>
-{`+------------------------------------------+
-|                                          |
-|        [!] CONFIGURATION ERROR           |
-|                                          |
-+------------------------------------------+`}
-          </pre>
-          <p style={{ marginBottom: '1rem' }}>{configError}</p>
-          <p style={{ color: '#6e6a86', fontSize: '0.875rem' }}>
-            Please ensure environment variables are set in your deployment.
-          </p>
-        </div>
-      </div>
-    )
   }
 
   return (

@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
@@ -30,7 +31,14 @@ export default function DashboardLayout({
     router.push('/')
   }
 
-  // Show loading state
+  // Redirect to sign-in if not authenticated (after loading completes)
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth/sign-in')
+    }
+  }, [loading, user, router])
+
+  // Show loading state (max 3 seconds due to AuthContext timeout)
   if (loading) {
     return (
       <div
@@ -42,9 +50,8 @@ export default function DashboardLayout({
     )
   }
 
-  // Redirect to sign-in if not authenticated
+  // Show redirecting state if no user
   if (!user) {
-    router.push('/auth/sign-in')
     return (
       <div
         className="min-h-screen flex items-center justify-center font-mono"
