@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 //  Pastel Retro Terminal Design
 // ═══════════════════════════════════════════════════════════════
 
-export default function PricingPage() {
+function PricingContent() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -687,5 +687,25 @@ export default function PricingPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        minHeight: '100vh',
+        background: '#1a1a2e',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: "'JetBrains Mono', monospace",
+        color: '#6e6a86'
+      }}>
+        [~] Loading...
+      </div>
+    }>
+      <PricingContent />
+    </Suspense>
   );
 }
