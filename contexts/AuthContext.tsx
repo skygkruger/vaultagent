@@ -91,26 +91,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const initAuth = async () => {
       try {
-        // Simple getUser call - no complex Promise.race needed
+        // Try getUser (server call) first
         const { data: { user: currentUser }, error } = await supabase.auth.getUser()
 
         if (!isMounted) return
 
         if (error || !currentUser) {
-          // No valid user - that's fine, just stop loading
           setLoading(false)
           return
         }
 
-        // We have a user
         setUser(currentUser)
 
-        // Try to get session (non-blocking for the UI)
+        // Get session (non-blocking)
         supabase.auth.getSession().then(({ data: { session: sess } }) => {
           if (isMounted && sess) {
             setSession(sess)
           }
-        })
+        }).catch(() => {})
 
         // Fetch profile
         const profileData = await fetchProfile(currentUser.id, supabase)
@@ -118,7 +116,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setProfile(profileData)
         }
       } catch (err) {
-        console.error('Auth init error:', err)
+        // getUser() failed (AbortError, network issue, etc.)
+        // Fall back to cached session which doesn't make a server call
+        try {
+          const { data: { session: cachedSession } } = await supabase.auth.getSession()
+          if (!isMounted) return
+
+          if (cachedSession?.user) {
+            setUser(cachedSession.user)
+            setSession(cachedSession)
+
+            const profileData = await fetchProfile(cachedSession.user.id, supabase)
+            if (isMounted) {
+              setProfile(profileData)
+            }
+            return
+          }
+        } catch {
+          // Session fallback also failed - user is truly not authenticated
+        }
       } finally {
         if (isMounted) {
           setLoading(false)
