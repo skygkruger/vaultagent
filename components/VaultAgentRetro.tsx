@@ -63,7 +63,7 @@ export default function VaultAgentRetro() {
     <div
       className="min-h-screen font-mono text-sm"
       style={{
-        backgroundColor: '#1a1a2e',
+        backgroundColor: '#141a17',
         color: '#a8b2c3'
       }}
     >
@@ -856,7 +856,7 @@ export default function VaultAgentRetro() {
               <div className="p-2 border" style={{ borderColor: '#6e6a86', color: '#6e6a86' }}>COPILOT [~]</div>
               <div className="p-2 border" style={{ borderColor: '#6e6a86', color: '#6e6a86' }}>WINDSURF [~]</div>
             </div>
-            <div className="text-xs space-y-1 p-3" style={{ backgroundColor: '#252542' }}>
+            <div className="text-xs space-y-1 p-3" style={{ backgroundColor: '#1a211d' }}>
               <div>$ npx vaultagent init</div>
               <div>$ vaultagent add OPENAI_API_KEY</div>
               <div className="break-all">$ vaultagent session create --agent claude-code</div>

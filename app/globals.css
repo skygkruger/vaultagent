@@ -10,10 +10,10 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  /* Base */
-  --bg-primary: #1a1a2e;
-  --bg-secondary: #16161a;
-  --bg-tertiary: #12121a;
+  /* Base - Dark with subtle green/mint warmth */
+  --bg-primary: #141a17;
+  --bg-secondary: #1a211d;
+  --bg-tertiary: #101512;
   
   /* Text */
   --text-primary: #e8e3e3;

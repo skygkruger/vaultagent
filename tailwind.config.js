@@ -12,11 +12,11 @@ module.exports = {
       //  VaultAgent Primary: Mint (#a8d8b9)
       // ═══════════════════════════════════════════════════════════════
       colors: {
-        // Base colors
+        // Base colors - Dark with subtle green/mint warmth
         terminal: {
-          bg: '#1a1a2e',
-          'bg-light': '#16161a',
-          'bg-dark': '#12121a',
+          bg: '#141a17',
+          'bg-light': '#1a211d',
+          'bg-dark': '#101512',
         },
         // Text colors
         text: {
