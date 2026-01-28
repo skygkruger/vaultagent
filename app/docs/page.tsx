@@ -168,7 +168,7 @@ export default function DocsPage() {
 
             <CodeBlock title="step 3: inject + run">
 {`# Install the CLI
-$ npm i -g @vaultagent/cli
+$ npm i -g vaultagent
 
 # Run your agent with secrets injected
 $ vaultagent run va_sess_xK7m... -- claude
@@ -480,10 +480,10 @@ $ vaultagent vault list
             <h3 style={{ color: colors.lavender }}>Installation</h3>
             <CodeBlock title="terminal">
 {`# Install globally via npm
-$ npm i -g @vaultagent/cli
+$ npm i -g vaultagent
 
 # Or run directly with npx
-$ npx @vaultagent/cli --help
+$ npx vaultagent --help
 
 # Verify installation
 $ vaultagent --version

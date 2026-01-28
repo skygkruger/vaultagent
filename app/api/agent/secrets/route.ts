@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createHash } from 'crypto'
 import { createClient } from '@supabase/supabase-js'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -49,11 +50,14 @@ export async function GET(request: NextRequest) {
   )
 
   try {
-    // Look up session by token
+    // Hash the token for lookup (plaintext tokens are never stored)
+    const tokenHash = createHash('sha256').update(token).digest('hex')
+
+    // Look up session by token hash
     const { data: session, error: sessionError } = await supabaseAdmin
       .from('sessions')
       .select('id, user_id, vault_id, agent_name, allowed_secrets, expires_at, revoked_at')
-      .eq('token', token)
+      .eq('token_hash', tokenHash)
       .single()
 
     if (sessionError || !session) {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createHash } from 'crypto'
 import { createClient, getUserProfile, TIER_LIMITS } from '@/lib/supabase-server'
 import { generateSessionToken } from '@/lib/encryption'
 import { isKnownAgent } from '@/lib/agents'
@@ -130,12 +131,13 @@ export async function POST(request: NextRequest) {
     secretNames = secrets?.map((s) => s.name) || []
   }
 
-  // Generate session token and expiry
+  // Generate session token, hash for storage, keep plaintext for user
   const token = generateSessionToken()
+  const tokenHash = createHash('sha256').update(token).digest('hex')
   const expiresAt = new Date()
   expiresAt.setHours(expiresAt.getHours() + duration_hours)
 
-  // Create session
+  // Create session (store hash, never plaintext)
   const { data, error } = await supabase
     .from('sessions')
     .insert({
@@ -143,7 +145,7 @@ export async function POST(request: NextRequest) {
       vault_id,
       agent_name,
       allowed_secrets: secretNames,
-      token,
+      token_hash: tokenHash,
       expires_at: expiresAt.toISOString(),
     })
     .select()
@@ -163,11 +165,12 @@ export async function POST(request: NextRequest) {
     metadata: { duration_hours, secret_count: secretNames.length, known_agent: isKnownAgent(agent_name) },
   })
 
+  // Return plaintext token to user (only time it's ever visible)
   return NextResponse.json(
     {
       session: {
         id: data.id,
-        token: data.token,
+        token,
         agent_name: data.agent_name,
         vault_name: vault.name,
         allowed_secrets: data.allowed_secrets,

@@ -858,7 +858,7 @@ export default function VaultAgentRetro() {
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  $ npm i -g @vaultagent/cli                                                 │
+│  $ npm i -g vaultagent                                                      │
 │  $ vaultagent run <session-token> -- claude                                 │
 │  > [/] 3 secrets decrypted + injected. Launching claude...                  │
 │                                                                             │
@@ -876,7 +876,7 @@ export default function VaultAgentRetro() {
               ))}
             </div>
             <div className="text-xs space-y-1 p-3" style={{ backgroundColor: '#1a211d' }}>
-              <div>$ npm i -g @vaultagent/cli</div>
+              <div>$ npm i -g vaultagent</div>
               <div className="break-all">$ vaultagent run &lt;token&gt; -- claude</div>
               <div style={{ color: '#a8d8b9' }}>&gt; [/] 3 secrets decrypted + injected</div>
             </div>

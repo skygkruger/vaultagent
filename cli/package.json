@@ -1,5 +1,5 @@
 {
-  "name": "@vaultagent/cli",
+  "name": "vaultagent",
   "version": "1.0.0",
   "description": "Zero-knowledge secret injection for AI coding agents",
   "type": "module",
