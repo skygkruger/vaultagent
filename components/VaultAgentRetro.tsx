@@ -15,6 +15,7 @@ export default function VaultAgentRetro() {
   const [sessionDuration, setSessionDuration] = useState(1);
   const [isCreating, setIsCreating] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(true);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [demoVault, setDemoVault] = useState([
     { name: 'OPENAI_API_KEY', masked: '***************k4Fj', lastAccessed: '2 min ago', status: 'active' },
     { name: 'DATABASE_URL', masked: '***************5432', lastAccessed: '15 min ago', status: 'active' },
@@ -72,56 +73,77 @@ export default function VaultAgentRetro() {
       {/* ═══════════════════════════════════════════════════════ */}
 
       <header className="border-b" style={{ borderColor: '#6e6a86' }}>
-        {/* Desktop Header */}
-        <div className="hidden lg:flex justify-between items-center px-4">
-          <div className="text-xs py-2" style={{ color: '#a8d8b9' }}>
-            <pre style={{ margin: 0, overflow: 'visible' }}>╔════════════════════════════════════════════════════════════════════════════════╗</pre>
-            <div style={{ display: 'flex', fontFamily: 'inherit', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>║  VAULTAGENT</span>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <Link href="/docs" className="hover-text-glow transition-all">[DOCS]</Link>
-                <Link href="/pricing" className="hover-text-glow transition-all">[PRICING]</Link>
-                <a href="https://github.com/skygkruger" target="_blank" rel="noopener noreferrer" className="hover-text-glow transition-all">[GITHUB]</a>
-                <a href="https://x.com/run_veridian" target="_blank" rel="noopener noreferrer" className="hover-text-glow transition-all">[@]</a>
-                <span>  ║</span>
-              </div>
+        <div className="max-w-5xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 group">
+              <span className="text-lg tracking-tight" style={{ color: '#a8d8b9' }}>VAULTAGENT</span>
+              <span
+                className="transition-opacity"
+                style={{
+                  color: '#a8d8b9',
+                  opacity: cursorVisible ? 1 : 0
+                }}
+              >_</span>
+            </Link>
+
+            {/* Navigation */}
+            <nav className="hidden md:flex items-center gap-6">
+              {[
+                { label: 'DOCS', href: '/docs' },
+                { label: 'PRICING', href: '/pricing' },
+                { label: 'GITHUB', href: 'https://github.com/skygkruger' },
+                { label: '@', href: 'https://x.com/run_veridian' },
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="relative transition-colors duration-200"
+                  style={{ color: hoveredNav === item.label ? '#a8d8b9' : '#6e6a86' }}
+                  onMouseEnter={() => setHoveredNav(item.label)}
+                  onMouseLeave={() => setHoveredNav(null)}
+                >
+                  <span className={`transition-all duration-200 ${hoveredNav === item.label ? 'pl-4' : ''}`}>
+                    {hoveredNav === item.label && <span className="absolute left-0" style={{ color: '#a8d8b9' }}>&gt;</span>}
+                    [{item.label}]
+                  </span>
+                </Link>
+              ))}
+              <Link
+                href="/auth/sign-in"
+                className="px-4 py-1.5 transition-all duration-200"
+                style={{
+                  border: '1px solid #a8d8b9',
+                  color: '#a8d8b9',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#a8d8b9';
+                  e.currentTarget.style.color = '#141a17';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#a8d8b9';
+                }}
+              >
+                [LOGIN]
+              </Link>
+            </nav>
+
+            {/* Mobile Menu */}
+            <div className="flex md:hidden items-center gap-4">
+              <Link href="/docs" className="text-xs" style={{ color: '#6e6a86' }}>[DOCS]</Link>
+              <Link
+                href="/auth/sign-in"
+                className="px-3 py-1 text-xs"
+                style={{
+                  border: '1px solid #a8d8b9',
+                  color: '#a8d8b9',
+                }}
+              >
+                [LOGIN]
+              </Link>
             </div>
-            <pre style={{ margin: 0, overflow: 'visible' }}>╚════════════════════════════════════════════════════════════════════════════════╝</pre>
           </div>
-          <Link
-            href="/auth/sign-in"
-            className="text-sm font-bold px-4 py-2 transition-all hover-glow hover-lift"
-            style={{
-              color: '#1a1a2e',
-              backgroundColor: '#a8d8b9',
-              marginLeft: '24px'
-            }}
-          >
-            LOGIN
-          </Link>
-        </div>
-        {/* Mobile Header */}
-        <div className="lg:hidden px-4 py-3">
-          <div className="flex justify-between items-center">
-            <Link href="/" style={{ color: '#a8d8b9', textDecoration: 'none' }}>
-              <span className="text-base font-bold tracking-wide">VAULTAGENT</span>
-            </Link>
-            <Link
-              href="/auth/sign-in"
-              className="text-xs font-bold px-4 py-2 transition-all hover-glow"
-              style={{
-                color: '#1a1a2e',
-                backgroundColor: '#a8d8b9',
-              }}
-            >
-              LOGIN
-            </Link>
-          </div>
-          <nav className="flex justify-center gap-6 mt-3 pt-3 text-xs" style={{ borderTop: '1px solid #2a2a3e' }}>
-            <Link href="/docs" className="hover-text-glow transition-all" style={{ color: '#6e6a86' }}>[?] Docs</Link>
-            <Link href="/pricing" className="hover-text-glow transition-all" style={{ color: '#6e6a86' }}>[$] Pricing</Link>
-            <a href="https://github.com/skygkruger" target="_blank" rel="noopener noreferrer" className="hover-text-glow transition-all" style={{ color: '#6e6a86' }}>[&lt;&gt;] GitHub</a>
-          </nav>
         </div>
       </header>
 
