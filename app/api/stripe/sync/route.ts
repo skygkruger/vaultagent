@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 import { getUserProfile, TIER_LIMITS } from '@/lib/supabase-server'
+import { rateLimit } from '@/lib/rate-limit'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - STRIPE SYNC
@@ -48,6 +49,12 @@ export async function POST() {
     }
 
     const { user, profile } = userProfile
+
+    // Rate limit: 10 syncs per minute per user
+    const { limited } = rateLimit(`sync:${user.id}`, 10, 60_000)
+    if (limited) {
+      return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
+    }
 
     // If user has a Stripe customer ID, check their subscription
     let customerId = profile.stripe_customer_id

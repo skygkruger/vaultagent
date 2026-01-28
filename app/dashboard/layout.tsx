@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { createClient } from '@/lib/supabase'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - DASHBOARD LAYOUT
@@ -27,6 +28,8 @@ export default function DashboardLayout({
   const { user, profile, signOut, loading, refreshProfile } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [tierSynced, setTierSynced] = useState(false)
+  const [vaultCount, setVaultCount] = useState(0)
+  const [secretCount, setSecretCount] = useState(0)
 
   const handleSignOut = async () => {
     await signOut()
@@ -40,6 +43,20 @@ export default function DashboardLayout({
       router.push('/auth/sign-in')
     }
   }, [loading, user, router])
+
+  // Fetch actual usage counts
+  useEffect(() => {
+    if (!user) return
+    try {
+      const supabase = createClient()
+      supabase.from('vaults').select('id', { count: 'exact', head: true }).then(({ count }) => {
+        setVaultCount(count ?? 0)
+      })
+      supabase.from('secrets').select('id', { count: 'exact', head: true }).then(({ count }) => {
+        setSecretCount(count ?? 0)
+      })
+    } catch {}
+  }, [user, pathname])
 
   // Auto-sync tier from Stripe if user has a customer ID but shows free
   useEffect(() => {
@@ -187,13 +204,13 @@ export default function DashboardLayout({
             <div className="flex justify-between">
               <span style={{ color: '#5f5d64' }}>Vaults:</span>
               <span style={{ color: '#e8e3e3' }}>
-                {profile?.vault_limit === -1 ? '∞' : `0/${profile?.vault_limit || 1}`}
+                {profile?.vault_limit === -1 ? `${vaultCount} / ∞` : `${vaultCount}/${profile?.vault_limit || 1}`}
               </span>
             </div>
             <div className="flex justify-between">
               <span style={{ color: '#5f5d64' }}>Secrets:</span>
               <span style={{ color: '#e8e3e3' }}>
-                {profile?.secret_limit === -1 ? '∞' : `0/${profile?.secret_limit || 10}`}
+                {profile?.secret_limit === -1 ? `${secretCount} / ∞` : `${secretCount}/${profile?.secret_limit || 10}`}
               </span>
             </div>
           </div>

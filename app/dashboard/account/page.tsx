@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - ACCOUNT PAGE
@@ -76,14 +77,44 @@ export default function AccountPage() {
 
   // Password change
   const [showPasswordForm, setShowPasswordForm] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [changingPassword, setChangingPassword] = useState(false)
+
+  // Check if user has email/password auth (vs OAuth-only)
+  const hasPasswordAuth = user?.app_metadata?.providers?.includes('email') ?? false
 
   // Account deletion
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteEmail, setDeleteEmail] = useState('')
   const [deleting, setDeleting] = useState(false)
+
+  // Usage counts
+  const [vaultCount, setVaultCount] = useState(0)
+  const [secretCount, setSecretCount] = useState(0)
+  const [sessionCount, setSessionCount] = useState(0)
+
+  useEffect(() => {
+    if (!user) return
+    try {
+      const supabase = createClient()
+      supabase.from('vaults').select('id', { count: 'exact', head: true }).then(({ count }) => {
+        setVaultCount(count ?? 0)
+      })
+      supabase.from('secrets').select('id', { count: 'exact', head: true }).then(({ count }) => {
+        setSecretCount(count ?? 0)
+      })
+      // Count sessions created today
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      supabase.from('sessions').select('id', { count: 'exact', head: true })
+        .gte('created_at', today.toISOString())
+        .then(({ count }) => {
+          setSessionCount(count ?? 0)
+        })
+    } catch {}
+  }, [user])
 
   const tierInfo = TIER_INFO[profile?.tier || 'free']
 
@@ -195,9 +226,24 @@ export default function AccountPage() {
     setChangingPassword(true)
 
     try {
+      // Verify current password first (only for email/password users)
+      if (hasPasswordAuth && currentPassword) {
+        const supabase = createClient()
+        const { error: verifyError } = await supabase.auth.signInWithPassword({
+          email: user?.email || '',
+          password: currentPassword,
+        })
+        if (verifyError) {
+          setError('Current password is incorrect')
+          setChangingPassword(false)
+          return
+        }
+      }
+
       await updatePassword(newPassword)
       setSuccess('Password updated successfully')
       setShowPasswordForm(false)
+      setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
     } catch (err) {
@@ -326,6 +372,25 @@ export default function AccountPage() {
         ) : (
           <form onSubmit={handlePasswordChange}>
             <div className="space-y-4 mb-4">
+              {hasPasswordAuth && (
+                <div>
+                  <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
+                    CURRENT PASSWORD
+                  </label>
+                  <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                    className="w-full max-w-xs px-3 py-2 text-xs"
+                    style={{
+                      backgroundColor: '#1a211d',
+                      border: '1px solid #5f5d64',
+                      color: '#e8e3e3',
+                    }}
+                  />
+                </div>
+              )}
               <div>
                 <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   NEW PASSWORD
@@ -379,6 +444,7 @@ export default function AccountPage() {
                 type="button"
                 onClick={() => {
                   setShowPasswordForm(false)
+                  setCurrentPassword('')
                   setNewPassword('')
                   setConfirmPassword('')
                 }}
@@ -595,7 +661,7 @@ export default function AccountPage() {
               VAULTS
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
-              0 / {profile?.vault_limit === -1 ? '∞' : (profile?.vault_limit ?? 1)}
+              {vaultCount} / {profile?.vault_limit === -1 ? '∞' : (profile?.vault_limit ?? 1)}
             </div>
           </div>
           <div>
@@ -603,7 +669,7 @@ export default function AccountPage() {
               SECRETS
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
-              0 / {profile?.secret_limit === -1 ? '∞' : (profile?.secret_limit ?? 10)}
+              {secretCount} / {profile?.secret_limit === -1 ? '∞' : (profile?.secret_limit ?? 10)}
             </div>
           </div>
           <div>
@@ -611,7 +677,7 @@ export default function AccountPage() {
               SESSIONS TODAY
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
-              0 / {profile?.session_limit === -1 ? '∞' : (profile?.session_limit ?? 50)}
+              {sessionCount} / {profile?.session_limit === -1 ? '∞' : (profile?.session_limit ?? 50)}
             </div>
           </div>
           <div>

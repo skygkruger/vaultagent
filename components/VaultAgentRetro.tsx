@@ -405,20 +405,20 @@ export default function VaultAgentRetro() {
         {activeTab === 1 && (
           <div className="space-y-4">
             {/* Session Duration Selector */}
-            <div className="overflow-x-auto">
-              <div style={{ color: '#e8e3e3', minWidth: '320px' }}>
-                <pre className="hidden sm:block text-xs">
+            <div className="sm:flex sm:justify-center">
+              <div className="w-full sm:w-auto" style={{ color: '#a8d8b9' }}>
+                <pre className="hidden sm:block text-xs" style={{ margin: 0 }}>
 {`┌─────────────────────────────────────────────────────────────────────────────┐
 │  CREATE AGENT SESSION                                                       │
 ├─────────────────────────────────────────────────────────────────────────────┤`}
                 </pre>
-                <div className="sm:hidden p-3 border border-b-0" style={{ borderColor: '#e8e3e3' }}>
+                <div className="sm:hidden p-3 border border-b-0" style={{ borderColor: '#a8d8b9' }}>
                   <span className="text-xs">CREATE AGENT SESSION</span>
                 </div>
 
                 <div
-                  className="px-3 sm:px-4 py-3 border-l border-r space-y-2"
-                  style={{ borderColor: '#e8e3e3' }}
+                  className="w-full px-3 sm:px-4 py-3 border-l border-r space-y-2"
+                  style={{ borderColor: '#a8d8b9' }}
                 >
                   <p className="text-xs" style={{ color: '#5f5d64' }}>{`// select session duration`}</p>
                   {durations.map((dur) => (
@@ -437,19 +437,19 @@ export default function VaultAgentRetro() {
                   ))}
                 </div>
 
-                <pre className="hidden sm:block text-xs">
+                <pre className="hidden sm:block text-xs" style={{ margin: 0 }}>
 {`├─────────────────────────────────────────────────────────────────────────────┤
 │  SELECTED: ${String(sessionDuration).padEnd(2)} HOUR(S)                                                      │
 └─────────────────────────────────────────────────────────────────────────────┘`}
                 </pre>
-                <div className="sm:hidden p-3 border-t border-l border-r border-b" style={{ borderColor: '#e8e3e3' }}>
+                <div className="sm:hidden p-3 border-t border-l border-r border-b" style={{ borderColor: '#a8d8b9' }}>
                   <span className="text-xs">SELECTED: {sessionDuration} HOUR(S)</span>
                 </div>
               </div>
             </div>
 
             {/* Session Token Display */}
-            <div className="overflow-x-auto">
+            <div className="sm:flex sm:justify-center overflow-x-auto">
               {/* Desktop */}
               <div className="hidden sm:block" style={{ color: '#bba7c0' }}>
                 <pre className="text-xs leading-tight">
@@ -509,9 +509,9 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         {activeTab === 2 && (
-          <div className="overflow-x-auto">
-            <div style={{ color: '#a8d8b9', minWidth: '320px' }}>
-              <pre className="hidden sm:block text-xs">
+          <div className="sm:flex sm:justify-center">
+            <div className="w-full sm:w-auto" style={{ color: '#a8d8b9' }}>
+              <pre className="hidden sm:block text-xs" style={{ margin: 0 }}>
 {`┌─────────────────────────────────────────────────────────────────────────────┐
 │  AUDIT LOG                                                      [EXPORT]    │
 ├─────────────────────────────────────────────────────────────────────────────┤`}
@@ -522,7 +522,7 @@ export default function VaultAgentRetro() {
               </div>
 
               <div
-                className="px-3 sm:px-4 py-2 border-l border-r"
+                className="w-full px-3 sm:px-4 py-2 border-l border-r"
                 style={{ borderColor: '#a8d8b9' }}
               >
                 {auditLog.map((log, i) => (
@@ -565,7 +565,7 @@ export default function VaultAgentRetro() {
                 ))}
               </div>
 
-              <pre className="hidden sm:block text-xs">
+              <pre className="hidden sm:block text-xs" style={{ margin: 0 }}>
 {`└─────────────────────────────────────────────────────────────────────────────┘`}
               </pre>
               <div className="sm:hidden border-t" style={{ borderColor: '#a8d8b9' }}></div>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 import { getUserProfile } from '@/lib/supabase-server'
+import { rateLimit } from '@/lib/rate-limit'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - ACCOUNT DELETION API
@@ -20,6 +21,13 @@ export async function POST(request: NextRequest) {
   }
 
   const { user, profile } = userProfile
+
+  // Rate limit: 3 delete attempts per minute per user
+  const { limited } = rateLimit(`delete:${user.id}`, 3, 60_000)
+  if (limited) {
+    return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
+  }
+
   const body = await request.json()
   const { confirmEmail } = body
 
