@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { SUPPORTED_AGENTS } from '@/lib/agents';
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - DOCUMENTATION PAGE
@@ -174,17 +175,12 @@ $ vaultagent session create --agent claude-code --duration 1h
 
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
               gap: '8px',
               marginBottom: '16px',
             }}>
-              {[
-                { name: 'Claude Code', status: 'Supported', color: colors.mint },
-                { name: 'Cursor', status: 'Supported', color: colors.mint },
-                { name: 'GitHub Copilot', status: 'Coming Soon', color: colors.muted },
-                { name: 'Windsurf', status: 'Coming Soon', color: colors.muted },
-              ].map(agent => (
-                <div key={agent.name} style={{
+              {SUPPORTED_AGENTS.map(agent => (
+                <div key={agent.id} style={{
                   background: colors.bgLight,
                   border: `1px solid ${colors.muted}`,
                   padding: '12px',
@@ -193,9 +189,38 @@ $ vaultagent session create --agent claude-code --duration 1h
                   alignItems: 'center',
                 }}>
                   <span style={{ color: colors.text }}>{agent.name}</span>
-                  <span style={{ color: agent.color, fontSize: '12px' }}>
-                    {agent.status === 'Supported' ? '[/]' : '[~]'} {agent.status}
+                  <span style={{ color: colors.mint, fontSize: '12px' }}>
+                    [/] Supported
                   </span>
+                </div>
+              ))}
+            </div>
+
+            <h3 style={{ color: colors.lavender }}>Agent Setup</h3>
+
+            <div style={{ marginBottom: '16px' }}>
+              {SUPPORTED_AGENTS.map(agent => (
+                <div key={agent.id} style={{
+                  background: colors.bgLight,
+                  border: `1px solid ${colors.muted}`,
+                  padding: '12px 16px',
+                  marginBottom: '8px',
+                }}>
+                  <div style={{ color: colors.mint, fontSize: '13px', marginBottom: '4px' }}>
+                    {agent.name}
+                  </div>
+                  <div style={{ color: colors.muted, fontSize: '12px', marginBottom: '6px' }}>
+                    {agent.envMethod}
+                  </div>
+                  <code style={{
+                    color: colors.text,
+                    fontSize: '12px',
+                    background: colors.bg,
+                    padding: '4px 8px',
+                    display: 'inline-block',
+                  }}>
+                    $ {agent.setupCommand}
+                  </code>
                 </div>
               ))}
             </div>
@@ -720,9 +745,9 @@ Content-Type: application/json
             <div style={{ marginBottom: '24px' }}>
               <h3 style={{ color: colors.lavender }}>[?] Which AI agents are supported?</h3>
               <p style={{ color: colors.text, lineHeight: '1.7' }}>
-                Currently we support Claude Code and Cursor with native integrations.
-                GitHub Copilot and Windsurf support is coming soon. Any agent that reads
-                environment variables can work with VaultAgent using the CLI.
+                We support Claude Code, Cursor, Windsurf, Aider, GitHub Copilot, and
+                Continue. Any agent that reads environment variables can work with
+                VaultAgent using the CLI.
               </p>
             </div>
 

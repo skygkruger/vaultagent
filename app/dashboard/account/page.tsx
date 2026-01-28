@@ -80,6 +80,11 @@ export default function AccountPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [changingPassword, setChangingPassword] = useState(false)
 
+  // Account deletion
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleteEmail, setDeleteEmail] = useState('')
+  const [deleting, setDeleting] = useState(false)
+
   const tierInfo = TIER_INFO[profile?.tier || 'free']
 
   // Auto-dismiss alerts after 5 seconds
@@ -636,25 +641,93 @@ export default function AccountPage() {
         <p className="text-xs mb-4" style={{ color: '#5f5d64' }}>
           Delete your account and all associated data. This action cannot be undone.
         </p>
-        <button
-          onClick={() => {
-            if (
-              confirm(
-                'Are you sure you want to delete your account? All your vaults, secrets, and data will be permanently deleted.'
-              )
-            ) {
-              alert('Account deletion coming soon. Contact support@vaultagent.dev')
-            }
-          }}
-          className="text-xs px-4 py-2 transition-all hover:bg-[#eb6f92] hover:text-[#141a17]"
-          style={{
-            border: '1px solid #eb6f92',
-            color: '#eb6f92',
-            backgroundColor: 'transparent',
-          }}
-        >
-          [!] DELETE ACCOUNT
-        </button>
+
+        {!showDeleteConfirm ? (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="text-xs px-4 py-2 transition-all hover:bg-[#eb6f92] hover:text-[#141a17]"
+            style={{
+              border: '1px solid #eb6f92',
+              color: '#eb6f92',
+              backgroundColor: 'transparent',
+            }}
+          >
+            [!] DELETE ACCOUNT
+          </button>
+        ) : (
+          <div
+            className="p-4"
+            style={{ backgroundColor: '#1e1517', border: '1px solid #eb6f92' }}
+          >
+            <p className="text-xs mb-3" style={{ color: '#eb6f92' }}>
+              [!] This will permanently delete all your vaults, secrets, sessions, audit logs,
+              and cancel any active subscription. This cannot be undone.
+            </p>
+            <p className="text-xs mb-3" style={{ color: '#5f5d64' }}>
+              Type your email to confirm: <strong style={{ color: '#e8e3e3' }}>{user?.email}</strong>
+            </p>
+            <input
+              type="email"
+              value={deleteEmail}
+              onChange={(e) => setDeleteEmail(e.target.value)}
+              placeholder="your@email.com"
+              className="w-full max-w-xs px-3 py-2 text-xs mb-3"
+              style={{
+                backgroundColor: '#141a17',
+                border: '1px solid #eb6f92',
+                color: '#e8e3e3',
+              }}
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={async () => {
+                  setDeleting(true)
+                  setError(null)
+                  try {
+                    const res = await fetch('/api/account/delete', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ confirmEmail: deleteEmail }),
+                    })
+                    const data = await res.json()
+                    if (!res.ok) {
+                      setError(data.error || 'Failed to delete account')
+                      setDeleting(false)
+                      return
+                    }
+                    // Account deleted - redirect to home
+                    window.location.href = '/'
+                  } catch {
+                    setError('Failed to delete account')
+                    setDeleting(false)
+                  }
+                }}
+                disabled={deleting || deleteEmail !== user?.email}
+                className="text-xs px-4 py-2 disabled:opacity-50 transition-all"
+                style={{
+                  backgroundColor: '#eb6f92',
+                  color: '#141a17',
+                }}
+              >
+                {deleting ? '[~] DELETING...' : '[!] PERMANENTLY DELETE'}
+              </button>
+              <button
+                onClick={() => {
+                  setShowDeleteConfirm(false)
+                  setDeleteEmail('')
+                }}
+                className="text-xs px-4 py-2 transition-all hover-border-glow hover-text-glow"
+                style={{
+                  border: '1px solid #5f5d64',
+                  color: '#5f5d64',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                [x] CANCEL
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { SUPPORTED_AGENTS } from '@/lib/agents';
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - PASTEL RETRO TERMINAL REDESIGN
@@ -852,7 +853,8 @@ export default function VaultAgentRetro() {
             <pre className="text-xs leading-tight">
 {`┌─────────────────────────────────────────────────────────────────────────────┐
 │                                                                             │
-│  [/] CLAUDE CODE     [/] CURSOR      [~] COPILOT      [~] WINDSURF          │
+│  [/] CLAUDE CODE     [/] CURSOR          [/] WINDSURF                       │
+│  [/] AIDER           [/] GITHUB COPILOT  [/] CONTINUE                       │
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
@@ -867,10 +869,11 @@ export default function VaultAgentRetro() {
           {/* Mobile */}
           <div className="md:hidden p-4 border space-y-4" style={{ borderColor: '#5f5d64', color: '#adb7ac' }}>
             <div className="grid grid-cols-2 gap-2 text-xs text-center">
-              <div className="p-2 border" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>CLAUDE CODE [/]</div>
-              <div className="p-2 border" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>CURSOR [/]</div>
-              <div className="p-2 border" style={{ borderColor: '#5f5d64', color: '#5f5d64' }}>COPILOT [~]</div>
-              <div className="p-2 border" style={{ borderColor: '#5f5d64', color: '#5f5d64' }}>WINDSURF [~]</div>
+              {SUPPORTED_AGENTS.map((agent) => (
+                <div key={agent.id} className="p-2 border" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>
+                  {agent.name.toUpperCase()} [/]
+                </div>
+              ))}
             </div>
             <div className="text-xs space-y-1 p-3" style={{ backgroundColor: '#1a211d' }}>
               <div>$ npx vaultagent init</div>
@@ -988,8 +991,8 @@ export default function VaultAgentRetro() {
                 </pre>
               </summary>
               <pre className="text-xs pl-4 pt-2" style={{ color: '#adb7ac' }}>
-{`    Currently Claude Code and Cursor. GitHub Copilot and Windsurf
-    integrations are coming soon. Any agent that reads env vars works.`}
+{`    Claude Code, Cursor, Windsurf, Aider, GitHub Copilot, and Continue.
+    Any agent that reads environment variables works with VaultAgent.`}
               </pre>
             </details>
             </div>

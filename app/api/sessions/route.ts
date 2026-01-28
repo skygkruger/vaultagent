@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, getUserProfile, TIER_LIMITS } from '@/lib/supabase-server'
 import { generateSessionToken } from '@/lib/encryption'
+import { isKnownAgent } from '@/lib/agents'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - SESSIONS API
@@ -159,7 +160,7 @@ export async function POST(request: NextRequest) {
     action: 'SESSION_CREATE',
     target: vault.name,
     agent_name,
-    metadata: { duration_hours, secret_count: secretNames.length },
+    metadata: { duration_hours, secret_count: secretNames.length, known_agent: isKnownAgent(agent_name) },
   })
 
   return NextResponse.json(

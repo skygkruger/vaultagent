@@ -30,7 +30,6 @@ export async function POST() {
   let customerId = profile.stripe_customer_id
 
   if (!customerId && user.email) {
-    console.log('Portal: No customer ID, searching by email:', user.email)
     try {
       const customers = await stripe.customers.list({
         email: user.email,
@@ -38,7 +37,6 @@ export async function POST() {
       })
       if (customers.data.length > 0) {
         customerId = customers.data[0].id
-        console.log('Portal: Found customer by email:', customerId)
 
         // Link the customer ID for future use
         if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -50,11 +48,10 @@ export async function POST() {
             .from('profiles')
             .update({ stripe_customer_id: customerId })
             .eq('id', user.id)
-          console.log('Portal: Linked customer ID to profile')
         }
       }
     } catch (err) {
-      console.error('Error searching for customer:', err)
+      console.error('Error searching for Stripe customer:', err instanceof Error ? err.message : err)
     }
   }
 
@@ -73,8 +70,7 @@ export async function POST() {
 
     return NextResponse.json({ url: session.url })
   } catch (err) {
-    console.error('Stripe portal error:', err)
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
-    return NextResponse.json({ error: `Failed to create portal session: ${errorMessage}` }, { status: 500 })
+    console.error('Stripe portal error:', err instanceof Error ? err.message : err)
+    return NextResponse.json({ error: 'Failed to open billing portal' }, { status: 500 })
   }
 }

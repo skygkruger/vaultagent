@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase'
+import { SUPPORTED_AGENTS } from '@/lib/agents'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - SESSIONS PAGE
@@ -42,7 +43,8 @@ export default function SessionsPage() {
 
   // New session form
   const [showCreateSession, setShowCreateSession] = useState(false)
-  const [agentName, setAgentName] = useState('')
+  const [agentName, setAgentName] = useState(SUPPORTED_AGENTS[0].id)
+  const [customAgentName, setCustomAgentName] = useState('')
   const [selectedVault, setSelectedVault] = useState('')
   const [selectedSecrets, setSelectedSecrets] = useState<string[]>([])
   const [expiresIn, setExpiresIn] = useState('24') // hours
@@ -106,14 +108,15 @@ export default function SessionsPage() {
     setCreating(true)
 
     try {
+      const resolvedAgent = agentName === 'other' ? customAgentName : agentName
       const response = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           vault_id: selectedVault,
-          agent_name: agentName,
+          agent_name: resolvedAgent,
           allowed_secrets: selectedSecrets,
-          expires_in_hours: parseInt(expiresIn),
+          duration_hours: parseInt(expiresIn),
         }),
       })
 
@@ -136,7 +139,8 @@ export default function SessionsPage() {
 
         setSuccess(`Session created! Token: ${data.session.token}`)
         setShowCreateSession(false)
-        setAgentName('')
+        setAgentName(SUPPORTED_AGENTS[0].id)
+        setCustomAgentName('')
         setSelectedSecrets([])
         setExpiresIn('24')
       }
@@ -283,13 +287,11 @@ export default function SessionsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
-                  AGENT NAME
+                  AGENT
                 </label>
-                <input
-                  type="text"
+                <select
                   value={agentName}
                   onChange={(e) => setAgentName(e.target.value)}
-                  placeholder="cursor-ai"
                   required
                   className="w-full px-3 py-2 text-xs"
                   style={{
@@ -297,7 +299,29 @@ export default function SessionsPage() {
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
-                />
+                >
+                  {SUPPORTED_AGENTS.map((agent) => (
+                    <option key={agent.id} value={agent.id}>
+                      {agent.name}
+                    </option>
+                  ))}
+                  <option value="other">Other (custom)</option>
+                </select>
+                {agentName === 'other' && (
+                  <input
+                    type="text"
+                    value={customAgentName}
+                    onChange={(e) => setCustomAgentName(e.target.value)}
+                    placeholder="custom-agent-name"
+                    required
+                    className="w-full px-3 py-2 text-xs mt-2"
+                    style={{
+                      backgroundColor: '#1a211d',
+                      border: '1px solid #5f5d64',
+                      color: '#e8e3e3',
+                    }}
+                  />
+                )}
               </div>
               <div>
                 <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>

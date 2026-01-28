@@ -13,6 +13,7 @@ interface Profile {
   id: string
   email: string
   tier: 'free' | 'pro' | 'team' | 'enterprise'
+  stripe_customer_id: string | null
   vault_limit: number
   secret_limit: number
   session_limit: number
@@ -27,6 +28,7 @@ interface AuthContextType {
   loading: boolean
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>
+  signInWithGitHub: () => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<{ error: Error | null }>
   updatePassword: (password: string) => Promise<{ error: Error | null }>
@@ -181,6 +183,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error as Error | null }
   }
 
+  const signInWithGitHub = async () => {
+    if (!supabase) return { error: new Error('Not initialized') }
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+    return { error: error as Error | null }
+  }
+
   const signOut = async () => {
     if (supabase) {
       try {
@@ -224,6 +237,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signUp,
         signIn,
+        signInWithGitHub,
         signOut,
         resetPassword,
         updatePassword,

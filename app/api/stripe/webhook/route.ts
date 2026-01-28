@@ -33,19 +33,22 @@ function getSupabaseAdmin() {
 
 // Map Stripe price IDs to tiers (loaded at runtime)
 function getPriceToTier(): Record<string, keyof typeof TIER_LIMITS> {
-  return {
-    // Monthly prices
-    [process.env.STRIPE_PRICE_PRO_MONTHLY || '']: 'pro',
-    [process.env.STRIPE_PRICE_TEAM_MONTHLY || '']: 'team',
-    [process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || '']: 'enterprise',
-    // Annual prices (support both ANNUAL and YEARLY naming)
-    [process.env.STRIPE_PRICE_PRO_ANNUAL || '']: 'pro',
-    [process.env.STRIPE_PRICE_TEAM_ANNUAL || '']: 'team',
-    [process.env.STRIPE_PRICE_ENTERPRISE_ANNUAL || '']: 'enterprise',
-    [process.env.STRIPE_PRICE_PRO_YEARLY || '']: 'pro',
-    [process.env.STRIPE_PRICE_TEAM_YEARLY || '']: 'team',
-    [process.env.STRIPE_PRICE_ENTERPRISE_YEARLY || '']: 'enterprise',
+  const entries: [string | undefined, keyof typeof TIER_LIMITS][] = [
+    [process.env.STRIPE_PRICE_PRO_MONTHLY, 'pro'],
+    [process.env.STRIPE_PRICE_TEAM_MONTHLY, 'team'],
+    [process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY, 'enterprise'],
+    [process.env.STRIPE_PRICE_PRO_ANNUAL, 'pro'],
+    [process.env.STRIPE_PRICE_TEAM_ANNUAL, 'team'],
+    [process.env.STRIPE_PRICE_ENTERPRISE_ANNUAL, 'enterprise'],
+    [process.env.STRIPE_PRICE_PRO_YEARLY, 'pro'],
+    [process.env.STRIPE_PRICE_TEAM_YEARLY, 'team'],
+    [process.env.STRIPE_PRICE_ENTERPRISE_YEARLY, 'enterprise'],
+  ]
+  const result: Record<string, keyof typeof TIER_LIMITS> = {}
+  for (const [priceId, tier] of entries) {
+    if (priceId) result[priceId] = tier
   }
+  return result
 }
 
 async function updateUserTier(
@@ -55,7 +58,6 @@ async function updateUserTier(
   const limits = TIER_LIMITS[tier]
   const supabase = getSupabaseAdmin() as any
 
-  // Find user by Stripe customer ID
   const { data: profile, error } = await supabase
     .from('profiles')
     .update({
@@ -70,7 +72,7 @@ async function updateUserTier(
     .single()
 
   if (error) {
-    console.error('Error updating user tier:', error)
+    console.error('Error updating user tier:', error.message)
     throw error
   }
 
@@ -84,12 +86,11 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 
   const tier = PRICE_TO_TIER[priceId]
   if (!tier) {
-    console.error('Unknown price ID in subscription created:', priceId)
+    console.error('Unknown price ID in subscription.created:', priceId)
     throw new Error(`Unknown price ID: ${priceId}`)
   }
 
   await updateUserTier(customerId, tier)
-  console.log(`Subscription created: ${customerId} -> ${tier}`)
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
@@ -97,32 +98,25 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   const priceId = subscription.items.data[0]?.price.id
   const PRICE_TO_TIER = getPriceToTier()
 
-  // Check if subscription is still active
   if (subscription.status === 'active' || subscription.status === 'trialing') {
     const tier = PRICE_TO_TIER[priceId]
     if (!tier) {
-      console.error('Unknown price ID in subscription updated:', priceId)
+      console.error('Unknown price ID in subscription.updated:', priceId)
       throw new Error(`Unknown price ID: ${priceId}`)
     }
     await updateUserTier(customerId, tier)
-    console.log(`Subscription updated: ${customerId} -> ${tier}`)
   } else if (
     subscription.status === 'canceled' ||
     subscription.status === 'unpaid' ||
     subscription.status === 'past_due'
   ) {
-    // Downgrade to free
     await updateUserTier(customerId, 'free')
-    console.log(`Subscription canceled/unpaid: ${customerId} -> free`)
   }
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
-
-  // Downgrade to free tier
   await updateUserTier(customerId, 'free')
-  console.log(`Subscription deleted: ${customerId} -> free`)
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
@@ -132,89 +126,75 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const supabase = getSupabaseAdmin() as any
   const PRICE_TO_TIER = getPriceToTier()
 
-  console.log('Checkout completed webhook received:', { customerId, userId, subscriptionId })
-
   if (!userId) {
-    console.error('No userId (client_reference_id) in checkout session!')
+    console.error('Missing client_reference_id in checkout session')
     throw new Error('Missing client_reference_id in checkout session')
   }
 
   if (!customerId) {
-    console.error('No customerId in checkout session!')
+    console.error('Missing customer in checkout session')
     throw new Error('Missing customer in checkout session')
   }
 
   if (!subscriptionId) {
-    console.error('CRITICAL: No subscriptionId in checkout session for user:', userId)
+    console.error('Missing subscription in checkout session')
     throw new Error('Missing subscription in checkout session')
   }
 
   // Get subscription details to determine tier
-  try {
-    const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
-    const priceId = subscription.items.data[0]?.price.id
-    console.log('Retrieved subscription, priceId:', priceId)
-    console.log('Available price mappings:', PRICE_TO_TIER)
+  const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
+  const priceId = subscription.items.data[0]?.price.id
 
-    const tier = PRICE_TO_TIER[priceId]
-    if (!tier) {
-      console.error('CRITICAL: Unknown price ID, cannot determine tier:', priceId)
-      console.error('Available price mappings:', JSON.stringify(PRICE_TO_TIER))
-      // Still link the customer ID so we can fix manually
-      await supabase
-        .from('profiles')
-        .update({
-          stripe_customer_id: customerId,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', userId)
-
-      // Throw error so Stripe knows to alert us
-      throw new Error(`Unknown price ID: ${priceId}. Customer linked but tier not set.`)
-    }
-
-    const limits = TIER_LIMITS[tier]
-    console.log(`Updating user ${userId} to tier ${tier} with limits:`, limits)
-
-    // SINGLE ATOMIC UPDATE: Link customer ID AND update tier together
-    const { error: updateError } = await supabase
+  const tier = PRICE_TO_TIER[priceId]
+  if (!tier) {
+    console.error('Unknown price ID in checkout:', priceId)
+    // Still link the customer ID so we can fix manually
+    await supabase
       .from('profiles')
       .update({
         stripe_customer_id: customerId,
-        tier,
-        vault_limit: limits.vault_limit,
-        secret_limit: limits.secret_limit,
-        session_limit: limits.session_limit,
         updated_at: new Date().toISOString(),
       })
       .eq('id', userId)
 
-    if (updateError) {
-      console.error('Error updating user profile:', updateError)
-      throw new Error(`Failed to update profile: ${updateError.message}`)
-    }
+    throw new Error(`Unknown price ID: ${priceId}. Customer linked but tier not set.`)
+  }
 
-    console.log(`Checkout completed: Linked customer ${customerId} and updated user ${userId} to tier ${tier}`)
-  } catch (err) {
-    console.error('Error processing checkout completion:', err)
-    throw err // Re-throw so webhook returns 500 and Stripe retries
+  const limits = TIER_LIMITS[tier]
+
+  // SINGLE ATOMIC UPDATE: Link customer ID AND update tier together
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({
+      stripe_customer_id: customerId,
+      tier,
+      vault_limit: limits.vault_limit,
+      secret_limit: limits.secret_limit,
+      session_limit: limits.session_limit,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId)
+
+  if (updateError) {
+    console.error('Checkout profile update failed:', updateError.message)
+    throw new Error(`Failed to update profile: ${updateError.message}`)
   }
 }
 
 export async function POST(request: NextRequest) {
   // Validate required env vars upfront
   if (!process.env.STRIPE_WEBHOOK_SECRET) {
-    console.error('CRITICAL: STRIPE_WEBHOOK_SECRET not configured')
+    console.error('STRIPE_WEBHOOK_SECRET not configured')
     return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
   }
 
   if (!process.env.STRIPE_SECRET_KEY) {
-    console.error('CRITICAL: STRIPE_SECRET_KEY not configured')
+    console.error('STRIPE_SECRET_KEY not configured')
     return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
   }
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    console.error('CRITICAL: Supabase env vars not configured')
+    console.error('Supabase env vars not configured')
     return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
   }
 
@@ -234,7 +214,7 @@ export async function POST(request: NextRequest) {
       process.env.STRIPE_WEBHOOK_SECRET
     )
   } catch (err) {
-    console.error('Webhook signature verification failed:', err)
+    console.error('Webhook signature verification failed')
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
@@ -255,12 +235,9 @@ export async function POST(request: NextRequest) {
       case 'customer.subscription.deleted':
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
         break
-
-      default:
-        console.log(`Unhandled event type: ${event.type}`)
     }
   } catch (err) {
-    console.error('Error processing webhook:', err)
+    console.error('Webhook handler failed:', err instanceof Error ? err.message : err)
     return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
   }
 

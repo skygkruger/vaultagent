@@ -58,15 +58,15 @@ export async function POST(request: NextRequest) {
 
   // Validate price ID exists and is a real Stripe price
   if (!priceId) {
-    console.error(`Price ID not configured for ${plan} ${billing}`)
+    console.error(`Price ID not configured for plan: ${plan}, billing: ${billing}`)
     return NextResponse.json(
-      { error: `Price not configured for ${plan} ${billing}. Contact support.` },
+      { error: `Pricing not configured for ${plan} ${billing}. Contact support.` },
       { status: 500 }
     )
   }
 
-  if (!priceId.startsWith('price_1')) {
-    console.error('Invalid price ID format:', priceId)
+  if (!priceId.startsWith('price_')) {
+    console.error('Invalid price ID format for plan:', plan)
     return NextResponse.json(
       { error: 'Invalid price configuration. Contact support.' },
       { status: 500 }
@@ -87,7 +87,6 @@ export async function POST(request: NextRequest) {
 
       if (existingCustomers.data.length > 0) {
         customerId = existingCustomers.data[0].id
-        console.log('Found existing Stripe customer:', customerId)
       } else {
         const customer = await stripe.customers.create({
           email: user.email!,
@@ -96,7 +95,6 @@ export async function POST(request: NextRequest) {
           },
         })
         customerId = customer.id
-        console.log('Created new Stripe customer:', customerId)
       }
 
       // Immediately link customer ID to profile (don't wait for webhook)
@@ -111,9 +109,7 @@ export async function POST(request: NextRequest) {
           .eq('id', user.id)
 
         if (linkError) {
-          console.error('Error linking customer ID:', linkError)
-        } else {
-          console.log('Linked customer ID to profile before checkout')
+          console.error('Error linking customer ID:', linkError.message)
         }
       }
     }
@@ -141,10 +137,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: session.url })
   } catch (err) {
-    console.error('Stripe checkout error:', err)
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+    console.error('Stripe checkout error:', err instanceof Error ? err.message : err)
     return NextResponse.json(
-      { error: `Failed to create checkout session: ${errorMessage}` },
+      { error: 'Failed to create checkout session. Please try again.' },
       { status: 500 }
     )
   }

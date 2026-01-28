@@ -51,20 +51,54 @@ export default function SignInPage() {
 └──────────────────────────────────────────┘`}
       </pre>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
-          <div
-            className="p-3 text-xs"
-            style={{
-              backgroundColor: '#1e1517',
-              border: '1px solid #eb6f92',
-              color: '#eb6f92',
-            }}
-          >
-            [!] {error}
-          </div>
-        )}
+      {error && (
+        <div
+          className="p-3 mb-4 text-xs"
+          style={{
+            backgroundColor: '#1e1517',
+            border: '1px solid #eb6f92',
+            color: '#eb6f92',
+          }}
+        >
+          [!] {error}
+        </div>
+      )}
 
+      <button
+        type="button"
+        onClick={async () => {
+          setError(null)
+          setLoading(true)
+          const supabase = createClient()
+          const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'github',
+            options: {
+              redirectTo: `${window.location.origin}/auth/callback`,
+            },
+          })
+          if (error) {
+            setError(error.message)
+            setLoading(false)
+          }
+        }}
+        disabled={loading}
+        className="w-full p-3 text-xs transition-all hover:translate-y-px disabled:opacity-50 mb-4"
+        style={{
+          backgroundColor: 'transparent',
+          color: '#e8e3e3',
+          border: '1px solid #5f5d64',
+        }}
+      >
+        [&gt;] SIGN IN WITH GITHUB
+      </button>
+
+      <div className="flex items-center gap-3 mb-4">
+        <div className="flex-1 h-px" style={{ backgroundColor: '#5f5d64' }} />
+        <span className="text-xs" style={{ color: '#5f5d64' }}>or</span>
+        <div className="flex-1 h-px" style={{ backgroundColor: '#5f5d64' }} />
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             EMAIL

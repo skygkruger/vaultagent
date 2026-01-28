@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
@@ -24,8 +24,9 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname()
   const router = useRouter()
-  const { user, profile, signOut, loading } = useAuth()
+  const { user, profile, signOut, loading, refreshProfile } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [tierSynced, setTierSynced] = useState(false)
 
   const handleSignOut = async () => {
     await signOut()
@@ -39,6 +40,22 @@ export default function DashboardLayout({
       router.push('/auth/sign-in')
     }
   }, [loading, user, router])
+
+  // Auto-sync tier from Stripe if user has a customer ID but shows free
+  useEffect(() => {
+    if (tierSynced || !profile || !user) return
+    if (profile.stripe_customer_id && profile.tier === 'free') {
+      setTierSynced(true)
+      fetch('/api/stripe/sync', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.synced && data.tier !== 'free') {
+            refreshProfile()
+          }
+        })
+        .catch(() => {})
+    }
+  }, [tierSynced, profile, user, refreshProfile])
 
   // Show loading state (max 3 seconds due to AuthContext timeout)
   if (loading) {
