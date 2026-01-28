@@ -248,9 +248,9 @@ function PricingContent() {
           }}>
 {`╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║     [$] SIMPLE, TRANSPARENT PRICING                           ║
+║                [$] SIMPLE, TRANSPARENT PRICING                ║
 ║                                                               ║
-║         Secure your secrets at any scale                      ║
+║                Secure your secrets at any scale               ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝`}
           </pre>

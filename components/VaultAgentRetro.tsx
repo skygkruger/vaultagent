@@ -852,7 +852,7 @@ export default function VaultAgentRetro() {
             <pre className="text-xs leading-tight">
 {`┌─────────────────────────────────────────────────────────────────────────────┐
 │                                                                             │
-│  [/] CLAUDE CODE     [/] CURSOR      [~] COPILOT      [~] WINDSURF         │
+│  [/] CLAUDE CODE     [/] CURSOR      [~] COPILOT      [~] WINDSURF          │
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │

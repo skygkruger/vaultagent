@@ -184,7 +184,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     if (supabase) {
       try {
-        await supabase.auth.signOut()
+        // Race against a timeout so sign-out never hangs
+        await Promise.race([
+          supabase.auth.signOut(),
+          new Promise(resolve => setTimeout(resolve, 3000)),
+        ])
       } catch (err) {
         console.error('Sign out error:', err)
       }
