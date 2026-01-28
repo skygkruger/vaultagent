@@ -61,8 +61,8 @@ function PricingContent() {
   };
 
   const colors = {
-    bg: '#1a1a2e',
-    bgLight: '#252542',
+    bg: '#141a17',
+    bgLight: '#1a211d',
     text: '#e8e3e3',
     muted: '#5f5d64',
     mint: '#a8d8b9',
@@ -226,7 +226,7 @@ function PricingContent() {
               padding: '12px 16px',
               marginBottom: '24px',
               border: `1px solid ${colors.coral}`,
-              background: '#2a1a2e',
+              background: '#1e1517',
               color: colors.coral,
               fontSize: '12px',
               textAlign: 'center',
@@ -719,7 +719,7 @@ export default function PricingPage() {
     <Suspense fallback={
       <div style={{
         minHeight: '100vh',
-        background: '#1a1a2e',
+        background: '#141a17',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

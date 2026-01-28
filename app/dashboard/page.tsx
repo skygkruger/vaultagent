@@ -379,7 +379,7 @@ export default function DashboardPage() {
               onChange={(e) => setSelectedVault(e.target.value)}
               className="px-3 py-2 text-xs w-full sm:w-auto"
               style={{
-                backgroundColor: '#252542',
+                backgroundColor: '#1a211d',
                 border: '1px solid #5f5d64',
                 color: '#e8e3e3',
               }}
@@ -409,7 +409,7 @@ export default function DashboardPage() {
         <div
           className="p-3 mb-6 text-xs flex justify-between items-center"
           style={{
-            backgroundColor: '#2a1a2e',
+            backgroundColor: '#1e1517',
             border: '1px solid #eb6f92',
             color: '#eb6f92',
           }}
@@ -448,7 +448,7 @@ export default function DashboardPage() {
                   required
                   className="w-full px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -465,7 +465,7 @@ export default function DashboardPage() {
                   placeholder="Production API keys"
                   className="w-full px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -479,7 +479,7 @@ export default function DashboardPage() {
                 className="px-4 py-2 text-xs disabled:opacity-50"
                 style={{
                   backgroundColor: '#a8d8b9',
-                  color: '#1a1a2e',
+                  color: '#141a17',
                 }}
               >
                 {creatingVault ? '[~] CREATING...' : '[>] CREATE VAULT'}
@@ -506,7 +506,7 @@ export default function DashboardPage() {
             className="px-4 py-2 text-xs"
             style={{
               backgroundColor: '#a8d8b9',
-              color: '#1a1a2e',
+              color: '#141a17',
             }}
           >
             [+] CREATE YOUR FIRST VAULT
@@ -523,7 +523,7 @@ export default function DashboardPage() {
         <div
           className="px-4 py-3 flex justify-between items-center"
           style={{
-            backgroundColor: '#252542',
+            backgroundColor: '#1a211d',
             borderBottom: '1px solid #5f5d64',
           }}
         >
@@ -563,7 +563,7 @@ export default function DashboardPage() {
                   required
                   className="w-full px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -581,7 +581,7 @@ export default function DashboardPage() {
                   required
                   className="w-full px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -599,7 +599,7 @@ export default function DashboardPage() {
                   required
                   className="w-full px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -616,7 +616,7 @@ export default function DashboardPage() {
                 className="px-4 py-2 text-xs disabled:opacity-50"
                 style={{
                   backgroundColor: '#a8d8b9',
-                  color: '#1a1a2e',
+                  color: '#141a17',
                 }}
               >
                 {saving ? '[~] ENCRYPTING...' : '[>] STORE SECRET'}
@@ -679,7 +679,7 @@ export default function DashboardPage() {
       <div
         className="p-4 text-xs"
         style={{
-          backgroundColor: '#252542',
+          backgroundColor: '#1a211d',
           border: '1px solid #5f5d64',
         }}
       >

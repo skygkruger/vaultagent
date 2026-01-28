@@ -130,8 +130,8 @@ export default function VaultAgentRetro() {
             </nav>
 
             {/* Mobile Menu */}
-            <div className="flex md:hidden items-center gap-4">
-              <Link href="/docs" className="text-xs" style={{ color: '#5f5d64' }}>[DOCS]</Link>
+            <div className="flex md:hidden items-center gap-3">
+              <Link href="/docs" className="px-3 py-1 text-xs" style={{ color: '#5f5d64' }}>[DOCS]</Link>
               <Link
                 href="/auth/sign-in"
                 className="px-3 py-1 text-xs"
@@ -377,7 +377,7 @@ export default function VaultAgentRetro() {
               <button
                 onClick={handleCreateSecret}
                 disabled={isCreating || !secretName.trim() || !secretValue.trim()}
-                className="transition-all hover-glow hover-lift disabled:opacity-50 w-full sm:w-auto"
+                className="transition-all hover-highlight disabled:opacity-50 w-full sm:w-auto"
                 style={{ color: '#a8d8b9' }}
               >
                 <pre className="hidden sm:block text-xs leading-tight">
@@ -487,7 +487,7 @@ export default function VaultAgentRetro() {
             {/* Create Session Button */}
             <div className="flex justify-center">
               <button
-                className="transition-all hover-glow hover-lift w-full sm:w-auto"
+                className="transition-all hover-highlight w-full sm:w-auto"
                 style={{ color: '#a8d8b9' }}
               >
                 <pre className="hidden sm:block text-xs leading-tight">
@@ -646,7 +646,7 @@ export default function VaultAgentRetro() {
 
           {/* Desktop */}
           <div className="hidden sm:flex flex-col md:flex-row justify-center gap-4">
-            <div style={{ color: '#a8d8b9' }} className="hover-border-glow hover-lift transition-all cursor-default">
+            <div style={{ color: '#a8d8b9' }} className="hover-brighten transition-all cursor-default">
               <pre className="text-xs leading-tight">
 {`┌───────────────────────────┐
 │                           │
@@ -660,7 +660,7 @@ export default function VaultAgentRetro() {
               </pre>
             </div>
 
-            <div style={{ color: '#bba7c0' }} className="hover-border-glow hover-lift transition-all cursor-default">
+            <div style={{ color: '#bba7c0' }} className="hover-brighten transition-all cursor-default">
               <pre className="text-xs leading-tight">
 {`┌───────────────────────────┐
 │                           │
@@ -674,7 +674,7 @@ export default function VaultAgentRetro() {
               </pre>
             </div>
 
-            <div style={{ color: '#adb7ac' }} className="hover-border-glow hover-lift transition-all cursor-default">
+            <div style={{ color: '#adb7ac' }} className="hover-brighten transition-all cursor-default">
               <pre className="text-xs leading-tight">
 {`┌───────────────────────────┐
 │                           │
@@ -759,7 +759,7 @@ export default function VaultAgentRetro() {
 ║      [x] Team features          ║
 ║                                 ║`}
               </pre>
-              <Link href="/pricing" className="block hover-glow hover-scale transition-all">
+              <Link href="/pricing" className="block hover-highlight transition-all">
                 <pre className="text-xs leading-tight">
 {`║     ╔═════════════════════╗     ║
 ║     ║  [>] UPGRADE NOW    ║     ║
@@ -802,7 +802,7 @@ export default function VaultAgentRetro() {
                 <div style={{ color: '#a8d8b9' }}>[/] Unlimited sessions</div>
                 <div style={{ color: '#a8d8b9' }}>[/] Audit export</div>
               </div>
-              <Link href="/pricing" className="block text-center py-2 text-xs" style={{ backgroundColor: '#a8d8b9', color: '#1a1a2e' }}>
+              <Link href="/pricing" className="block text-center py-2 text-xs" style={{ backgroundColor: '#a8d8b9', color: '#141a17' }}>
                 [&gt;] UPGRADE NOW
               </Link>
             </div>
@@ -821,7 +821,7 @@ export default function VaultAgentRetro() {
 ║  [/] Role-based access                 [/] Compliance reports               ║
 ║                                                                             ║`}
               </pre>
-              <Link href="/pricing" className="block hover-glow hover-text-glow transition-all">
+              <Link href="/pricing" className="block hover-highlight transition-all">
                 <pre className="text-xs leading-tight">
 {`║                           [>] SEE PRICING                                   ║`}
                 </pre>
@@ -849,19 +849,18 @@ export default function VaultAgentRetro() {
 
           {/* Desktop */}
           <div className="hidden md:flex justify-center overflow-x-auto" style={{ color: '#adb7ac' }}>
-            <pre className="text-xs leading-tight" style={{ fontFamily: 'Consolas, Monaco, "Courier New", monospace', overflow: 'visible' }}>
-{`+------------------------------------------------------------------------+
-|                                                                        |
-|  +-----------+ +-----------+ +-----------+ +-----------+               |
-|  |CLAUDE CODE| |  CURSOR   | |  COPILOT  | | WINDSURF  |               |
-|  |   [/]     | |   [/]     | | [~] soon  | | [~] soon  |               |
-|  +-----------+ +-----------+ +-----------+ +-----------+               |
-|                                                                        |
-|  $ npx vaultagent init                                                 |
-|  $ vaultagent add OPENAI_API_KEY                                       |
-|  $ vaultagent session create --agent claude-code --duration 1h         |
-|                                                                        |
-+------------------------------------------------------------------------+`}
+            <pre className="text-xs leading-tight">
+{`┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  [/] CLAUDE CODE     [/] CURSOR      [~] COPILOT      [~] WINDSURF         │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  $ npx vaultagent init                                                      │
+│  $ vaultagent add OPENAI_API_KEY                                            │
+│  $ vaultagent session create --agent claude-code --duration 1h              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘`}
             </pre>
           </div>
 
@@ -889,29 +888,29 @@ export default function VaultAgentRetro() {
           <p className="text-xs text-center" style={{ color: '#5f5d64' }}>{`// THREAT MODEL`}</p>
 
           {/* Desktop */}
-          <div className="hidden lg:flex justify-center overflow-x-auto" style={{ color: '#adb7ac' }}>
-            <pre className="text-xs leading-tight">
-{`┌─────────────────────────────────────────────────────────────────────────────┐
-│  WITHOUT VAULTAGENT                    WITH VAULTAGENT                      │
+          <div className="hidden lg:flex justify-center overflow-x-auto">
+            <pre className="text-xs leading-tight" style={{ color: '#adb7ac' }}
+              dangerouslySetInnerHTML={{ __html:
+`┌─────────────────────────────────────────────────────────────────────────────┐
+│  <span style="color:#eb6f92">WITHOUT VAULTAGENT</span>                    <span style="color:#a8d8b9">WITH VAULTAGENT</span>                      │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  [!] API keys in .env files            [/] Keys encrypted client-side       │
-│      Risk: leaked in git, logs             Never stored in plaintext        │
-│                                                                             │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  [!] Agent has permanent access        [/] Time-scoped sessions             │
-│      Risk: compromised agent =             Access auto-revokes              │
-│      compromised secrets forever           Blast radius contained           │
+│  <span style="color:#eb6f92">[!] API keys in .env files</span>            <span style="color:#a8d8b9">[/] Keys encrypted client-side</span>       │
+│      <span style="color:#5f5d64">Risk: leaked in git, logs</span>             <span style="color:#5f5d64">Never stored in plaintext</span>        │
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  [!] No visibility into usage          [/] Full audit trail                 │
-│      Risk: can't detect misuse             Every access logged              │
-│      or prove compliance                   Exportable for audits            │
+│  <span style="color:#eb6f92">[!] Agent has permanent access</span>        <span style="color:#a8d8b9">[/] Time-scoped sessions</span>             │
+│      <span style="color:#5f5d64">Risk: compromised agent =</span>             <span style="color:#5f5d64">Access auto-revokes</span>              │
+│      <span style="color:#5f5d64">compromised secrets forever</span>           <span style="color:#5f5d64">Blast radius contained</span>           │
 │                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘`}
-            </pre>
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  <span style="color:#eb6f92">[!] No visibility into usage</span>          <span style="color:#a8d8b9">[/] Full audit trail</span>                 │
+│      <span style="color:#5f5d64">Risk: can&#39;t detect misuse</span>             <span style="color:#5f5d64">Every access logged</span>              │
+│      <span style="color:#5f5d64">or prove compliance</span>                   <span style="color:#5f5d64">Exportable for audits</span>            │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘` }} />
           </div>
 
           {/* Mobile */}

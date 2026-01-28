@@ -65,11 +65,11 @@ export default function ResetPasswordPage() {
           className="text-xs mb-8"
           style={{ color: '#a8d8b9', overflow: 'visible' }}
         >
-{`+------------------------------------------+
-|                                          |
-|         [/] PASSWORD UPDATED             |
-|                                          |
-+------------------------------------------+`}
+{`┌──────────────────────────────────────────┐
+│                                          │
+│         [/] PASSWORD UPDATED             │
+│                                          │
+└──────────────────────────────────────────┘`}
         </pre>
         <p className="text-xs mb-4" style={{ color: '#e8e3e3' }}>
           Your password has been successfully updated.
@@ -87,13 +87,13 @@ export default function ResetPasswordPage() {
         className="text-xs mb-8 text-center"
         style={{ color: '#a8d8b9', overflow: 'visible' }}
       >
-{`+------------------------------------------+
-|                                          |
-|           [~] RESET PASSWORD             |
-|                                          |
-|        Enter your new password           |
-|                                          |
-+------------------------------------------+`}
+{`┌──────────────────────────────────────────┐
+│                                          │
+│           [~] RESET PASSWORD             │
+│                                          │
+│        Enter your new password           │
+│                                          │
+└──────────────────────────────────────────┘`}
       </pre>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -101,7 +101,7 @@ export default function ResetPasswordPage() {
           <div
             className="p-3 text-xs"
             style={{
-              backgroundColor: '#2a1a2e',
+              backgroundColor: '#1e1517',
               border: '1px solid #eb6f92',
               color: '#eb6f92',
             }}
@@ -117,7 +117,7 @@ export default function ResetPasswordPage() {
           <div
             className="flex items-center p-3"
             style={{
-              backgroundColor: '#252542',
+              backgroundColor: '#1a211d',
               border: '1px solid #5f5d64',
             }}
           >
@@ -144,7 +144,7 @@ export default function ResetPasswordPage() {
           <div
             className="flex items-center p-3"
             style={{
-              backgroundColor: '#252542',
+              backgroundColor: '#1a211d',
               border: '1px solid #5f5d64',
             }}
           >
@@ -167,7 +167,7 @@ export default function ResetPasswordPage() {
           className="w-full p-3 text-xs transition-all hover:translate-y-px disabled:opacity-50"
           style={{
             backgroundColor: '#a8d8b9',
-            color: '#1a1a2e',
+            color: '#141a17',
             border: 'none',
           }}
         >

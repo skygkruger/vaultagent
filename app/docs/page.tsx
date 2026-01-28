@@ -13,8 +13,8 @@ export default function DocsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const colors = {
-    bg: '#1a1a2e',
-    bgLight: '#252542',
+    bg: '#141a17',
+    bgLight: '#1a211d',
     text: '#e8e3e3',
     muted: '#5f5d64',
     mint: '#a8d8b9',

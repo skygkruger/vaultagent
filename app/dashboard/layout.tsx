@@ -45,7 +45,7 @@ export default function DashboardLayout({
     return (
       <div
         className="min-h-screen flex items-center justify-center font-mono"
-        style={{ backgroundColor: '#1a1a2e', color: '#a8d8b9' }}
+        style={{ backgroundColor: '#141a17', color: '#a8d8b9' }}
       >
         <p className="text-xs">[~] Loading...</p>
       </div>
@@ -57,7 +57,7 @@ export default function DashboardLayout({
     return (
       <div
         className="min-h-screen flex items-center justify-center font-mono"
-        style={{ backgroundColor: '#1a1a2e', color: '#a8d8b9' }}
+        style={{ backgroundColor: '#141a17', color: '#a8d8b9' }}
       >
         <p className="text-xs">[~] Redirecting to sign in...</p>
       </div>
@@ -74,7 +74,7 @@ export default function DashboardLayout({
   return (
     <div
       className="min-h-screen font-mono text-sm flex flex-col lg:flex-row"
-      style={{ backgroundColor: '#1a1a2e', color: '#adb7ac' }}
+      style={{ backgroundColor: '#141a17', color: '#adb7ac' }}
     >
       {/* Mobile Header */}
       <div
@@ -150,7 +150,7 @@ export default function DashboardLayout({
                 onClick={() => setSidebarOpen(false)}
                 className="block px-3 py-2 text-xs mb-1 transition-all hover-border-glow"
                 style={{
-                  backgroundColor: isActive ? '#252542' : 'transparent',
+                  backgroundColor: isActive ? '#1a211d' : 'transparent',
                   color: isActive ? '#a8d8b9' : '#adb7ac',
                   border: isActive ? '1px solid #a8d8b9' : '1px solid transparent',
                 }}
@@ -191,7 +191,7 @@ export default function DashboardLayout({
               className="block w-full text-center text-xs px-3 py-2 transition-all hover-glow hover-lift"
               style={{
                 backgroundColor: '#a8d8b9',
-                color: '#1a1a2e',
+                color: '#141a17',
               }}
             >
               [*] UPGRADE PLAN
@@ -223,7 +223,7 @@ export default function DashboardLayout({
         <div className="p-4 border-t" style={{ borderColor: '#5f5d64' }}>
           <button
             onClick={handleSignOut}
-            className="w-full text-left text-xs px-3 py-2 transition-all hover:bg-[#252542] hover-text-glow"
+            className="w-full text-left text-xs px-3 py-2 transition-all hover:bg-[#1a211d] hover-text-glow"
             style={{ color: '#eb6f92' }}
           >
             [x] Sign Out

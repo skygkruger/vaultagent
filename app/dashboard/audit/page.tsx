@@ -217,7 +217,7 @@ export default function AuditPage() {
         <div
           className="p-3 mb-6 text-xs"
           style={{
-            backgroundColor: '#2a1a2e',
+            backgroundColor: '#1e1517',
             border: '1px solid #eb6f92',
             color: '#eb6f92',
           }}
@@ -240,7 +240,7 @@ export default function AuditPage() {
             }}
             className="w-full sm:w-auto px-3 py-2 text-xs"
             style={{
-              backgroundColor: '#252542',
+              backgroundColor: '#1a211d',
               border: '1px solid #5f5d64',
               color: '#e8e3e3',
               minWidth: '150px',
@@ -266,7 +266,7 @@ export default function AuditPage() {
             }}
             className="w-full sm:w-auto px-3 py-2 text-xs"
             style={{
-              backgroundColor: '#252542',
+              backgroundColor: '#1a211d',
               border: '1px solid #5f5d64',
               color: '#e8e3e3',
               minWidth: '150px',
@@ -288,7 +288,7 @@ export default function AuditPage() {
         <div
           className="hidden lg:grid px-4 py-3 grid-cols-12 gap-4"
           style={{
-            backgroundColor: '#252542',
+            backgroundColor: '#1a211d',
             borderBottom: '1px solid #5f5d64',
           }}
         >
@@ -313,7 +313,7 @@ export default function AuditPage() {
         <div
           className="lg:hidden px-4 py-3"
           style={{
-            backgroundColor: '#252542',
+            backgroundColor: '#1a211d',
             borderBottom: '1px solid #5f5d64',
           }}
         >
@@ -442,7 +442,7 @@ export default function AuditPage() {
       <div
         className="p-4 text-xs mt-6"
         style={{
-          backgroundColor: '#252542',
+          backgroundColor: '#1a211d',
           border: '1px solid #5f5d64',
         }}
       >

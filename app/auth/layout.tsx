@@ -14,7 +14,7 @@ export default function AuthLayout({
     <div
       className="min-h-screen font-mono text-sm flex flex-col"
       style={{
-        backgroundColor: '#1a1a2e',
+        backgroundColor: '#141a17',
         color: '#adb7ac',
       }}
     >

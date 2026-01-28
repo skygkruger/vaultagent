@@ -219,7 +219,7 @@ export default function AccountPage() {
         <div
           className="p-3 mb-6 text-xs flex justify-between items-center"
           style={{
-            backgroundColor: '#2a1a2e',
+            backgroundColor: '#1e1517',
             border: '1px solid #eb6f92',
             color: '#eb6f92',
           }}
@@ -333,7 +333,7 @@ export default function AccountPage() {
                   minLength={8}
                   className="w-full max-w-xs px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -351,7 +351,7 @@ export default function AccountPage() {
                   minLength={8}
                   className="w-full max-w-xs px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -365,7 +365,7 @@ export default function AccountPage() {
                 className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-glow hover-lift"
                 style={{
                   backgroundColor: '#a8d8b9',
-                  color: '#1a1a2e',
+                  color: '#141a17',
                 }}
               >
                 {changingPassword ? '[~] UPDATING...' : '[>] UPDATE PASSWORD'}
@@ -428,7 +428,7 @@ export default function AccountPage() {
                 key={feature}
                 className="text-xs px-2 py-1"
                 style={{
-                  backgroundColor: '#252542',
+                  backgroundColor: '#1a211d',
                   color: '#adb7ac',
                 }}
               >
@@ -452,7 +452,7 @@ export default function AccountPage() {
                 className="text-xs px-3 py-1 transition-all"
                 style={{
                   backgroundColor: billingPeriod === 'monthly' ? '#a8d8b9' : 'transparent',
-                  color: billingPeriod === 'monthly' ? '#1a1a2e' : '#5f5d64',
+                  color: billingPeriod === 'monthly' ? '#141a17' : '#5f5d64',
                   border: '1px solid #a8d8b9',
                 }}
               >
@@ -463,7 +463,7 @@ export default function AccountPage() {
                 className="text-xs px-3 py-1 transition-all"
                 style={{
                   backgroundColor: billingPeriod === 'yearly' ? '#a8d8b9' : 'transparent',
-                  color: billingPeriod === 'yearly' ? '#1a1a2e' : '#5f5d64',
+                  color: billingPeriod === 'yearly' ? '#141a17' : '#5f5d64',
                   border: '1px solid #a8d8b9',
                 }}
               >
@@ -646,7 +646,7 @@ export default function AccountPage() {
               alert('Account deletion coming soon. Contact support@vaultagent.dev')
             }
           }}
-          className="text-xs px-4 py-2 transition-all hover:bg-[#eb6f92] hover:text-[#1a1a2e]"
+          className="text-xs px-4 py-2 transition-all hover:bg-[#eb6f92] hover:text-[#141a17]"
           style={{
             border: '1px solid #eb6f92',
             color: '#eb6f92',

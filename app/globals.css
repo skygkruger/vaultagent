@@ -378,3 +378,21 @@ code {
 .hover-bg-slide:hover::before {
   left: 100%;
 }
+
+/* Refined hover - subtle background highlight */
+.hover-highlight {
+  transition: background-color 0.2s ease;
+}
+
+.hover-highlight:hover {
+  background-color: rgba(168, 216, 185, 0.06);
+}
+
+/* Gentle brightness increase on hover */
+.hover-brighten {
+  transition: filter 0.2s ease;
+}
+
+.hover-brighten:hover {
+  filter: brightness(1.15);
+}

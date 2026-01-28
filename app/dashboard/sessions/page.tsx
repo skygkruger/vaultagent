@@ -248,7 +248,7 @@ export default function SessionsPage() {
         <div
           className="p-3 mb-6 text-xs"
           style={{
-            backgroundColor: '#2a1a2e',
+            backgroundColor: '#1e1517',
             border: '1px solid #eb6f92',
             color: '#eb6f92',
           }}
@@ -293,7 +293,7 @@ export default function SessionsPage() {
                   required
                   className="w-full px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -312,7 +312,7 @@ export default function SessionsPage() {
                   required
                   className="w-full px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -344,7 +344,7 @@ export default function SessionsPage() {
                       className="px-3 py-1 text-xs"
                       style={{
                         border: `1px solid ${selectedSecrets.includes(secret.id) ? '#a8d8b9' : '#5f5d64'}`,
-                        backgroundColor: selectedSecrets.includes(secret.id) ? '#252542' : 'transparent',
+                        backgroundColor: selectedSecrets.includes(secret.id) ? '#1a211d' : 'transparent',
                         color: selectedSecrets.includes(secret.id) ? '#a8d8b9' : '#5f5d64',
                       }}
                     >
@@ -366,7 +366,7 @@ export default function SessionsPage() {
                   onChange={(e) => setExpiresIn(e.target.value)}
                   className="w-full px-3 py-2 text-xs"
                   style={{
-                    backgroundColor: '#252542',
+                    backgroundColor: '#1a211d',
                     border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
@@ -388,7 +388,7 @@ export default function SessionsPage() {
                 className="px-4 py-2 text-xs disabled:opacity-50"
                 style={{
                   backgroundColor: '#a8d8b9',
-                  color: '#1a1a2e',
+                  color: '#141a17',
                 }}
               >
                 {creating ? '[~] CREATING...' : '[>] CREATE SESSION'}
@@ -403,7 +403,7 @@ export default function SessionsPage() {
         <div
           className="px-4 py-3"
           style={{
-            backgroundColor: '#252542',
+            backgroundColor: '#1a211d',
             borderBottom: '1px solid #5f5d64',
           }}
         >
@@ -481,7 +481,7 @@ export default function SessionsPage() {
                         key={secretId}
                         className="text-xs px-2 py-0.5"
                         style={{
-                          backgroundColor: '#252542',
+                          backgroundColor: '#1a211d',
                           color: '#5f5d64',
                         }}
                       >
@@ -502,7 +502,7 @@ export default function SessionsPage() {
           <div
             className="px-4 py-3"
             style={{
-              backgroundColor: '#252542',
+              backgroundColor: '#1a211d',
               borderBottom: '1px solid #5f5d64',
             }}
           >
@@ -539,7 +539,7 @@ export default function SessionsPage() {
       <div
         className="p-4 text-xs mt-6"
         style={{
-          backgroundColor: '#252542',
+          backgroundColor: '#1a211d',
           border: '1px solid #5f5d64',
         }}
       >
