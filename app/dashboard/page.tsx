@@ -351,7 +351,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="p-8">
-        <p className="text-xs" style={{ color: '#6e6a86' }}>
+        <p className="text-xs" style={{ color: '#5f5d64' }}>
           [~] Loading vault...
         </p>
       </div>
@@ -366,7 +366,7 @@ export default function DashboardPage() {
           <h1 className="text-lg sm:text-xl mb-2" style={{ color: '#a8d8b9' }}>
             [/] Your Vault
           </h1>
-          <p className="text-xs" style={{ color: '#6e6a86' }}>
+          <p className="text-xs" style={{ color: '#5f5d64' }}>
             {`// encrypted secrets, zero-knowledge storage`}
           </p>
         </div>
@@ -380,7 +380,7 @@ export default function DashboardPage() {
               className="px-3 py-2 text-xs w-full sm:w-auto"
               style={{
                 backgroundColor: '#252542',
-                border: '1px solid #6e6a86',
+                border: '1px solid #5f5d64',
                 color: '#e8e3e3',
               }}
             >
@@ -429,7 +429,7 @@ export default function DashboardPage() {
       {showAddVault && (
         <div
           className="mb-6 p-4"
-          style={{ border: '1px solid #6e6a86', backgroundColor: '#1e1e2e' }}
+          style={{ border: '1px solid #5f5d64', backgroundColor: '#1e1e2e' }}
         >
           <h2 className="text-sm mb-4" style={{ color: '#a8d8b9' }}>
             Create New Vault
@@ -437,7 +437,7 @@ export default function DashboardPage() {
           <form onSubmit={handleCreateVault}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   VAULT NAME
                 </label>
                 <input
@@ -449,13 +449,13 @@ export default function DashboardPage() {
                   className="w-full px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 />
               </div>
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   DESCRIPTION (OPTIONAL)
                 </label>
                 <input
@@ -466,7 +466,7 @@ export default function DashboardPage() {
                   className="w-full px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 />
@@ -493,12 +493,12 @@ export default function DashboardPage() {
       {vaults.length === 0 && !showAddVault && (
         <div
           className="p-8 text-center mb-6"
-          style={{ border: '1px solid #6e6a86' }}
+          style={{ border: '1px solid #5f5d64' }}
         >
           <p className="text-sm mb-4" style={{ color: '#a8d8b9' }}>
             [/] No vaults yet
           </p>
-          <p className="text-xs mb-6" style={{ color: '#6e6a86' }}>
+          <p className="text-xs mb-6" style={{ color: '#5f5d64' }}>
             Create your first vault to start storing encrypted secrets.
           </p>
           <button
@@ -518,13 +518,13 @@ export default function DashboardPage() {
       {vaults.length > 0 && (
       <div
         className="mb-6"
-        style={{ border: '1px solid #6e6a86' }}
+        style={{ border: '1px solid #5f5d64' }}
       >
         <div
           className="px-4 py-3 flex justify-between items-center"
           style={{
             backgroundColor: '#252542',
-            borderBottom: '1px solid #6e6a86',
+            borderBottom: '1px solid #5f5d64',
           }}
         >
           <span className="text-xs" style={{ color: '#a8d8b9' }}>
@@ -548,11 +548,11 @@ export default function DashboardPage() {
           <form
             onSubmit={handleAddSecret}
             className="p-4 border-b"
-            style={{ borderColor: '#6e6a86', backgroundColor: '#1e1e2e' }}
+            style={{ borderColor: '#5f5d64', backgroundColor: '#1e1e2e' }}
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   SECRET NAME
                 </label>
                 <input
@@ -564,13 +564,13 @@ export default function DashboardPage() {
                   className="w-full px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 />
               </div>
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   SECRET VALUE
                 </label>
                 <input
@@ -582,13 +582,13 @@ export default function DashboardPage() {
                   className="w-full px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 />
               </div>
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   MASTER PASSWORD
                 </label>
                 <input
@@ -600,14 +600,14 @@ export default function DashboardPage() {
                   className="w-full px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 />
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <p className="text-xs" style={{ color: '#6e6a86' }}>
+              <p className="text-xs" style={{ color: '#5f5d64' }}>
                 {`// encrypted client-side before upload`}
               </p>
               <button
@@ -628,7 +628,7 @@ export default function DashboardPage() {
         {/* Secrets Table */}
         {secrets.length === 0 ? (
           <div className="p-6 sm:p-8 text-center">
-            <p className="text-xs" style={{ color: '#6e6a86' }}>
+            <p className="text-xs" style={{ color: '#5f5d64' }}>
               No secrets yet. Click [+] ADD to store your first secret.
             </p>
           </div>
@@ -649,7 +649,7 @@ export default function DashboardPage() {
                     <span className="truncate" style={{ color: '#e8e3e3' }}>{secret.name}</span>
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-6 pl-6 sm:pl-0">
-                    <div className="flex items-center gap-3 sm:gap-6 text-xs" style={{ color: '#6e6a86' }}>
+                    <div className="flex items-center gap-3 sm:gap-6 text-xs" style={{ color: '#5f5d64' }}>
                       <span className="hidden sm:inline">
                         {maskSecret(secret.encrypted_value.substring(0, 20))}
                       </span>
@@ -680,11 +680,11 @@ export default function DashboardPage() {
         className="p-4 text-xs"
         style={{
           backgroundColor: '#252542',
-          border: '1px solid #6e6a86',
+          border: '1px solid #5f5d64',
         }}
       >
         <p style={{ color: '#a8d8b9', marginBottom: '8px' }}>[i] Zero-Knowledge Encryption</p>
-        <p style={{ color: '#6e6a86', lineHeight: '1.5' }}>
+        <p style={{ color: '#5f5d64', lineHeight: '1.5' }}>
           Your secrets are encrypted with your master password before they leave your browser.
           We store only encrypted blobs that we cannot decrypt. Keep your master password safe -
           if you lose it, we cannot recover your secrets.

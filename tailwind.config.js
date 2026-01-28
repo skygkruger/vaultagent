@@ -21,14 +21,14 @@ module.exports = {
         // Text colors
         text: {
           primary: '#e8e3e3',
-          secondary: '#a8b2c3',
-          muted: '#6e6a86',
+          secondary: '#adb7ac',
+          muted: '#5f5d64',
         },
         // Accent colors (shared palette)
         accent: {
-          cyan: '#7eb8da',      // RegexGPT
+          cyan: '#adb7ac',      // Sage accent
           mint: '#a8d8b9',      // VaultAgent (PRIMARY)
-          lavender: '#c4a7e7',  // ShipLog / Pro features
+          lavender: '#bba7c0',  // Lavender / Pro features
           rose: '#f2cdcd',      // Cursors / highlights
           cream: '#ffe9b0',     // ErrorStory
           peach: '#f5a97f',     // DeadCode Detective
@@ -38,8 +38,8 @@ module.exports = {
         success: '#a8d8b9',
         error: '#eb6f92',
         warning: '#ffe9b0',
-        info: '#7eb8da',
-        pro: '#c4a7e7',
+        info: '#adb7ac',
+        pro: '#bba7c0',
       },
       fontFamily: {
         mono: ['JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', 'monospace'],

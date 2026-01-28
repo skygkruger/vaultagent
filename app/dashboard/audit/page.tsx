@@ -20,15 +20,15 @@ interface AuditLog {
 
 const ACTION_COLORS: Record<string, string> = {
   SECRET_CREATE: '#a8d8b9',
-  SECRET_READ: '#7eb8da',
-  SECRET_UPDATE: '#c4a7e7',
+  SECRET_READ: '#adb7ac',
+  SECRET_UPDATE: '#bba7c0',
   SECRET_DELETE: '#eb6f92',
   SESSION_CREATE: '#a8d8b9',
   SESSION_REVOKE: '#eb6f92',
   VAULT_CREATE: '#a8d8b9',
   VAULT_DELETE: '#eb6f92',
-  LOGIN: '#7eb8da',
-  LOGOUT: '#6e6a86',
+  LOGIN: '#adb7ac',
+  LOGOUT: '#5f5d64',
 }
 
 const ACTION_ICONS: Record<string, string> = {
@@ -174,7 +174,7 @@ export default function AuditPage() {
           <h1 className="text-lg sm:text-xl mb-2" style={{ color: '#a8d8b9' }}>
             [&gt;] Audit Log
           </h1>
-          <p className="text-xs" style={{ color: '#6e6a86' }}>
+          <p className="text-xs" style={{ color: '#5f5d64' }}>
             {`// security event trail`}
             {retentionDays !== null && retentionDays !== -1 && (
               <span> ({retentionDays} day retention)</span>
@@ -190,8 +190,8 @@ export default function AuditPage() {
             disabled={exporting}
             className="text-xs px-3 py-2 disabled:opacity-50"
             style={{
-              border: '1px solid #6e6a86',
-              color: '#6e6a86',
+              border: '1px solid #5f5d64',
+              color: '#5f5d64',
               backgroundColor: 'transparent',
             }}
           >
@@ -202,8 +202,8 @@ export default function AuditPage() {
             disabled={exporting}
             className="text-xs px-3 py-2 disabled:opacity-50"
             style={{
-              border: '1px solid #6e6a86',
-              color: '#6e6a86',
+              border: '1px solid #5f5d64',
+              color: '#5f5d64',
               backgroundColor: 'transparent',
             }}
           >
@@ -229,7 +229,7 @@ export default function AuditPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
         <div className="flex-1 sm:flex-initial">
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             ACTION
           </label>
           <select
@@ -241,7 +241,7 @@ export default function AuditPage() {
             className="w-full sm:w-auto px-3 py-2 text-xs"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
               color: '#e8e3e3',
               minWidth: '150px',
             }}
@@ -255,7 +255,7 @@ export default function AuditPage() {
           </select>
         </div>
         <div className="flex-1 sm:flex-initial">
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             AGENT
           </label>
           <select
@@ -267,7 +267,7 @@ export default function AuditPage() {
             className="w-full sm:w-auto px-3 py-2 text-xs"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
               color: '#e8e3e3',
               minWidth: '150px',
             }}
@@ -283,28 +283,28 @@ export default function AuditPage() {
       </div>
 
       {/* Logs Table */}
-      <div style={{ border: '1px solid #6e6a86' }}>
+      <div style={{ border: '1px solid #5f5d64' }}>
         {/* Desktop Header - Hidden on Mobile */}
         <div
           className="hidden lg:grid px-4 py-3 grid-cols-12 gap-4"
           style={{
             backgroundColor: '#252542',
-            borderBottom: '1px solid #6e6a86',
+            borderBottom: '1px solid #5f5d64',
           }}
         >
-          <span className="text-xs col-span-2" style={{ color: '#6e6a86' }}>
+          <span className="text-xs col-span-2" style={{ color: '#5f5d64' }}>
             TIMESTAMP
           </span>
-          <span className="text-xs col-span-2" style={{ color: '#6e6a86' }}>
+          <span className="text-xs col-span-2" style={{ color: '#5f5d64' }}>
             ACTION
           </span>
-          <span className="text-xs col-span-3" style={{ color: '#6e6a86' }}>
+          <span className="text-xs col-span-3" style={{ color: '#5f5d64' }}>
             TARGET
           </span>
-          <span className="text-xs col-span-2" style={{ color: '#6e6a86' }}>
+          <span className="text-xs col-span-2" style={{ color: '#5f5d64' }}>
             AGENT
           </span>
-          <span className="text-xs col-span-3" style={{ color: '#6e6a86' }}>
+          <span className="text-xs col-span-3" style={{ color: '#5f5d64' }}>
             IP ADDRESS
           </span>
         </div>
@@ -314,23 +314,23 @@ export default function AuditPage() {
           className="lg:hidden px-4 py-3"
           style={{
             backgroundColor: '#252542',
-            borderBottom: '1px solid #6e6a86',
+            borderBottom: '1px solid #5f5d64',
           }}
         >
-          <span className="text-xs" style={{ color: '#6e6a86' }}>
+          <span className="text-xs" style={{ color: '#5f5d64' }}>
             EVENTS
           </span>
         </div>
 
         {loading ? (
           <div className="p-6 sm:p-8 text-center">
-            <p className="text-xs" style={{ color: '#6e6a86' }}>
+            <p className="text-xs" style={{ color: '#5f5d64' }}>
               [~] Loading audit logs...
             </p>
           </div>
         ) : logs.length === 0 ? (
           <div className="p-6 sm:p-8 text-center">
-            <p className="text-xs" style={{ color: '#6e6a86' }}>
+            <p className="text-xs" style={{ color: '#5f5d64' }}>
               No audit logs found.
             </p>
           </div>
@@ -346,24 +346,24 @@ export default function AuditPage() {
               >
                 {/* Desktop View */}
                 <div className="hidden lg:grid grid-cols-12 gap-4 items-center">
-                  <span className="text-xs col-span-2" style={{ color: '#6e6a86' }}>
+                  <span className="text-xs col-span-2" style={{ color: '#5f5d64' }}>
                     {formatTimestamp(log.created_at)}
                   </span>
                   <span className="text-xs col-span-2 flex items-center gap-2">
-                    <span style={{ color: ACTION_COLORS[log.action] || '#6e6a86' }}>
+                    <span style={{ color: ACTION_COLORS[log.action] || '#5f5d64' }}>
                       {ACTION_ICONS[log.action] || '[?]'}
                     </span>
-                    <span style={{ color: ACTION_COLORS[log.action] || '#a8b2c3' }}>
+                    <span style={{ color: ACTION_COLORS[log.action] || '#adb7ac' }}>
                       {log.action}
                     </span>
                   </span>
                   <span className="text-xs col-span-3 truncate" style={{ color: '#e8e3e3' }}>
                     {log.target || '-'}
                   </span>
-                  <span className="text-xs col-span-2" style={{ color: '#c4a7e7' }}>
+                  <span className="text-xs col-span-2" style={{ color: '#bba7c0' }}>
                     {log.agent_name || '-'}
                   </span>
-                  <span className="text-xs col-span-3" style={{ color: '#6e6a86' }}>
+                  <span className="text-xs col-span-3" style={{ color: '#5f5d64' }}>
                     {log.ip_address || '-'}
                   </span>
                 </div>
@@ -372,14 +372,14 @@ export default function AuditPage() {
                 <div className="lg:hidden space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs flex items-center gap-2">
-                      <span style={{ color: ACTION_COLORS[log.action] || '#6e6a86' }}>
+                      <span style={{ color: ACTION_COLORS[log.action] || '#5f5d64' }}>
                         {ACTION_ICONS[log.action] || '[?]'}
                       </span>
-                      <span style={{ color: ACTION_COLORS[log.action] || '#a8b2c3' }}>
+                      <span style={{ color: ACTION_COLORS[log.action] || '#adb7ac' }}>
                         {log.action}
                       </span>
                     </span>
-                    <span className="text-xs" style={{ color: '#6e6a86' }}>
+                    <span className="text-xs" style={{ color: '#5f5d64' }}>
                       {formatTimestamp(log.created_at)}
                     </span>
                   </div>
@@ -390,7 +390,7 @@ export default function AuditPage() {
                       </span>
                     )}
                     {log.agent_name && (
-                      <span style={{ color: '#c4a7e7' }}>
+                      <span style={{ color: '#bba7c0' }}>
                         {log.agent_name}
                       </span>
                     )}
@@ -405,7 +405,7 @@ export default function AuditPage() {
       {/* Pagination */}
       {total > limit && (
         <div className="flex justify-between items-center mt-4">
-          <span className="text-xs" style={{ color: '#6e6a86' }}>
+          <span className="text-xs" style={{ color: '#5f5d64' }}>
             Showing {offset + 1}-{Math.min(offset + limit, total)} of {total} events
           </span>
           <div className="flex gap-2">
@@ -414,13 +414,13 @@ export default function AuditPage() {
               disabled={offset === 0}
               className="text-xs px-3 py-1 disabled:opacity-50"
               style={{
-                border: '1px solid #6e6a86',
-                color: '#6e6a86',
+                border: '1px solid #5f5d64',
+                color: '#5f5d64',
               }}
             >
               [&lt;] PREV
             </button>
-            <span className="text-xs px-3 py-1" style={{ color: '#6e6a86' }}>
+            <span className="text-xs px-3 py-1" style={{ color: '#5f5d64' }}>
               {currentPage} / {totalPages}
             </span>
             <button
@@ -428,8 +428,8 @@ export default function AuditPage() {
               disabled={offset + limit >= total}
               className="text-xs px-3 py-1 disabled:opacity-50"
               style={{
-                border: '1px solid #6e6a86',
-                color: '#6e6a86',
+                border: '1px solid #5f5d64',
+                color: '#5f5d64',
               }}
             >
               NEXT [&gt;]
@@ -443,11 +443,11 @@ export default function AuditPage() {
         className="p-4 text-xs mt-6"
         style={{
           backgroundColor: '#252542',
-          border: '1px solid #6e6a86',
+          border: '1px solid #5f5d64',
         }}
       >
         <p style={{ color: '#a8d8b9', marginBottom: '8px' }}>[i] Audit Trail</p>
-        <p style={{ color: '#6e6a86', lineHeight: '1.5' }}>
+        <p style={{ color: '#5f5d64', lineHeight: '1.5' }}>
           All secret access, session creation, and security events are logged automatically.
           {profile?.tier === 'free' && (
             <span style={{ color: '#eb6f92' }}>

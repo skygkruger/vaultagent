@@ -65,14 +65,14 @@ export default function VaultAgentRetro() {
       className="min-h-screen font-mono text-sm"
       style={{
         backgroundColor: '#141a17',
-        color: '#a8b2c3'
+        color: '#adb7ac'
       }}
     >
       {/* ═══════════════════════════════════════════════════════ */}
       {/*                       HEADER                            */}
       {/* ═══════════════════════════════════════════════════════ */}
 
-      <header className="border-b" style={{ borderColor: '#6e6a86' }}>
+      <header className="border-b" style={{ borderColor: '#5f5d64' }}>
         <div className="max-w-5xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -99,7 +99,7 @@ export default function VaultAgentRetro() {
                   key={item.label}
                   href={item.href}
                   className="relative transition-colors duration-200"
-                  style={{ color: hoveredNav === item.label ? '#a8d8b9' : '#6e6a86' }}
+                  style={{ color: hoveredNav === item.label ? '#a8d8b9' : '#5f5d64' }}
                   onMouseEnter={() => setHoveredNav(item.label)}
                   onMouseLeave={() => setHoveredNav(null)}
                 >
@@ -131,7 +131,7 @@ export default function VaultAgentRetro() {
 
             {/* Mobile Menu */}
             <div className="flex md:hidden items-center gap-4">
-              <Link href="/docs" className="text-xs" style={{ color: '#6e6a86' }}>[DOCS]</Link>
+              <Link href="/docs" className="text-xs" style={{ color: '#5f5d64' }}>[DOCS]</Link>
               <Link
                 href="/auth/sign-in"
                 className="px-3 py-1 text-xs"
@@ -154,9 +154,9 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="flex flex-col items-center" style={{ color: '#a8d8b9' }}>
-          {/* Desktop ASCII Logo */}
-          <pre className="hidden sm:block" style={{
-            fontSize: '16px',
+          {/* ASCII Logo - responsive */}
+          <pre style={{
+            fontSize: 'clamp(9px, 2.5vw, 16px)',
             lineHeight: 1.05,
             fontFamily: 'Consolas, Monaco, "Courier New", monospace',
             textAlign: 'left',
@@ -173,14 +173,9 @@ export default function VaultAgentRetro() {
  ╚████╔╝ ██║  ██║╚██████╔╝███████╗██║
   ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝`}
           </pre>
-          {/* Mobile Title */}
-          <div className="sm:hidden text-center">
-            <h1 className="text-2xl font-bold" style={{ color: '#a8d8b9' }}>VAULT</h1>
-            <h1 className="text-2xl font-bold" style={{ color: '#a8d8b9' }}>AGENT</h1>
-          </div>
-          <div className="hidden sm:flex justify-center w-full" style={{ marginTop: '8px' }}>
+          <div className="flex justify-center w-full" style={{ marginTop: '8px' }}>
             <pre style={{
-              fontSize: '12px',
+              fontSize: 'clamp(7px, 1.8vw, 12px)',
               lineHeight: 1.05,
               fontFamily: 'Consolas, Monaco, "Courier New", monospace',
               textAlign: 'left',
@@ -196,7 +191,7 @@ export default function VaultAgentRetro() {
 └───┘ └───┘ └───┘ └───┘ └───┘`}
             </pre>
           </div>
-          <p className="text-xs tracking-widest mt-4" style={{ color: '#c4a7e7' }}>
+          <p className="text-xs tracking-widest mt-4" style={{ color: '#bba7c0' }}>
             ·:·:· SECURE SECRET MANAGEMENT ·:·:·
           </p>
         </div>
@@ -209,7 +204,7 @@ export default function VaultAgentRetro() {
           <p style={{ color: '#e8e3e3' }}>
             AI agents need secrets. They shouldn&apos;t see them.
           </p>
-          <p className="text-xs" style={{ color: '#6e6a86' }}>
+          <p className="text-xs" style={{ color: '#5f5d64' }}>
             {`// zero-knowledge encryption, scoped sessions, full audit trails`}
           </p>
         </div>
@@ -231,7 +226,7 @@ export default function VaultAgentRetro() {
                   onClick={() => setActiveTab(i)}
                   className="flex-1 text-center py-1 text-xs transition-all hover-text-glow"
                   style={{
-                    color: activeTab === i ? '#a8d8b9' : '#6e6a86',
+                    color: activeTab === i ? '#a8d8b9' : '#5f5d64',
                     width: '18ch',
                   }}
                 >
@@ -251,8 +246,8 @@ export default function VaultAgentRetro() {
                 onClick={() => setActiveTab(i)}
                 className="flex-1 text-center py-2 text-xs transition-all"
                 style={{
-                  color: activeTab === i ? '#a8d8b9' : '#6e6a86',
-                  backgroundColor: activeTab === i ? '#252542' : 'transparent',
+                  color: activeTab === i ? '#a8d8b9' : '#5f5d64',
+                  backgroundColor: activeTab === i ? '#27252a' : 'transparent',
                   borderRight: i < tabs.length - 1 ? '1px solid #a8d8b9' : 'none',
                 }}
               >
@@ -292,7 +287,7 @@ export default function VaultAgentRetro() {
                       key={i}
                       className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-2 text-xs gap-1"
                       style={{
-                        color: secret.status === 'active' ? '#e8e3e3' : '#6e6a86'
+                        color: secret.status === 'active' ? '#e8e3e3' : '#5f5d64'
                       }}
                     >
                       <span className="flex items-center gap-2">
@@ -302,8 +297,8 @@ export default function VaultAgentRetro() {
                         <span>{secret.name}</span>
                       </span>
                       <span className="flex items-center gap-4 pl-6 sm:pl-0">
-                        <span className="hidden sm:inline" style={{ color: '#6e6a86' }}>{secret.masked}</span>
-                        <span style={{ color: '#6e6a86' }}>{secret.lastAccessed}</span>
+                        <span className="hidden sm:inline" style={{ color: '#5f5d64' }}>{secret.masked}</span>
+                        <span style={{ color: '#5f5d64' }}>{secret.lastAccessed}</span>
                       </span>
                     </div>
                   ))}
@@ -333,7 +328,7 @@ export default function VaultAgentRetro() {
                   style={{ borderColor: '#a8d8b9' }}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-xs" style={{ color: '#6e6a86' }}>NAME:</span>
+                    <span className="text-xs" style={{ color: '#5f5d64' }}>NAME:</span>
                     <span style={{ color: '#f2cdcd' }}>{'>'}</span>
                     <span
                       className="transition-opacity hidden sm:inline"
@@ -354,7 +349,7 @@ export default function VaultAgentRetro() {
                     />
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs" style={{ color: '#6e6a86' }}>VALUE:</span>
+                    <span className="text-xs" style={{ color: '#5f5d64' }}>VALUE:</span>
                     <span style={{ color: '#f2cdcd' }}>{'>'}</span>
                     <input
                       type="password"
@@ -424,19 +419,19 @@ export default function VaultAgentRetro() {
                   className="px-3 sm:px-4 py-3 border-l border-r space-y-2"
                   style={{ borderColor: '#e8e3e3' }}
                 >
-                  <p className="text-xs" style={{ color: '#6e6a86' }}>{`// select session duration`}</p>
+                  <p className="text-xs" style={{ color: '#5f5d64' }}>{`// select session duration`}</p>
                   {durations.map((dur) => (
                     <button
                       key={dur.label}
                       onClick={() => setSessionDuration(dur.value)}
                       className="w-full text-left flex items-center gap-2 sm:gap-4 py-2 transition-all hover:translate-x-1"
                       style={{
-                        color: sessionDuration === dur.value ? '#a8d8b9' : '#6e6a86'
+                        color: sessionDuration === dur.value ? '#a8d8b9' : '#5f5d64'
                       }}
                     >
                       <span className="w-6">{sessionDuration === dur.value ? '[x]' : '[ ]'}</span>
                       <span className="w-16">{dur.label}</span>
-                      <span className="hidden sm:inline text-xs" style={{ color: '#6e6a86' }}>{`// ${dur.desc}`}</span>
+                      <span className="hidden sm:inline text-xs" style={{ color: '#5f5d64' }}>{`// ${dur.desc}`}</span>
                     </button>
                   ))}
                 </div>
@@ -455,7 +450,7 @@ export default function VaultAgentRetro() {
             {/* Session Token Display */}
             <div className="overflow-x-auto">
               {/* Desktop */}
-              <div className="hidden sm:block" style={{ color: '#c4a7e7' }}>
+              <div className="hidden sm:block" style={{ color: '#bba7c0' }}>
                 <pre className="text-xs leading-tight">
 {`╔═════════════════════════════════════════════════════════════════════════════╗
 ║  ACTIVE SESSION                                                  [REVOKE]   ║
@@ -473,18 +468,18 @@ export default function VaultAgentRetro() {
                 </pre>
               </div>
               {/* Mobile */}
-              <div className="sm:hidden p-4 border space-y-3" style={{ borderColor: '#c4a7e7', color: '#c4a7e7' }}>
+              <div className="sm:hidden p-4 border space-y-3" style={{ borderColor: '#bba7c0', color: '#bba7c0' }}>
                 <div className="flex justify-between items-center text-xs">
                   <span>ACTIVE SESSION</span>
                   <span>[REVOKE]</span>
                 </div>
                 <div className="text-xs space-y-2" style={{ color: '#e8e3e3' }}>
-                  <div><span style={{ color: '#6e6a86' }}>AGENT:</span> claude-code</div>
-                  <div><span style={{ color: '#6e6a86' }}>EXPIRES:</span> 58 min</div>
-                  <div><span style={{ color: '#6e6a86' }}>SECRETS:</span> OPENAI_API_KEY, DATABASE_URL</div>
+                  <div><span style={{ color: '#5f5d64' }}>AGENT:</span> claude-code</div>
+                  <div><span style={{ color: '#5f5d64' }}>EXPIRES:</span> 58 min</div>
+                  <div><span style={{ color: '#5f5d64' }}>SECRETS:</span> OPENAI_API_KEY, DATABASE_URL</div>
                 </div>
-                <div className="h-2 border" style={{ borderColor: '#c4a7e7' }}>
-                  <div className="h-full" style={{ width: '58%', backgroundColor: '#c4a7e7' }}></div>
+                <div className="h-2 border" style={{ borderColor: '#bba7c0' }}>
+                  <div className="h-full" style={{ width: '58%', backgroundColor: '#bba7c0' }}></div>
                 </div>
               </div>
             </div>
@@ -533,36 +528,36 @@ export default function VaultAgentRetro() {
                   <div
                     key={i}
                     className="py-2 text-xs border-b"
-                    style={{ borderColor: '#2a2a3e' }}
+                    style={{ borderColor: '#2a2a2e' }}
                   >
                     {/* Desktop */}
                     <div className="hidden sm:flex items-center gap-4">
-                      <span style={{ color: '#6e6a86' }}>{log.time}</span>
+                      <span style={{ color: '#5f5d64' }}>{log.time}</span>
                       <span style={{
                         color: log.action === 'SESSION_CREATE' ? '#a8d8b9' :
-                               log.action === 'SECRET_ACCESS' ? '#7eb8da' :
+                               log.action === 'SECRET_ACCESS' ? '#adb7ac' :
                                '#eb6f92'
                       }}>
                         [{log.action}]
                       </span>
-                      <span style={{ color: '#c4a7e7' }}>{log.agent}</span>
-                      <span style={{ color: '#6e6a86' }}>{log.secrets.join(', ')}</span>
+                      <span style={{ color: '#bba7c0' }}>{log.agent}</span>
+                      <span style={{ color: '#5f5d64' }}>{log.secrets.join(', ')}</span>
                     </div>
                     {/* Mobile */}
                     <div className="sm:hidden space-y-1">
                       <div className="flex justify-between items-center">
                         <span style={{
                           color: log.action === 'SESSION_CREATE' ? '#a8d8b9' :
-                                 log.action === 'SECRET_ACCESS' ? '#7eb8da' :
+                                 log.action === 'SECRET_ACCESS' ? '#adb7ac' :
                                  '#eb6f92'
                         }}>
                           [{log.action}]
                         </span>
-                        <span style={{ color: '#6e6a86' }}>{log.time}</span>
+                        <span style={{ color: '#5f5d64' }}>{log.time}</span>
                       </div>
                       <div className="flex gap-2">
-                        <span style={{ color: '#c4a7e7' }}>{log.agent}</span>
-                        <span style={{ color: '#6e6a86' }}>{log.secrets.join(', ')}</span>
+                        <span style={{ color: '#bba7c0' }}>{log.agent}</span>
+                        <span style={{ color: '#5f5d64' }}>{log.secrets.join(', ')}</span>
                       </div>
                     </div>
                   </div>
@@ -582,10 +577,10 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// HOW IT WORKS`}</p>
+          <p className="text-xs text-center" style={{ color: '#5f5d64' }}>{`// HOW IT WORKS`}</p>
 
           {/* Desktop */}
-          <div className="hidden lg:flex justify-center overflow-x-auto" style={{ color: '#a8b2c3' }}>
+          <div className="hidden lg:flex justify-center overflow-x-auto" style={{ color: '#adb7ac' }}>
             <pre className="text-xs leading-tight">
 {`┌─────────────────────────────────────────────────────────────────────────────┐
 │                                                                             │
@@ -610,33 +605,33 @@ export default function VaultAgentRetro() {
             </pre>
           </div>
           {/* Mobile */}
-          <div className="lg:hidden p-4 border space-y-4" style={{ borderColor: '#6e6a86', color: '#a8b2c3' }}>
+          <div className="lg:hidden p-4 border space-y-4" style={{ borderColor: '#5f5d64', color: '#adb7ac' }}>
             <div className="flex items-start gap-3">
               <span style={{ color: '#a8d8b9' }}>1.</span>
               <div>
                 <p className="text-sm">Store secrets</p>
-                <p className="text-xs" style={{ color: '#6e6a86' }}>encrypted client-side</p>
+                <p className="text-xs" style={{ color: '#5f5d64' }}>encrypted client-side</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <span style={{ color: '#a8d8b9' }}>2.</span>
               <div>
                 <p className="text-sm">Create session</p>
-                <p className="text-xs" style={{ color: '#6e6a86' }}>scoped, time-limited</p>
+                <p className="text-xs" style={{ color: '#5f5d64' }}>scoped, time-limited</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <span style={{ color: '#a8d8b9' }}>3.</span>
               <div>
                 <p className="text-sm">Agent uses secrets</p>
-                <p className="text-xs" style={{ color: '#6e6a86' }}>never sees actual values</p>
+                <p className="text-xs" style={{ color: '#5f5d64' }}>never sees actual values</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <span style={{ color: '#a8d8b9' }}>4.</span>
               <div>
                 <p className="text-sm">Full audit log</p>
-                <p className="text-xs" style={{ color: '#6e6a86' }}>track every access</p>
+                <p className="text-xs" style={{ color: '#5f5d64' }}>track every access</p>
               </div>
             </div>
           </div>
@@ -647,7 +642,7 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// FEATURES`}</p>
+          <p className="text-xs text-center" style={{ color: '#5f5d64' }}>{`// FEATURES`}</p>
 
           {/* Desktop */}
           <div className="hidden sm:flex flex-col md:flex-row justify-center gap-4">
@@ -665,7 +660,7 @@ export default function VaultAgentRetro() {
               </pre>
             </div>
 
-            <div style={{ color: '#c4a7e7' }} className="hover-border-glow hover-lift transition-all cursor-default">
+            <div style={{ color: '#bba7c0' }} className="hover-border-glow hover-lift transition-all cursor-default">
               <pre className="text-xs leading-tight">
 {`┌───────────────────────────┐
 │                           │
@@ -679,7 +674,7 @@ export default function VaultAgentRetro() {
               </pre>
             </div>
 
-            <div style={{ color: '#7eb8da' }} className="hover-border-glow hover-lift transition-all cursor-default">
+            <div style={{ color: '#adb7ac' }} className="hover-border-glow hover-lift transition-all cursor-default">
               <pre className="text-xs leading-tight">
 {`┌───────────────────────────┐
 │                           │
@@ -698,15 +693,15 @@ export default function VaultAgentRetro() {
           <div className="sm:hidden space-y-3">
             <div className="p-4 border" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>
               <div className="text-sm mb-2">[/] ZERO-KNOWLEDGE</div>
-              <p className="text-xs" style={{ color: '#a8b2c3' }}>Secrets encrypted client-side. Server never sees plaintext.</p>
+              <p className="text-xs" style={{ color: '#adb7ac' }}>Secrets encrypted client-side. Server never sees plaintext.</p>
             </div>
-            <div className="p-4 border" style={{ borderColor: '#c4a7e7', color: '#c4a7e7' }}>
+            <div className="p-4 border" style={{ borderColor: '#bba7c0', color: '#bba7c0' }}>
               <div className="text-sm mb-2">[~] SCOPED SESSIONS</div>
-              <p className="text-xs" style={{ color: '#a8b2c3' }}>Time-limited access. Agents only see what you explicitly allow.</p>
+              <p className="text-xs" style={{ color: '#adb7ac' }}>Time-limited access. Agents only see what you explicitly allow.</p>
             </div>
-            <div className="p-4 border" style={{ borderColor: '#7eb8da', color: '#7eb8da' }}>
+            <div className="p-4 border" style={{ borderColor: '#adb7ac', color: '#adb7ac' }}>
               <div className="text-sm mb-2">[&gt;] FULL AUDIT</div>
-              <p className="text-xs" style={{ color: '#a8b2c3' }}>Know exactly what was accessed, when, and by which agent.</p>
+              <p className="text-xs" style={{ color: '#adb7ac' }}>Know exactly what was accessed, when, and by which agent.</p>
             </div>
           </div>
         </div>
@@ -716,12 +711,12 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// PRICING`}</p>
+          <p className="text-xs text-center" style={{ color: '#5f5d64' }}>{`// PRICING`}</p>
 
           {/* Desktop */}
           <div className="hidden lg:flex flex-col md:flex-row justify-center gap-6">
             {/* Free Tier */}
-            <div style={{ color: '#a8b2c3' }}>
+            <div style={{ color: '#adb7ac' }}>
               <pre className="text-xs leading-tight">
 {`┌─────────────────────────────────┐
 │                                 │
@@ -781,7 +776,7 @@ export default function VaultAgentRetro() {
           {/* Mobile Pricing */}
           <div className="lg:hidden space-y-4">
             {/* Free */}
-            <div className="p-4 border" style={{ borderColor: '#6e6a86', color: '#a8b2c3' }}>
+            <div className="p-4 border" style={{ borderColor: '#5f5d64', color: '#adb7ac' }}>
               <div className="flex justify-between items-center mb-3">
                 <span className="text-sm font-bold">FREE</span>
                 <span className="text-lg">$0</span>
@@ -790,9 +785,9 @@ export default function VaultAgentRetro() {
                 <div style={{ color: '#a8d8b9' }}>[/] 1 vault</div>
                 <div style={{ color: '#a8d8b9' }}>[/] 10 secrets</div>
                 <div style={{ color: '#a8d8b9' }}>[/] 50 sessions/day</div>
-                <div style={{ color: '#6e6a86' }}>[x] Audit export</div>
+                <div style={{ color: '#5f5d64' }}>[x] Audit export</div>
               </div>
-              <div className="text-center py-2 border text-xs" style={{ borderColor: '#6e6a86' }}>CURRENT PLAN</div>
+              <div className="text-center py-2 border text-xs" style={{ borderColor: '#5f5d64' }}>CURRENT PLAN</div>
             </div>
             {/* Pro */}
             <div className="p-4 border-2" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>
@@ -815,7 +810,7 @@ export default function VaultAgentRetro() {
 
           {/* Team/Enterprise - Desktop */}
           <div className="hidden lg:flex justify-center">
-            <div style={{ color: '#c4a7e7' }}>
+            <div style={{ color: '#bba7c0' }}>
               <pre className="text-xs leading-tight">
 {`╔═════════════════════════════════════════════════════════════════════════════╗
 ║  TEAM $29/mo                           ENTERPRISE $99/mo                    ║
@@ -839,7 +834,7 @@ export default function VaultAgentRetro() {
 
           {/* Team/Enterprise - Mobile */}
           <div className="lg:hidden">
-            <Link href="/pricing" className="block text-center py-3 border text-xs" style={{ borderColor: '#c4a7e7', color: '#c4a7e7' }}>
+            <Link href="/pricing" className="block text-center py-3 border text-xs" style={{ borderColor: '#bba7c0', color: '#bba7c0' }}>
               [&gt;] SEE ALL PLANS (Team $29/mo, Enterprise $99/mo)
             </Link>
           </div>
@@ -850,10 +845,10 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// INTEGRATIONS`}</p>
+          <p className="text-xs text-center" style={{ color: '#5f5d64' }}>{`// INTEGRATIONS`}</p>
 
           {/* Desktop */}
-          <div className="hidden md:flex justify-center overflow-x-auto" style={{ color: '#a8b2c3' }}>
+          <div className="hidden md:flex justify-center overflow-x-auto" style={{ color: '#adb7ac' }}>
             <pre className="text-xs leading-tight" style={{ fontFamily: 'Consolas, Monaco, "Courier New", monospace', overflow: 'visible' }}>
 {`+------------------------------------------------------------------------+
 |                                                                        |
@@ -871,12 +866,12 @@ export default function VaultAgentRetro() {
           </div>
 
           {/* Mobile */}
-          <div className="md:hidden p-4 border space-y-4" style={{ borderColor: '#6e6a86', color: '#a8b2c3' }}>
+          <div className="md:hidden p-4 border space-y-4" style={{ borderColor: '#5f5d64', color: '#adb7ac' }}>
             <div className="grid grid-cols-2 gap-2 text-xs text-center">
               <div className="p-2 border" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>CLAUDE CODE [/]</div>
               <div className="p-2 border" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>CURSOR [/]</div>
-              <div className="p-2 border" style={{ borderColor: '#6e6a86', color: '#6e6a86' }}>COPILOT [~]</div>
-              <div className="p-2 border" style={{ borderColor: '#6e6a86', color: '#6e6a86' }}>WINDSURF [~]</div>
+              <div className="p-2 border" style={{ borderColor: '#5f5d64', color: '#5f5d64' }}>COPILOT [~]</div>
+              <div className="p-2 border" style={{ borderColor: '#5f5d64', color: '#5f5d64' }}>WINDSURF [~]</div>
             </div>
             <div className="text-xs space-y-1 p-3" style={{ backgroundColor: '#1a211d' }}>
               <div>$ npx vaultagent init</div>
@@ -891,10 +886,10 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// THREAT MODEL`}</p>
+          <p className="text-xs text-center" style={{ color: '#5f5d64' }}>{`// THREAT MODEL`}</p>
 
           {/* Desktop */}
-          <div className="hidden lg:flex justify-center overflow-x-auto" style={{ color: '#a8b2c3' }}>
+          <div className="hidden lg:flex justify-center overflow-x-auto" style={{ color: '#adb7ac' }}>
             <pre className="text-xs leading-tight">
 {`┌─────────────────────────────────────────────────────────────────────────────┐
 │  WITHOUT VAULTAGENT                    WITH VAULTAGENT                      │
@@ -924,31 +919,31 @@ export default function VaultAgentRetro() {
             <div className="grid grid-cols-2 gap-2">
               <div className="p-3 border text-xs" style={{ borderColor: '#eb6f92', color: '#eb6f92' }}>
                 <div className="mb-2">[!] WITHOUT</div>
-                <p style={{ color: '#6e6a86' }}>Keys in .env files</p>
+                <p style={{ color: '#5f5d64' }}>Keys in .env files</p>
               </div>
               <div className="p-3 border text-xs" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>
                 <div className="mb-2">[/] WITH</div>
-                <p style={{ color: '#a8b2c3' }}>Encrypted client-side</p>
+                <p style={{ color: '#adb7ac' }}>Encrypted client-side</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="p-3 border text-xs" style={{ borderColor: '#eb6f92', color: '#eb6f92' }}>
                 <div className="mb-2">[!] WITHOUT</div>
-                <p style={{ color: '#6e6a86' }}>Permanent agent access</p>
+                <p style={{ color: '#5f5d64' }}>Permanent agent access</p>
               </div>
               <div className="p-3 border text-xs" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>
                 <div className="mb-2">[/] WITH</div>
-                <p style={{ color: '#a8b2c3' }}>Time-scoped sessions</p>
+                <p style={{ color: '#adb7ac' }}>Time-scoped sessions</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="p-3 border text-xs" style={{ borderColor: '#eb6f92', color: '#eb6f92' }}>
                 <div className="mb-2">[!] WITHOUT</div>
-                <p style={{ color: '#6e6a86' }}>No usage visibility</p>
+                <p style={{ color: '#5f5d64' }}>No usage visibility</p>
               </div>
               <div className="p-3 border text-xs" style={{ borderColor: '#a8d8b9', color: '#a8d8b9' }}>
                 <div className="mb-2">[/] WITH</div>
-                <p style={{ color: '#a8b2c3' }}>Full audit trail</p>
+                <p style={{ color: '#adb7ac' }}>Full audit trail</p>
               </div>
             </div>
           </div>
@@ -959,17 +954,17 @@ export default function VaultAgentRetro() {
         {/* ═══════════════════════════════════════════════════════ */}
 
         <div className="space-y-3">
-          <p className="text-xs text-center" style={{ color: '#6e6a86' }}>{`// FAQ`}</p>
+          <p className="text-xs text-center" style={{ color: '#5f5d64' }}>{`// FAQ`}</p>
 
           <div className="flex justify-center">
-            <div className="space-y-2" style={{ color: '#a8b2c3' }}>
+            <div className="space-y-2" style={{ color: '#adb7ac' }}>
             <details className="group">
               <summary className="cursor-pointer" style={{ color: '#a8d8b9' }}>
                 <pre className="text-xs inline">
 {`[?] Can VaultAgent access my plaintext secrets?`}
                 </pre>
               </summary>
-              <pre className="text-xs pl-4 pt-2" style={{ color: '#a8b2c3' }}>
+              <pre className="text-xs pl-4 pt-2" style={{ color: '#adb7ac' }}>
 {`    No. All encryption happens client-side with your master password.
     We only store encrypted blobs that we cannot decrypt.`}
               </pre>
@@ -981,7 +976,7 @@ export default function VaultAgentRetro() {
 {`[?] What happens when a session expires?`}
                 </pre>
               </summary>
-              <pre className="text-xs pl-4 pt-2" style={{ color: '#a8b2c3' }}>
+              <pre className="text-xs pl-4 pt-2" style={{ color: '#adb7ac' }}>
 {`    The environment variables are automatically cleaned up.
     The agent loses access immediately with no manual intervention.`}
               </pre>
@@ -993,7 +988,7 @@ export default function VaultAgentRetro() {
 {`[?] Which AI coding agents are supported?`}
                 </pre>
               </summary>
-              <pre className="text-xs pl-4 pt-2" style={{ color: '#a8b2c3' }}>
+              <pre className="text-xs pl-4 pt-2" style={{ color: '#adb7ac' }}>
 {`    Currently Claude Code and Cursor. GitHub Copilot and Windsurf
     integrations are coming soon. Any agent that reads env vars works.`}
               </pre>
@@ -1008,11 +1003,11 @@ export default function VaultAgentRetro() {
       {/*                      FOOTER                             */}
       {/* ═══════════════════════════════════════════════════════ */}
 
-      <footer className="border-t mt-12 sm:mt-16" style={{ borderColor: '#6e6a86' }}>
+      <footer className="border-t mt-12 sm:mt-16" style={{ borderColor: '#5f5d64' }}>
         <div className="px-4 py-6 sm:py-8 flex justify-center">
-          <div className="text-xs w-full" style={{ color: '#6e6a86', textAlign: 'center' }}>
+          <div className="text-xs w-full" style={{ color: '#5f5d64', textAlign: 'center' }}>
             <pre className="hidden sm:block" style={{ margin: 0, overflow: 'visible', textAlign: 'center' }}>════════════════════════════════════════════════════════════════════════════════</pre>
-            <div className="sm:hidden border-t mb-4" style={{ borderColor: '#6e6a86' }}></div>
+            <div className="sm:hidden border-t mb-4" style={{ borderColor: '#5f5d64' }}></div>
             <div style={{ margin: '16px 0' }}>
               <div>SECURED WITH &lt;3 IN THE TERMINAL</div>
               <div style={{ marginTop: '16px' }}>(c) 2025 VAULTAGENT</div>
@@ -1026,7 +1021,7 @@ export default function VaultAgentRetro() {
               <a href="mailto:sky@veridian.run" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[CONTACT]</a>
             </div>
             <pre className="hidden sm:block" style={{ margin: 0, overflow: 'visible', textAlign: 'center' }}>════════════════════════════════════════════════════════════════════════════════</pre>
-            <div className="sm:hidden border-t mt-4" style={{ borderColor: '#6e6a86' }}></div>
+            <div className="sm:hidden border-t mt-4" style={{ borderColor: '#5f5d64' }}></div>
           </div>
         </div>
       </footer>

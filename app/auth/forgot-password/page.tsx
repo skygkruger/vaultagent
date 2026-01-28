@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
         <p className="text-xs mb-4" style={{ color: '#e8e3e3' }}>
           We&apos;ve sent a password reset link to <strong>{email}</strong>
         </p>
-        <p className="text-xs" style={{ color: '#6e6a86' }}>
+        <p className="text-xs" style={{ color: '#5f5d64' }}>
           Click the link in the email to reset your password.
         </p>
         <div className="mt-6">
@@ -96,14 +96,14 @@ export default function ForgotPasswordPage() {
         )}
 
         <div>
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             EMAIL
           </label>
           <div
             className="flex items-center p-3"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
             }}
           >
             <span style={{ color: '#a8d8b9' }}>&gt;</span>
@@ -134,7 +134,7 @@ export default function ForgotPasswordPage() {
       </form>
 
       <div className="mt-6 text-center text-xs">
-        <Link href="/auth/sign-in" style={{ color: '#6e6a86' }}>
+        <Link href="/auth/sign-in" style={{ color: '#5f5d64' }}>
           [&lt;] Back to sign in
         </Link>
       </div>

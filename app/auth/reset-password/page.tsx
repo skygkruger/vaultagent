@@ -74,7 +74,7 @@ export default function ResetPasswordPage() {
         <p className="text-xs mb-4" style={{ color: '#e8e3e3' }}>
           Your password has been successfully updated.
         </p>
-        <p className="text-xs" style={{ color: '#6e6a86' }}>
+        <p className="text-xs" style={{ color: '#5f5d64' }}>
           Redirecting to dashboard...
         </p>
       </div>
@@ -111,14 +111,14 @@ export default function ResetPasswordPage() {
         )}
 
         <div>
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             NEW PASSWORD
           </label>
           <div
             className="flex items-center p-3"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
             }}
           >
             <span style={{ color: '#a8d8b9' }}>&gt;</span>
@@ -132,20 +132,20 @@ export default function ResetPasswordPage() {
               style={{ color: '#e8e3e3' }}
             />
           </div>
-          <p className="text-xs mt-1" style={{ color: '#6e6a86' }}>
+          <p className="text-xs mt-1" style={{ color: '#5f5d64' }}>
             {`// 12+ chars, uppercase, lowercase, number, special char`}
           </p>
         </div>
 
         <div>
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             CONFIRM NEW PASSWORD
           </label>
           <div
             className="flex items-center p-3"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
             }}
           >
             <span style={{ color: '#a8d8b9' }}>&gt;</span>
@@ -176,7 +176,7 @@ export default function ResetPasswordPage() {
       </form>
 
       <div className="mt-6 text-center text-xs">
-        <Link href="/auth/sign-in" style={{ color: '#6e6a86' }}>
+        <Link href="/auth/sign-in" style={{ color: '#5f5d64' }}>
           [&lt;] Back to sign in
         </Link>
       </div>

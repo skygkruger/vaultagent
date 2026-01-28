@@ -65,21 +65,21 @@ export default function DashboardLayout({
   }
 
   const tierColors: Record<string, string> = {
-    free: '#6e6a86',
+    free: '#5f5d64',
     pro: '#a8d8b9',
-    team: '#c4a7e7',
-    enterprise: '#7eb8da',
+    team: '#bba7c0',
+    enterprise: '#adb7ac',
   }
 
   return (
     <div
       className="min-h-screen font-mono text-sm flex flex-col lg:flex-row"
-      style={{ backgroundColor: '#1a1a2e', color: '#a8b2c3' }}
+      style={{ backgroundColor: '#1a1a2e', color: '#adb7ac' }}
     >
       {/* Mobile Header */}
       <div
         className="lg:hidden flex items-center justify-between p-4 border-b"
-        style={{ borderColor: '#6e6a86', backgroundColor: '#16161a' }}
+        style={{ borderColor: '#5f5d64', backgroundColor: '#16161a' }}
       >
         <Link href="/" style={{ color: '#a8d8b9', textDecoration: 'none' }}>
           <div className="text-lg font-bold">VAULTAGENT</div>
@@ -110,20 +110,20 @@ export default function DashboardLayout({
           transform transition-transform duration-200 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
-        style={{ borderColor: '#6e6a86', backgroundColor: '#16161a' }}
+        style={{ borderColor: '#5f5d64', backgroundColor: '#16161a' }}
       >
         {/* Logo */}
-        <div className="p-4 border-b" style={{ borderColor: '#6e6a86' }}>
+        <div className="p-4 border-b" style={{ borderColor: '#5f5d64' }}>
           <Link href="/" style={{ color: '#a8d8b9', textDecoration: 'none' }}>
             <div className="text-lg font-bold">VAULTAGENT</div>
-            <div className="text-xs" style={{ color: '#6e6a86' }}>
+            <div className="text-xs" style={{ color: '#5f5d64' }}>
               ::  ::
             </div>
           </Link>
         </div>
 
         {/* User Info */}
-        <div className="p-4 border-b" style={{ borderColor: '#6e6a86' }}>
+        <div className="p-4 border-b" style={{ borderColor: '#5f5d64' }}>
           <div className="text-xs truncate" style={{ color: '#e8e3e3' }}>
             {user?.email}
           </div>
@@ -151,7 +151,7 @@ export default function DashboardLayout({
                 className="block px-3 py-2 text-xs mb-1 transition-all hover-border-glow"
                 style={{
                   backgroundColor: isActive ? '#252542' : 'transparent',
-                  color: isActive ? '#a8d8b9' : '#a8b2c3',
+                  color: isActive ? '#a8d8b9' : '#adb7ac',
                   border: isActive ? '1px solid #a8d8b9' : '1px solid transparent',
                 }}
               >
@@ -162,19 +162,19 @@ export default function DashboardLayout({
         </nav>
 
         {/* Usage Stats */}
-        <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
-          <div className="text-xs mb-2" style={{ color: '#6e6a86' }}>
+        <div className="p-4 border-t" style={{ borderColor: '#5f5d64' }}>
+          <div className="text-xs mb-2" style={{ color: '#5f5d64' }}>
             USAGE
           </div>
           <div className="space-y-1 text-xs">
             <div className="flex justify-between">
-              <span style={{ color: '#6e6a86' }}>Vaults:</span>
+              <span style={{ color: '#5f5d64' }}>Vaults:</span>
               <span style={{ color: '#e8e3e3' }}>
                 {profile?.vault_limit === -1 ? '∞' : `0/${profile?.vault_limit || 1}`}
               </span>
             </div>
             <div className="flex justify-between">
-              <span style={{ color: '#6e6a86' }}>Secrets:</span>
+              <span style={{ color: '#5f5d64' }}>Secrets:</span>
               <span style={{ color: '#e8e3e3' }}>
                 {profile?.secret_limit === -1 ? '∞' : `0/${profile?.secret_limit || 10}`}
               </span>
@@ -184,7 +184,7 @@ export default function DashboardLayout({
 
         {/* Upgrade Prompt - Only show for free tier */}
         {(profile?.tier === 'free' || !profile?.tier) && (
-          <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
+          <div className="p-4 border-t" style={{ borderColor: '#5f5d64' }}>
             <Link
               href="/dashboard/account"
               onClick={() => setSidebarOpen(false)}
@@ -196,7 +196,7 @@ export default function DashboardLayout({
             >
               [*] UPGRADE PLAN
             </Link>
-            <p className="text-xs mt-2 text-center" style={{ color: '#6e6a86' }}>
+            <p className="text-xs mt-2 text-center" style={{ color: '#5f5d64' }}>
               Get more vaults & secrets
             </p>
           </div>
@@ -204,7 +204,7 @@ export default function DashboardLayout({
 
         {/* Manage Subscription - Show for paid tiers */}
         {profile?.tier && profile.tier !== 'free' && (
-          <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
+          <div className="p-4 border-t" style={{ borderColor: '#5f5d64' }}>
             <Link
               href="/dashboard/account"
               onClick={() => setSidebarOpen(false)}
@@ -220,7 +220,7 @@ export default function DashboardLayout({
         )}
 
         {/* Sign Out */}
-        <div className="p-4 border-t" style={{ borderColor: '#6e6a86' }}>
+        <div className="p-4 border-t" style={{ borderColor: '#5f5d64' }}>
           <button
             onClick={handleSignOut}
             className="w-full text-left text-xs px-3 py-2 transition-all hover:bg-[#252542] hover-text-glow"

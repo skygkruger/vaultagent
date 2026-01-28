@@ -208,7 +208,7 @@ export default function SessionsPage() {
   if (loading) {
     return (
       <div className="p-8">
-        <p className="text-xs" style={{ color: '#6e6a86' }}>
+        <p className="text-xs" style={{ color: '#5f5d64' }}>
           [~] Loading sessions...
         </p>
       </div>
@@ -226,7 +226,7 @@ export default function SessionsPage() {
           <h1 className="text-lg sm:text-xl mb-2" style={{ color: '#a8d8b9' }}>
             [~] Agent Sessions
           </h1>
-          <p className="text-xs" style={{ color: '#6e6a86' }}>
+          <p className="text-xs" style={{ color: '#5f5d64' }}>
             {`// time-limited access tokens for AI agents`}
           </p>
         </div>
@@ -274,7 +274,7 @@ export default function SessionsPage() {
       {showCreateSession && (
         <div
           className="mb-6 p-4"
-          style={{ border: '1px solid #6e6a86', backgroundColor: '#1e1e2e' }}
+          style={{ border: '1px solid #5f5d64', backgroundColor: '#1e1e2e' }}
         >
           <h2 className="text-sm mb-4" style={{ color: '#a8d8b9' }}>
             Create New Session
@@ -282,7 +282,7 @@ export default function SessionsPage() {
           <form onSubmit={handleCreateSession}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   AGENT NAME
                 </label>
                 <input
@@ -294,13 +294,13 @@ export default function SessionsPage() {
                   className="w-full px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 />
               </div>
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   VAULT
                 </label>
                 <select
@@ -313,7 +313,7 @@ export default function SessionsPage() {
                   className="w-full px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 >
@@ -327,11 +327,11 @@ export default function SessionsPage() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+              <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                 ALLOWED SECRETS
               </label>
               {vaultSecrets.length === 0 ? (
-                <p className="text-xs" style={{ color: '#6e6a86' }}>
+                <p className="text-xs" style={{ color: '#5f5d64' }}>
                   No secrets in this vault. Add secrets first.
                 </p>
               ) : (
@@ -343,9 +343,9 @@ export default function SessionsPage() {
                       onClick={() => toggleSecret(secret.id)}
                       className="px-3 py-1 text-xs"
                       style={{
-                        border: `1px solid ${selectedSecrets.includes(secret.id) ? '#a8d8b9' : '#6e6a86'}`,
+                        border: `1px solid ${selectedSecrets.includes(secret.id) ? '#a8d8b9' : '#5f5d64'}`,
                         backgroundColor: selectedSecrets.includes(secret.id) ? '#252542' : 'transparent',
-                        color: selectedSecrets.includes(secret.id) ? '#a8d8b9' : '#6e6a86',
+                        color: selectedSecrets.includes(secret.id) ? '#a8d8b9' : '#5f5d64',
                       }}
                     >
                       {selectedSecrets.includes(secret.id) ? '[✓] ' : '[ ] '}
@@ -358,7 +358,7 @@ export default function SessionsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   EXPIRES IN (HOURS)
                 </label>
                 <select
@@ -367,7 +367,7 @@ export default function SessionsPage() {
                   className="w-full px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 >
@@ -399,12 +399,12 @@ export default function SessionsPage() {
       )}
 
       {/* Active Sessions */}
-      <div className="mb-6" style={{ border: '1px solid #6e6a86' }}>
+      <div className="mb-6" style={{ border: '1px solid #5f5d64' }}>
         <div
           className="px-4 py-3"
           style={{
             backgroundColor: '#252542',
-            borderBottom: '1px solid #6e6a86',
+            borderBottom: '1px solid #5f5d64',
           }}
         >
           <span className="text-xs" style={{ color: '#a8d8b9' }}>
@@ -414,7 +414,7 @@ export default function SessionsPage() {
 
         {activeSessions.length === 0 ? (
           <div className="p-6 sm:p-8 text-center">
-            <p className="text-xs" style={{ color: '#6e6a86' }}>
+            <p className="text-xs" style={{ color: '#5f5d64' }}>
               No active sessions. Create one to grant agent access.
             </p>
           </div>
@@ -437,8 +437,8 @@ export default function SessionsPage() {
                     <span
                       className="px-2 py-0.5 text-xs"
                       style={{
-                        border: '1px solid #6e6a86',
-                        color: '#6e6a86',
+                        border: '1px solid #5f5d64',
+                        color: '#5f5d64',
                       }}
                     >
                       {session.vaults?.name || 'Unknown Vault'}
@@ -456,8 +456,8 @@ export default function SessionsPage() {
                         onClick={() => handleCopyToken(session.token)}
                         className="text-xs px-2 py-1"
                         style={{
-                          border: '1px solid #6e6a86',
-                          color: copiedToken === session.token ? '#a8d8b9' : '#6e6a86',
+                          border: '1px solid #5f5d64',
+                          color: copiedToken === session.token ? '#a8d8b9' : '#5f5d64',
                         }}
                       >
                         {copiedToken === session.token ? '[✓] COPIED' : '[>] COPY'}
@@ -482,7 +482,7 @@ export default function SessionsPage() {
                         className="text-xs px-2 py-0.5"
                         style={{
                           backgroundColor: '#252542',
-                          color: '#6e6a86',
+                          color: '#5f5d64',
                         }}
                       >
                         {secret?.name || secretId}
@@ -498,15 +498,15 @@ export default function SessionsPage() {
 
       {/* Expired Sessions */}
       {expiredSessions.length > 0 && (
-        <div style={{ border: '1px solid #6e6a86' }}>
+        <div style={{ border: '1px solid #5f5d64' }}>
           <div
             className="px-4 py-3"
             style={{
               backgroundColor: '#252542',
-              borderBottom: '1px solid #6e6a86',
+              borderBottom: '1px solid #5f5d64',
             }}
           >
-            <span className="text-xs" style={{ color: '#6e6a86' }}>
+            <span className="text-xs" style={{ color: '#5f5d64' }}>
               EXPIRED SESSIONS ({expiredSessions.length})
             </span>
           </div>
@@ -523,8 +523,8 @@ export default function SessionsPage() {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span style={{ color: '#6e6a86' }}>[x]</span>
-                  <span style={{ color: '#6e6a86' }}>{session.agent_name}</span>
+                  <span style={{ color: '#5f5d64' }}>[x]</span>
+                  <span style={{ color: '#5f5d64' }}>{session.agent_name}</span>
                 </div>
                 <span className="text-xs" style={{ color: '#eb6f92' }}>
                   Expired {new Date(session.expires_at).toLocaleDateString()}
@@ -540,11 +540,11 @@ export default function SessionsPage() {
         className="p-4 text-xs mt-6"
         style={{
           backgroundColor: '#252542',
-          border: '1px solid #6e6a86',
+          border: '1px solid #5f5d64',
         }}
       >
         <p style={{ color: '#a8d8b9', marginBottom: '8px' }}>[i] Session Tokens</p>
-        <p style={{ color: '#6e6a86', lineHeight: '1.5' }}>
+        <p style={{ color: '#5f5d64', lineHeight: '1.5' }}>
           Sessions grant time-limited access to specific secrets. Share the token with your AI agent
           via environment variable. When the session expires, the agent loses access automatically.
           {profile?.tier === 'free' && (

@@ -72,7 +72,7 @@ export default function SignUpPage() {
         <p className="text-xs mb-4" style={{ color: '#e8e3e3' }}>
           We&apos;ve sent a confirmation link to <strong>{email}</strong>
         </p>
-        <p className="text-xs" style={{ color: '#6e6a86' }}>
+        <p className="text-xs" style={{ color: '#5f5d64' }}>
           Click the link in the email to activate your account and access your vault.
         </p>
         <div className="mt-6">
@@ -118,14 +118,14 @@ export default function SignUpPage() {
         )}
 
         <div>
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             EMAIL
           </label>
           <div
             className="flex items-center p-3"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
             }}
           >
             <span style={{ color: '#a8d8b9' }}>&gt;</span>
@@ -142,14 +142,14 @@ export default function SignUpPage() {
         </div>
 
         <div>
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             PASSWORD
           </label>
           <div
             className="flex items-center p-3"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
             }}
           >
             <span style={{ color: '#a8d8b9' }}>&gt;</span>
@@ -163,20 +163,20 @@ export default function SignUpPage() {
               style={{ color: '#e8e3e3' }}
             />
           </div>
-          <p className="text-xs mt-1" style={{ color: '#6e6a86' }}>
+          <p className="text-xs mt-1" style={{ color: '#5f5d64' }}>
             {`// 12+ chars, uppercase, lowercase, number, special char`}
           </p>
         </div>
 
         <div>
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             CONFIRM PASSWORD
           </label>
           <div
             className="flex items-center p-3"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
             }}
           >
             <span style={{ color: '#a8d8b9' }}>&gt;</span>
@@ -207,7 +207,7 @@ export default function SignUpPage() {
       </form>
 
       <div className="mt-6 text-center text-xs">
-        <p style={{ color: '#6e6a86' }}>
+        <p style={{ color: '#5f5d64' }}>
           Already have an account?{' '}
           <Link href="/auth/sign-in" style={{ color: '#a8d8b9' }}>
             Sign in
@@ -219,11 +219,11 @@ export default function SignUpPage() {
         className="mt-6 p-4 text-xs"
         style={{
           backgroundColor: '#252542',
-          border: '1px solid #6e6a86',
+          border: '1px solid #5f5d64',
         }}
       >
         <p style={{ color: '#a8d8b9', marginBottom: '8px' }}>[i] Zero-Knowledge Security</p>
-        <p style={{ color: '#6e6a86', lineHeight: '1.5' }}>
+        <p style={{ color: '#5f5d64', lineHeight: '1.5' }}>
           Your master password never leaves your device. We only store encrypted
           data that we cannot read. If you lose your password, we cannot recover
           your secrets.

@@ -17,13 +17,13 @@
   
   /* Text */
   --text-primary: #e8e3e3;
-  --text-secondary: #a8b2c3;
-  --text-muted: #6e6a86;
-  
+  --text-secondary: #adb7ac;
+  --text-muted: #5f5d64;
+
   /* Accent Palette */
-  --accent-cyan: #7eb8da;
+  --accent-cyan: #adb7ac;
   --accent-mint: #a8d8b9;
-  --accent-lavender: #c4a7e7;
+  --accent-lavender: #bba7c0;
   --accent-rose: #f2cdcd;
   --accent-cream: #ffe9b0;
   --accent-peach: #f5a97f;

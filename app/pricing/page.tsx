@@ -64,11 +64,11 @@ function PricingContent() {
     bg: '#1a1a2e',
     bgLight: '#252542',
     text: '#e8e3e3',
-    muted: '#6e6a86',
+    muted: '#5f5d64',
     mint: '#a8d8b9',
-    lavender: '#c4a7e7',
+    lavender: '#bba7c0',
     coral: '#eb6f92',
-    cyan: '#7eb8da',
+    cyan: '#adb7ac',
     cream: '#ffe9b0',
   };
 
@@ -724,7 +724,7 @@ export default function PricingPage() {
         alignItems: 'center',
         justifyContent: 'center',
         fontFamily: "'JetBrains Mono', monospace",
-        color: '#6e6a86'
+        color: '#5f5d64'
       }}>
         [~] Loading...
       </div>

@@ -16,11 +16,11 @@ export default function DocsPage() {
     bg: '#1a1a2e',
     bgLight: '#252542',
     text: '#e8e3e3',
-    muted: '#6e6a86',
+    muted: '#5f5d64',
     mint: '#a8d8b9',
-    lavender: '#c4a7e7',
+    lavender: '#bba7c0',
     coral: '#eb6f92',
-    cyan: '#7eb8da',
+    cyan: '#adb7ac',
   };
 
   const sections = [

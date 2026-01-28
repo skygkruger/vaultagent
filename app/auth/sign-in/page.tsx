@@ -66,14 +66,14 @@ export default function SignInPage() {
         )}
 
         <div>
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             EMAIL
           </label>
           <div
             className="flex items-center p-3"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
             }}
           >
             <span style={{ color: '#a8d8b9' }}>&gt;</span>
@@ -90,14 +90,14 @@ export default function SignInPage() {
         </div>
 
         <div>
-          <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+          <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
             PASSWORD
           </label>
           <div
             className="flex items-center p-3"
             style={{
               backgroundColor: '#252542',
-              border: '1px solid #6e6a86',
+              border: '1px solid #5f5d64',
             }}
           >
             <span style={{ color: '#a8d8b9' }}>&gt;</span>
@@ -131,12 +131,12 @@ export default function SignInPage() {
         <p>
           <Link
             href="/auth/forgot-password"
-            style={{ color: '#7eb8da' }}
+            style={{ color: '#adb7ac' }}
           >
             [?] Forgot your password?
           </Link>
         </p>
-        <p style={{ color: '#6e6a86' }}>
+        <p style={{ color: '#5f5d64' }}>
           Don&apos;t have an account?{' '}
           <Link href="/auth/sign-up" style={{ color: '#a8d8b9' }}>
             Sign up

@@ -21,7 +21,7 @@ const TIER_INFO: Record<
 > = {
   free: {
     name: 'Free',
-    color: '#6e6a86',
+    color: '#5f5d64',
     features: ['1 vault', '10 secrets', '50 sessions/day', '7-day audit retention'],
     monthlyPrice: 0,
     yearlyPrice: 0,
@@ -35,7 +35,7 @@ const TIER_INFO: Record<
   },
   team: {
     name: 'Team',
-    color: '#c4a7e7',
+    color: '#bba7c0',
     features: [
       '20 vaults',
       '500 secrets',
@@ -49,7 +49,7 @@ const TIER_INFO: Record<
   },
   enterprise: {
     name: 'Enterprise',
-    color: '#7eb8da',
+    color: '#adb7ac',
     features: [
       'Unlimited vaults',
       'Unlimited secrets',
@@ -209,7 +209,7 @@ export default function AccountPage() {
         <h1 className="text-lg sm:text-xl mb-2" style={{ color: '#a8d8b9' }}>
           [@] Account Settings
         </h1>
-        <p className="text-xs" style={{ color: '#6e6a86' }}>
+        <p className="text-xs" style={{ color: '#5f5d64' }}>
           {`// manage your account and subscription`}
         </p>
       </div>
@@ -256,17 +256,17 @@ export default function AccountPage() {
       {/* Profile Section */}
       <div
         className="mb-6 p-4"
-        style={{ border: '1px solid #6e6a86' }}
+        style={{ border: '1px solid #5f5d64' }}
       >
         <h2
           className="text-sm mb-4 pb-3"
-          style={{ color: '#a8d8b9', borderBottom: '1px solid #6e6a86' }}
+          style={{ color: '#a8d8b9', borderBottom: '1px solid #5f5d64' }}
         >
           Profile
         </h2>
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-xs" style={{ color: '#6e6a86' }}>
+            <span className="text-xs" style={{ color: '#5f5d64' }}>
               EMAIL
             </span>
             <span className="text-xs" style={{ color: '#e8e3e3' }}>
@@ -274,15 +274,15 @@ export default function AccountPage() {
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-xs" style={{ color: '#6e6a86' }}>
+            <span className="text-xs" style={{ color: '#5f5d64' }}>
               USER ID
             </span>
-            <span className="text-xs font-mono" style={{ color: '#6e6a86' }}>
+            <span className="text-xs font-mono" style={{ color: '#5f5d64' }}>
               {user?.id?.substring(0, 8)}...
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-xs" style={{ color: '#6e6a86' }}>
+            <span className="text-xs" style={{ color: '#5f5d64' }}>
               MEMBER SINCE
             </span>
             <span className="text-xs" style={{ color: '#e8e3e3' }}>
@@ -297,11 +297,11 @@ export default function AccountPage() {
       {/* Security Section */}
       <div
         className="mb-6 p-4"
-        style={{ border: '1px solid #6e6a86' }}
+        style={{ border: '1px solid #5f5d64' }}
       >
         <h2
           className="text-sm mb-4 pb-3"
-          style={{ color: '#a8d8b9', borderBottom: '1px solid #6e6a86' }}
+          style={{ color: '#a8d8b9', borderBottom: '1px solid #5f5d64' }}
         >
           Security
         </h2>
@@ -311,8 +311,8 @@ export default function AccountPage() {
             onClick={() => setShowPasswordForm(true)}
             className="text-xs px-4 py-2 transition-all hover-border-glow hover-text-glow"
             style={{
-              border: '1px solid #6e6a86',
-              color: '#a8b2c3',
+              border: '1px solid #5f5d64',
+              color: '#adb7ac',
               backgroundColor: 'transparent',
             }}
           >
@@ -322,7 +322,7 @@ export default function AccountPage() {
           <form onSubmit={handlePasswordChange}>
             <div className="space-y-4 mb-4">
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   NEW PASSWORD
                 </label>
                 <input
@@ -334,13 +334,13 @@ export default function AccountPage() {
                   className="w-full max-w-xs px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 />
               </div>
               <div>
-                <label className="block text-xs mb-2" style={{ color: '#6e6a86' }}>
+                <label className="block text-xs mb-2" style={{ color: '#5f5d64' }}>
                   CONFIRM PASSWORD
                 </label>
                 <input
@@ -352,7 +352,7 @@ export default function AccountPage() {
                   className="w-full max-w-xs px-3 py-2 text-xs"
                   style={{
                     backgroundColor: '#252542',
-                    border: '1px solid #6e6a86',
+                    border: '1px solid #5f5d64',
                     color: '#e8e3e3',
                   }}
                 />
@@ -379,8 +379,8 @@ export default function AccountPage() {
                 }}
                 className="text-xs px-4 py-2 transition-all hover-border-glow hover-text-glow"
                 style={{
-                  border: '1px solid #6e6a86',
-                  color: '#6e6a86',
+                  border: '1px solid #5f5d64',
+                  color: '#5f5d64',
                   backgroundColor: 'transparent',
                 }}
               >
@@ -394,11 +394,11 @@ export default function AccountPage() {
       {/* Subscription Section */}
       <div
         className="mb-6 p-4"
-        style={{ border: '1px solid #6e6a86' }}
+        style={{ border: '1px solid #5f5d64' }}
       >
         <h2
           className="text-sm mb-4 pb-3"
-          style={{ color: '#a8d8b9', borderBottom: '1px solid #6e6a86' }}
+          style={{ color: '#a8d8b9', borderBottom: '1px solid #5f5d64' }}
         >
           Subscription
         </h2>
@@ -429,7 +429,7 @@ export default function AccountPage() {
                 className="text-xs px-2 py-1"
                 style={{
                   backgroundColor: '#252542',
-                  color: '#a8b2c3',
+                  color: '#adb7ac',
                 }}
               >
                 {feature}
@@ -441,7 +441,7 @@ export default function AccountPage() {
         {/* Upgrade Options or Manage */}
         {(!profile?.tier || profile?.tier === 'free') ? (
           <div className="space-y-4">
-            <p className="text-xs" style={{ color: '#6e6a86' }}>
+            <p className="text-xs" style={{ color: '#5f5d64' }}>
               Upgrade for more vaults, secrets, and longer audit retention:
             </p>
 
@@ -452,7 +452,7 @@ export default function AccountPage() {
                 className="text-xs px-3 py-1 transition-all"
                 style={{
                   backgroundColor: billingPeriod === 'monthly' ? '#a8d8b9' : 'transparent',
-                  color: billingPeriod === 'monthly' ? '#1a1a2e' : '#6e6a86',
+                  color: billingPeriod === 'monthly' ? '#1a1a2e' : '#5f5d64',
                   border: '1px solid #a8d8b9',
                 }}
               >
@@ -463,7 +463,7 @@ export default function AccountPage() {
                 className="text-xs px-3 py-1 transition-all"
                 style={{
                   backgroundColor: billingPeriod === 'yearly' ? '#a8d8b9' : 'transparent',
-                  color: billingPeriod === 'yearly' ? '#1a1a2e' : '#6e6a86',
+                  color: billingPeriod === 'yearly' ? '#1a1a2e' : '#5f5d64',
                   border: '1px solid #a8d8b9',
                 }}
               >
@@ -498,8 +498,8 @@ export default function AccountPage() {
                 disabled={loading}
                 className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow hover-lift"
                 style={{
-                  border: '1px solid #c4a7e7',
-                  color: '#c4a7e7',
+                  border: '1px solid #bba7c0',
+                  color: '#bba7c0',
                   backgroundColor: 'transparent',
                 }}
               >
@@ -513,8 +513,8 @@ export default function AccountPage() {
                 disabled={loading}
                 className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow hover-lift"
                 style={{
-                  border: '1px solid #7eb8da',
-                  color: '#7eb8da',
+                  border: '1px solid #adb7ac',
+                  color: '#adb7ac',
                   backgroundColor: 'transparent',
                 }}
               >
@@ -532,8 +532,8 @@ export default function AccountPage() {
               disabled={loading}
               className="text-xs px-4 py-2 disabled:opacity-50 transition-all hover-border-glow hover-text-glow"
               style={{
-                border: '1px solid #6e6a86',
-                color: '#a8b2c3',
+                border: '1px solid #5f5d64',
+                color: '#adb7ac',
                 backgroundColor: 'transparent',
               }}
             >
@@ -576,17 +576,17 @@ export default function AccountPage() {
       {/* Usage Section */}
       <div
         className="mb-6 p-4"
-        style={{ border: '1px solid #6e6a86' }}
+        style={{ border: '1px solid #5f5d64' }}
       >
         <h2
           className="text-sm mb-4 pb-3"
-          style={{ color: '#a8d8b9', borderBottom: '1px solid #6e6a86' }}
+          style={{ color: '#a8d8b9', borderBottom: '1px solid #5f5d64' }}
         >
           Current Usage
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div>
-            <div className="text-xs mb-1" style={{ color: '#6e6a86' }}>
+            <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
               VAULTS
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
@@ -594,7 +594,7 @@ export default function AccountPage() {
             </div>
           </div>
           <div>
-            <div className="text-xs mb-1" style={{ color: '#6e6a86' }}>
+            <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
               SECRETS
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
@@ -602,7 +602,7 @@ export default function AccountPage() {
             </div>
           </div>
           <div>
-            <div className="text-xs mb-1" style={{ color: '#6e6a86' }}>
+            <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
               SESSIONS TODAY
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
@@ -610,7 +610,7 @@ export default function AccountPage() {
             </div>
           </div>
           <div>
-            <div className="text-xs mb-1" style={{ color: '#6e6a86' }}>
+            <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
               AUDIT RETENTION
             </div>
             <div className="text-lg" style={{ color: '#e8e3e3' }}>
@@ -633,7 +633,7 @@ export default function AccountPage() {
         >
           Danger Zone
         </h2>
-        <p className="text-xs mb-4" style={{ color: '#6e6a86' }}>
+        <p className="text-xs mb-4" style={{ color: '#5f5d64' }}>
           Delete your account and all associated data. This action cannot be undone.
         </p>
         <button
