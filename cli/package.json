@@ -1,0 +1,31 @@
+{
+  "name": "@vaultagent/cli",
+  "version": "1.0.0",
+  "description": "Zero-knowledge secret injection for AI coding agents",
+  "type": "module",
+  "bin": {
+    "vaultagent": "./index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "crypto.mjs"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "vaultagent",
+    "secrets",
+    "ai-agents",
+    "zero-knowledge",
+    "encryption",
+    "claude",
+    "cursor",
+    "copilot"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skygkruger/vaultagent"
+  },
+  "license": "MIT"
+}

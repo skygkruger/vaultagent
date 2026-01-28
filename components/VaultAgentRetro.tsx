@@ -858,9 +858,9 @@ export default function VaultAgentRetro() {
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  $ npx vaultagent init                                                      │
-│  $ vaultagent add OPENAI_API_KEY                                            │
-│  $ vaultagent session create --agent claude-code --duration 1h              │
+│  $ npm i -g @vaultagent/cli                                                 │
+│  $ vaultagent run <session-token> -- claude                                 │
+│  > [/] 3 secrets decrypted + injected. Launching claude...                  │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘`}
             </pre>
@@ -876,9 +876,9 @@ export default function VaultAgentRetro() {
               ))}
             </div>
             <div className="text-xs space-y-1 p-3" style={{ backgroundColor: '#1a211d' }}>
-              <div>$ npx vaultagent init</div>
-              <div>$ vaultagent add OPENAI_API_KEY</div>
-              <div className="break-all">$ vaultagent session create --agent claude-code</div>
+              <div>$ npm i -g @vaultagent/cli</div>
+              <div className="break-all">$ vaultagent run &lt;token&gt; -- claude</div>
+              <div style={{ color: '#a8d8b9' }}>&gt; [/] 3 secrets decrypted + injected</div>
             </div>
           </div>
         </div>

@@ -151,24 +151,32 @@ export default function DocsPage() {
 
             <h3 style={{ color: colors.lavender }}>Quick Start</h3>
 
-            <CodeBlock title="terminal">
+            <CodeBlock title="step 1: dashboard">
+{`# Sign up at vaultagent.io and store your secrets
+# Secrets are encrypted client-side before upload
+# Server never sees your plaintext values`}
+            </CodeBlock>
+
+            <CodeBlock title="step 2: create session">
+{`# In the dashboard, create a session:
+#   - Select your vault
+#   - Choose which secrets to share
+#   - Set duration (15min to 24hr)
+#   - Pick your agent
+# You'll receive a session token: va_sess_xK7m...`}
+            </CodeBlock>
+
+            <CodeBlock title="step 3: inject + run">
 {`# Install the CLI
-$ npm install -g vaultagent
+$ npm i -g @vaultagent/cli
 
-# Initialize your vault
-$ vaultagent init
-[/] Vault initialized at ~/.vaultagent
-
-# Add a secret
-$ vaultagent add OPENAI_API_KEY
-Enter value: ****************************
-[/] Secret stored (encrypted)
-
-# Create a session for your AI agent
-$ vaultagent session create --agent claude-code --duration 1h
-[/] Session created: va_sess_xK7m9pL2qR4tN8vB3cD6fH1j
-[/] Secrets injected to environment
-[/] Expires in 60 minutes`}
+# Run your agent with secrets injected
+$ vaultagent run va_sess_xK7m... -- claude
+Master password: ********
+[/] Fetching session secrets...
+[/] Session: claude-code (58 min remaining)
+[/] Decrypting 3 secret(s)...
+[/] 3 secret(s) injected. Launching: claude`}
             </CodeBlock>
 
             <h3 style={{ color: colors.lavender }}>Supported AI Agents</h3>
@@ -471,109 +479,83 @@ $ vaultagent vault list
 
             <h3 style={{ color: colors.lavender }}>Installation</h3>
             <CodeBlock title="terminal">
-{`# npm
-$ npm install -g vaultagent
+{`# Install globally via npm
+$ npm i -g @vaultagent/cli
 
-# yarn
-$ yarn global add vaultagent
+# Or run directly with npx
+$ npx @vaultagent/cli --help
 
-# verify installation
+# Verify installation
 $ vaultagent --version
 vaultagent v1.0.0`}
             </CodeBlock>
 
+            <p style={{ color: colors.muted, fontSize: '12px', marginBottom: '16px' }}>
+              Requires Node.js 18+. No external dependencies.
+            </p>
+
             <h3 style={{ color: colors.lavender }}>Commands</h3>
 
             <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>vaultagent init</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>Initialize a new vault</p>
+              <h4 style={{ color: colors.mint }}>vaultagent run &lt;token&gt; -- &lt;command&gt;</h4>
+              <p style={{ color: colors.muted, marginBottom: '8px' }}>Decrypt secrets and inject into a subprocess environment</p>
               <CodeBlock>
-{`$ vaultagent init
-Enter master password: ********
-Confirm password: ********
-[/] Vault initialized at ~/.vaultagent`}
+{`# Run Claude Code with secrets injected
+$ vaultagent run va_sess_xK7m... -- claude
+Master password: ********
+[/] Fetching session secrets...
+[/] Session: claude-code (58 min remaining)
+[/] Decrypting 3 secret(s)...
+[/] 3 secret(s) injected. Launching: claude
+
+# Run Cursor with secrets
+$ vaultagent run va_sess_xK7m... -- cursor .
+
+# Run Aider with secrets
+$ vaultagent run va_sess_xK7m... -- aider`}
               </CodeBlock>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>vaultagent add [name]</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>Add a secret to your vault</p>
+              <h4 style={{ color: colors.mint }}>vaultagent env &lt;token&gt;</h4>
+              <p style={{ color: colors.muted, marginBottom: '8px' }}>Output secrets as shell export statements (for eval)</p>
               <CodeBlock>
-{`$ vaultagent add OPENAI_API_KEY
-Enter value: ****************************
-[/] Secret 'OPENAI_API_KEY' stored
+{`# Load secrets into current shell
+$ eval "$(vaultagent env va_sess_xK7m...)"
+Master password: ********
+[/] Fetching session secrets...
+[/] Decrypting 3 secret(s)...
+[/] Done. Secrets exported to stdout.
 
-# Or pipe from stdin
-$ echo "sk-xxx" | vaultagent add OPENAI_API_KEY --stdin`}
+# Now secrets are available as env vars
+$ echo $OPENAI_API_KEY
+sk-****`}
               </CodeBlock>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>vaultagent list</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>List all secrets (names only)</p>
+              <h4 style={{ color: colors.mint }}>vaultagent status &lt;token&gt;</h4>
+              <p style={{ color: colors.muted, marginBottom: '8px' }}>Check session status and expiry</p>
               <CodeBlock>
-{`$ vaultagent list
-┌──────────────────────┬─────────────────┬──────────────┐
-│ NAME                 │ LAST ACCESSED   │ STATUS       │
-├──────────────────────┼─────────────────┼──────────────┤
-│ OPENAI_API_KEY       │ 5 min ago       │ [/] active   │
-│ DATABASE_URL         │ 2 hours ago     │ [/] active   │
-│ STRIPE_SECRET        │ 3 days ago      │ [x] expired  │
-└──────────────────────┴─────────────────┴──────────────┘`}
+{`$ vaultagent status va_sess_xK7m...
+  Agent:     claude-code
+  Expires:   2025-01-28T15:00:00.000Z
+  Remaining: 42 minutes
+  Secrets:   OPENAI_API_KEY, DATABASE_URL
+  Status:    ACTIVE`}
               </CodeBlock>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>vaultagent session create</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>Create a new agent session</p>
+              <h4 style={{ color: colors.mint }}>Options</h4>
               <CodeBlock>
-{`$ vaultagent session create [options]
+{`--url <url>    Override API URL (default: https://vaultagent.io)
+--help         Show help
+--version      Show version
 
-Options:
-  --agent <name>       Agent name (claude-code, cursor, etc.)
-  --duration <time>    Session duration (15m, 1h, 4h, 24h)
-  --secrets <list>     Comma-separated secret names (optional)
-  --vault <name>       Vault name (default: 'default')
-
-Example:
-$ vaultagent session create \\
-    --agent claude-code \\
-    --duration 1h \\
-    --secrets OPENAI_API_KEY,DATABASE_URL`}
-              </CodeBlock>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>vaultagent session revoke [id]</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>Revoke an active session immediately</p>
-              <CodeBlock>
-{`$ vaultagent session revoke va_sess_xK7m9pL2
-[/] Session revoked
-[/] Environment variables cleaned`}
-              </CodeBlock>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>vaultagent audit</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>View audit log</p>
-              <CodeBlock>
-{`$ vaultagent audit [options]
-
-Options:
-  --last <n>           Show last n entries
-  --since <date>       Show entries since date
-  --agent <name>       Filter by agent
-  --export <format>    Export as json or csv`}
-              </CodeBlock>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>vaultagent remove [name]</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>Remove a secret from your vault</p>
-              <CodeBlock>
-{`$ vaultagent remove STRIPE_SECRET
-Are you sure? This cannot be undone. [y/N] y
-[/] Secret 'STRIPE_SECRET' removed`}
+Environment variables:
+  VAULTAGENT_URL        API base URL override
+  VAULTAGENT_PASSWORD   Master password (prefer interactive prompt)`}
               </CodeBlock>
             </div>
           </div>
@@ -598,74 +580,66 @@ Are you sure? This cannot be undone. [y/N] y
             <h3 style={{ color: colors.lavender }}>Base URL</h3>
 
             <CodeBlock>
-{`https://api.vaultagent.dev/v1`}
+{`https://vaultagent.io/api`}
             </CodeBlock>
 
-            <h3 style={{ color: colors.lavender }}>Endpoints</h3>
+            <h3 style={{ color: colors.lavender }}>Agent Endpoint</h3>
 
             <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>POST /sessions</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>Create a new session</p>
+              <h4 style={{ color: colors.mint }}>GET /api/agent/secrets</h4>
+              <p style={{ color: colors.muted, marginBottom: '8px' }}>Retrieve encrypted secrets for a session token. This is the endpoint the CLI uses. Returns encrypted blobs — decryption happens client-side.</p>
               <CodeBlock title="request">
-{`POST /v1/sessions
-Content-Type: application/json
-
-{
-  "agent": "claude-code",
-  "duration": 3600,
-  "secrets": ["OPENAI_API_KEY", "DATABASE_URL"],
-  "vault_id": "vault_abc123"
-}`}
+{`GET /api/agent/secrets
+Authorization: Bearer va_sess_xK7m9pL2qR4tN8vB3cD6fH1j`}
               </CodeBlock>
               <CodeBlock title="response">
 {`{
-  "id": "sess_xyz789",
-  "token": "va_sess_xK7m9pL2qR4tN8vB3cD6fH1jW5yZ0aE4gI7k",
-  "agent": "claude-code",
-  "expires_at": "2025-01-26T15:30:00Z",
-  "secrets": ["OPENAI_API_KEY", "DATABASE_URL"],
-  "status": "active"
-}`}
-              </CodeBlock>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>DELETE /sessions/:id</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>Revoke a session</p>
-              <CodeBlock title="request">
-{`DELETE /v1/sessions/sess_xyz789`}
-              </CodeBlock>
-              <CodeBlock title="response">
-{`{
-  "id": "sess_xyz789",
-  "status": "revoked",
-  "revoked_at": "2025-01-26T14:45:00Z"
-}`}
-              </CodeBlock>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ color: colors.mint }}>GET /audit</h4>
-              <p style={{ color: colors.muted, marginBottom: '8px' }}>Retrieve audit log entries</p>
-              <CodeBlock title="request">
-{`GET /v1/audit?limit=50&agent=claude-code`}
-              </CodeBlock>
-              <CodeBlock title="response">
-{`{
-  "entries": [
+  "secrets": [
     {
-      "id": "log_001",
-      "timestamp": "2025-01-26T14:32:05Z",
-      "action": "SECRET_ACCESS",
-      "agent": "claude-code",
-      "session_id": "sess_xyz789",
-      "secret": "OPENAI_API_KEY"
+      "name": "OPENAI_API_KEY",
+      "encrypted_value": "YWJjZGVmZ2...",
+      "iv": "aGVsbG8gd29...",
+      "salt": "Z29vZCBzYWx..."
     }
   ],
-  "total": 127,
-  "has_more": true
+  "session": {
+    "agent_name": "claude-code",
+    "expires_at": "2025-01-28T15:30:00Z",
+    "allowed_secrets": ["OPENAI_API_KEY", "DATABASE_URL"]
+  }
 }`}
               </CodeBlock>
+              <p style={{ color: colors.muted, fontSize: '12px', marginTop: '8px' }}>
+                Note: Values are AES-256-GCM encrypted. The CLI decrypts locally using your master password. The server never sees plaintext.
+              </p>
+            </div>
+
+            <h3 style={{ color: colors.lavender }}>Dashboard API</h3>
+            <p style={{ color: colors.muted, marginBottom: '16px', fontSize: '13px' }}>
+              These endpoints require Supabase authentication (session cookies). Used by the dashboard.
+            </p>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h4 style={{ color: colors.mint }}>POST /api/sessions</h4>
+              <p style={{ color: colors.muted, marginBottom: '8px' }}>Create a new agent session</p>
+              <CodeBlock title="request body">
+{`{
+  "vault_id": "uuid",
+  "agent_name": "claude-code",
+  "duration_hours": 1,
+  "allowed_secrets": ["OPENAI_API_KEY", "DATABASE_URL"]
+}`}
+              </CodeBlock>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h4 style={{ color: colors.mint }}>DELETE /api/sessions/:id</h4>
+              <p style={{ color: colors.muted, marginBottom: '8px' }}>Revoke an active session immediately</p>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h4 style={{ color: colors.mint }}>GET /api/audit</h4>
+              <p style={{ color: colors.muted, marginBottom: '8px' }}>Retrieve audit log entries with filtering</p>
             </div>
 
             <h3 style={{ color: colors.lavender }}>Rate Limits</h3>

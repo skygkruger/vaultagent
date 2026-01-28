@@ -91,6 +91,6 @@ export const config = {
      * - public folder
      * - api/stripe/webhook (Stripe webhooks need raw body)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api/stripe/webhook).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api/stripe/webhook|api/agent).*)',
   ],
 }
