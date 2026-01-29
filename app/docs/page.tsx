@@ -766,7 +766,7 @@ Enter new value: ****************************
               </div>
               <div style={{ color: colors.text }}>
                 Contact us at{' '}
-                <span style={{ color: colors.mint }}>support@vaultagent.dev</span>
+                <a href="mailto:sky@veridian.run" style={{ color: colors.mint, textDecoration: 'none' }}>sky@veridian.run</a>
               </div>
             </div>
           </div>

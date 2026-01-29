@@ -178,10 +178,6 @@ function PricingContent() {
       question: 'What happens to my secrets if I downgrade?',
       answer: 'Your secrets remain encrypted and safe. If you exceed the new plan\'s limits, you\'ll need to remove some before adding new ones.',
     },
-    {
-      question: 'Do you offer refunds?',
-      answer: 'Yes, we offer a 30-day money-back guarantee on all paid plans. No questions asked.',
-    },
   ];
 
   return (
