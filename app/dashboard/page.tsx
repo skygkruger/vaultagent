@@ -186,7 +186,12 @@ export default function DashboardPage() {
   // Add new secret
   const handleAddSecret = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!selectedVault || !masterPassword) return
+    console.log('[handleAddSecret] Starting...', { selectedVault, hasPassword: !!masterPassword })
+
+    if (!selectedVault || !masterPassword) {
+      console.log('[handleAddSecret] Missing vault or password')
+      return
+    }
 
     const supabase = getSupabase()
     if (!supabase) {
@@ -196,19 +201,29 @@ export default function DashboardPage() {
 
     setError(null)
     setSaving(true)
+    console.log('[handleAddSecret] Set saving=true')
 
     try {
       // Check secret limit
       const currentSecretCount = secrets.length
       const tierLimits = getTierLimits(profile?.tier)
+      console.log('[handleAddSecret] Tier limits:', tierLimits, 'Current count:', currentSecretCount)
+
       if (tierLimits.secret_limit !== -1 && currentSecretCount >= tierLimits.secret_limit) {
         setError(`You've reached your secret limit (${tierLimits.secret_limit}). Upgrade to add more.`)
         setSaving(false)
         return
       }
 
+      // Check if crypto.subtle is available
+      if (typeof crypto === 'undefined' || !crypto.subtle) {
+        throw new Error('Web Crypto API not available. Please use HTTPS.')
+      }
+      console.log('[handleAddSecret] Crypto API available, starting encryption...')
+
       // Encrypt the secret client-side
       const encrypted = await encryptSecret(newSecretValue, masterPassword)
+      console.log('[handleAddSecret] Encryption complete')
 
       // Save to database
       const { error: insertError } = await supabase

@@ -58,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Fetch profile helper
   const fetchProfile = async (userId: string, client: SupabaseClient): Promise<Profile | null> => {
     try {
+      console.log('[AuthContext] Fetching profile for user:', userId)
       const { data, error } = await client
         .from('profiles')
         .select('*')
@@ -65,12 +66,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .single()
 
       if (error) {
-        console.error('Profile fetch error:', error)
+        console.error('[AuthContext] Profile fetch error:', error)
         return null
       }
+      console.log('[AuthContext] Profile fetched:', data)
+      console.log('[AuthContext] Profile tier:', data?.tier)
       return data as Profile
     } catch (err) {
-      console.error('Profile fetch exception:', err)
+      console.error('[AuthContext] Profile fetch exception:', err)
       return null
     }
   }

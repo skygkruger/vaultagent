@@ -59,6 +59,12 @@ export default function DashboardLayout({
     } catch {}
   }, [user, pathname])
 
+  // Debug: log profile tier
+  useEffect(() => {
+    console.log('[Layout] Profile loaded:', profile)
+    console.log('[Layout] Profile tier:', profile?.tier)
+  }, [profile])
+
   // Auto-sync tier from Stripe if user has a customer ID but shows free
   useEffect(() => {
     if (tierSynced || !profile || !user) return
