@@ -12,9 +12,10 @@ export async function deriveKey(
   password: string,
   salt: Uint8Array
 ): Promise<CryptoKey> {
+  console.log('[deriveKey] Starting key derivation...')
   const encoder = new TextEncoder()
   const passwordBuffer = encoder.encode(password)
-  
+
   // Import password as key material
   const keyMaterial = await crypto.subtle.importKey(
     'raw',
@@ -23,13 +24,16 @@ export async function deriveKey(
     false,
     ['deriveBits', 'deriveKey']
   )
-  
+  console.log('[deriveKey] Key material imported')
+
   // Derive the actual encryption key
-  return crypto.subtle.deriveKey(
+  // Using a new Uint8Array to ensure we have a clean buffer
+  const saltArray = new Uint8Array(salt)
+  const result = await crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
-      salt: salt.buffer as ArrayBuffer,
-      iterations: 100000,  // High iteration count for security
+      salt: saltArray,
+      iterations: 100000,
       hash: 'SHA-256'
     },
     keyMaterial,
@@ -37,6 +41,8 @@ export async function deriveKey(
     false,
     ['encrypt', 'decrypt']
   )
+  console.log('[deriveKey] Key derived successfully')
+  return result
 }
 
 /**
@@ -47,23 +53,28 @@ export async function encryptSecret(
   plaintext: string,
   password: string
 ): Promise<{ encrypted: string; iv: string; salt: string }> {
+  console.log('[encrypt] Starting encryption...')
+
   // Generate random salt and IV
   const salt = crypto.getRandomValues(new Uint8Array(16))
   const iv = crypto.getRandomValues(new Uint8Array(12))
-  
+  console.log('[encrypt] Generated salt and IV')
+
   // Derive key from password
   const key = await deriveKey(password, salt)
-  
+  console.log('[encrypt] Key derived')
+
   // Encrypt the plaintext
   const encoder = new TextEncoder()
   const plaintextBuffer = encoder.encode(plaintext)
-  
+
   const encryptedBuffer = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv: iv.buffer as ArrayBuffer },
+    { name: 'AES-GCM', iv },
     key,
     plaintextBuffer
   )
-  
+  console.log('[encrypt] Encryption complete')
+
   // Convert to base64 for storage
   return {
     encrypted: bufferToBase64(encryptedBuffer),
