@@ -1,6 +1,6 @@
 {
   "name": "vaultagent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zero-knowledge secret injection for AI coding agents",
   "type": "module",
   "bin": {

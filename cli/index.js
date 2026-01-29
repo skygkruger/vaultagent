@@ -10,8 +10,8 @@ import { createInterface } from 'node:readline';
 import { spawn } from 'node:child_process';
 import { decryptSecret } from './crypto.js';
 
-const API_URL = process.env.VAULTAGENT_URL || 'https://vaultagent.io';
-const VERSION = '1.0.0';
+const API_URL = process.env.VAULTAGENT_URL || 'https://www.vaultagent.io';
+const VERSION = '1.0.1';
 
 // ── Helpers ──────────────────────────────────────────────────
 
