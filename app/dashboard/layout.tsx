@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase'
+import { getTierLimits } from '@/lib/tier-limits'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - DASHBOARD LAYOUT
@@ -201,18 +202,25 @@ export default function DashboardLayout({
             USAGE
           </div>
           <div className="space-y-1 text-xs">
-            <div className="flex justify-between">
-              <span style={{ color: '#5f5d64' }}>Vaults:</span>
-              <span style={{ color: '#e8e3e3' }}>
-                {profile?.vault_limit === -1 ? `${vaultCount} / ∞` : `${vaultCount}/${profile?.vault_limit || 1}`}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span style={{ color: '#5f5d64' }}>Secrets:</span>
-              <span style={{ color: '#e8e3e3' }}>
-                {profile?.secret_limit === -1 ? `${secretCount} / ∞` : `${secretCount}/${profile?.secret_limit || 10}`}
-              </span>
-            </div>
+            {(() => {
+              const limits = getTierLimits(profile?.tier)
+              return (
+                <>
+                  <div className="flex justify-between">
+                    <span style={{ color: '#5f5d64' }}>Vaults:</span>
+                    <span style={{ color: '#e8e3e3' }}>
+                      {limits.vault_limit === -1 ? `${vaultCount} / ∞` : `${vaultCount}/${limits.vault_limit}`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: '#5f5d64' }}>Secrets:</span>
+                    <span style={{ color: '#e8e3e3' }}>
+                      {limits.secret_limit === -1 ? `${secretCount} / ∞` : `${secretCount}/${limits.secret_limit}`}
+                    </span>
+                  </div>
+                </>
+              )
+            })()}
           </div>
         </div>
 

@@ -62,48 +62,5 @@ export async function getUserProfile() {
   return { user, profile }
 }
 
-// Tier limits configuration
-export const TIER_LIMITS = {
-  free: {
-    vault_limit: 1,
-    secret_limit: 10,
-    session_limit: 50,
-    audit_retention_days: 7,
-    can_export_audit: false,
-    can_share_vaults: false,
-    has_api_access: false,
-    has_sso: false,
-  },
-  pro: {
-    vault_limit: 5,
-    secret_limit: 100,
-    session_limit: -1, // unlimited
-    audit_retention_days: 30,
-    can_export_audit: true,
-    can_share_vaults: false,
-    has_api_access: true,
-    has_sso: false,
-  },
-  team: {
-    vault_limit: 20,
-    secret_limit: 500,
-    session_limit: -1, // unlimited
-    audit_retention_days: 90,
-    can_export_audit: true,
-    can_share_vaults: true,
-    has_api_access: true,
-    has_sso: false,
-  },
-  enterprise: {
-    vault_limit: -1, // unlimited
-    secret_limit: -1, // unlimited
-    session_limit: -1, // unlimited
-    audit_retention_days: -1, // custom/unlimited
-    can_export_audit: true,
-    can_share_vaults: true,
-    has_api_access: true,
-    has_sso: true,
-  },
-} as const
-
-export type Tier = keyof typeof TIER_LIMITS
+// Re-export tier limits from shared module
+export { TIER_LIMITS, type Tier } from './tier-limits'

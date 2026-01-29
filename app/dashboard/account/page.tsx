@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import { getTierLimits } from '@/lib/tier-limits'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - ACCOUNT PAGE
@@ -656,30 +657,37 @@ export default function AccountPage() {
           Current Usage
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <div>
-            <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
-              VAULTS
-            </div>
-            <div className="text-lg" style={{ color: '#e8e3e3' }}>
-              {vaultCount} / {profile?.vault_limit === -1 ? '∞' : (profile?.vault_limit ?? 1)}
-            </div>
-          </div>
-          <div>
-            <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
-              SECRETS
-            </div>
-            <div className="text-lg" style={{ color: '#e8e3e3' }}>
-              {secretCount} / {profile?.secret_limit === -1 ? '∞' : (profile?.secret_limit ?? 10)}
-            </div>
-          </div>
-          <div>
-            <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
-              SESSIONS TODAY
-            </div>
-            <div className="text-lg" style={{ color: '#e8e3e3' }}>
-              {sessionCount} / {profile?.session_limit === -1 ? '∞' : (profile?.session_limit ?? 50)}
-            </div>
-          </div>
+          {(() => {
+            const limits = getTierLimits(profile?.tier)
+            return (
+              <>
+                <div>
+                  <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
+                    VAULTS
+                  </div>
+                  <div className="text-lg" style={{ color: '#e8e3e3' }}>
+                    {vaultCount} / {limits.vault_limit === -1 ? '∞' : limits.vault_limit}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
+                    SECRETS
+                  </div>
+                  <div className="text-lg" style={{ color: '#e8e3e3' }}>
+                    {secretCount} / {limits.secret_limit === -1 ? '∞' : limits.secret_limit}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
+                    SESSIONS TODAY
+                  </div>
+                  <div className="text-lg" style={{ color: '#e8e3e3' }}>
+                    {sessionCount} / {limits.session_limit === -1 ? '∞' : limits.session_limit}
+                  </div>
+                </div>
+              </>
+            )
+          })()}
           <div>
             <div className="text-xs mb-1" style={{ color: '#5f5d64' }}>
               AUDIT RETENTION
