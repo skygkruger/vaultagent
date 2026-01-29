@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { createClient } from '@/lib/supabase'
 import { getTierLimits } from '@/lib/tier-limits'
 
 // ═══════════════════════════════════════════════════════════════
@@ -45,25 +44,30 @@ export default function DashboardLayout({
     }
   }, [loading, user, router])
 
-  // Fetch actual usage counts
+  // Fetch actual usage counts via API
   useEffect(() => {
     if (!user) return
-    try {
-      const supabase = createClient()
-      supabase.from('vaults').select('id', { count: 'exact', head: true }).then(({ count }) => {
-        setVaultCount(count ?? 0)
-      })
-      supabase.from('secrets').select('id', { count: 'exact', head: true }).then(({ count }) => {
-        setSecretCount(count ?? 0)
-      })
-    } catch {}
-  }, [user, pathname])
 
-  // Debug: log profile tier
-  useEffect(() => {
-    console.log('[Layout] Profile loaded:', profile)
-    console.log('[Layout] Profile tier:', profile?.tier)
-  }, [profile])
+    const fetchCounts = async () => {
+      try {
+        const [vaultsRes, secretsRes] = await Promise.all([
+          fetch('/api/vaults'),
+          fetch('/api/secrets'),
+        ])
+
+        if (vaultsRes.ok) {
+          const data = await vaultsRes.json()
+          setVaultCount(data.vaults?.length ?? 0)
+        }
+        if (secretsRes.ok) {
+          const data = await secretsRes.json()
+          setSecretCount(data.secrets?.length ?? 0)
+        }
+      } catch {}
+    }
+
+    fetchCounts()
+  }, [user, pathname])
 
   // Auto-sync tier from Stripe if user has a customer ID but shows free
   useEffect(() => {

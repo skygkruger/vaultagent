@@ -1,20 +1,10 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { createClient } from '@/lib/supabase'
 import { encryptSecret, maskSecret } from '@/lib/encryption'
 import { getTierLimits } from '@/lib/tier-limits'
-
-// Helper to safely create Supabase client
-function getSupabase() {
-  try {
-    return createClient()
-  } catch {
-    return null
-  }
-}
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - DASHBOARD (VAULT VIEW)
@@ -85,52 +75,35 @@ export default function DashboardPage() {
     }
   }, [searchParams, user, syncingStripe, refreshProfile, router])
 
-  // Fetch vaults - simplified with hard timeout
+  // Fetch vaults via API route
   useEffect(() => {
     let isMounted = true
 
-    // Hard timeout for this page's loading state
-    const timeout = setTimeout(() => {
-      if (isMounted && loading) {
-        setLoading(false)
-      }
-    }, 2000)
-
     const fetchVaults = async () => {
-      // Don't fetch if auth is still loading
       if (authLoading) return
-
-      // Don't fetch if no user
       if (!user) {
         setLoading(false)
         return
       }
 
       try {
-        const supabase = getSupabase()
-        if (!supabase) {
+        const response = await fetch('/api/vaults')
+        if (!isMounted) return
+
+        if (!response.ok) {
+          const data = await response.json()
+          setError(data.error || 'Failed to load vaults')
           setLoading(false)
           return
         }
 
-        const { data, error: fetchError } = await supabase
-          .from('vaults')
-          .select('*')
-          .order('created_at', { ascending: true })
-
-        if (!isMounted) return
-
-        if (fetchError) {
-          console.error('Vault fetch error:', fetchError)
-          setError(fetchError.message)
-        } else {
-          setVaults(data || [])
-          if (data && data.length > 0 && !selectedVault) {
-            setSelectedVault(data[0].id)
-          }
+        const data = await response.json()
+        setVaults(data.vaults || [])
+        if (data.vaults?.length > 0 && !selectedVault) {
+          setSelectedVault(data.vaults[0].id)
         }
       } catch (err) {
-        console.error('Vault fetch exception:', err)
+        console.error('Vault fetch error:', err)
         if (isMounted) setError('Failed to load vaults')
       } finally {
         if (isMounted) setLoading(false)
@@ -141,30 +114,24 @@ export default function DashboardPage() {
 
     return () => {
       isMounted = false
-      clearTimeout(timeout)
     }
   }, [user, authLoading])
 
-  // Fetch secrets when vault changes
+  // Fetch secrets via API route when vault changes
   useEffect(() => {
     const fetchSecrets = async () => {
       if (!selectedVault) return
 
       try {
-        const supabase = getSupabase()
-        if (!supabase) return
-
-        const { data, error: fetchError } = await supabase
-          .from('secrets')
-          .select('*')
-          .eq('vault_id', selectedVault)
-          .order('created_at', { ascending: false })
-
-        if (fetchError) {
-          setError(fetchError.message)
-        } else {
-          setSecrets(data || [])
+        const response = await fetch(`/api/secrets?vault_id=${selectedVault}`)
+        if (!response.ok) {
+          const data = await response.json()
+          setError(data.error || 'Failed to load secrets')
+          return
         }
+
+        const data = await response.json()
+        setSecrets(data.secrets || [])
       } catch (err) {
         console.error('Failed to fetch secrets:', err)
       }
@@ -186,54 +153,25 @@ export default function DashboardPage() {
   // Add new secret
   const handleAddSecret = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('[handleAddSecret] Starting...', { selectedVault, hasPassword: !!masterPassword })
 
-    if (!selectedVault || !masterPassword) {
-      console.log('[handleAddSecret] Missing vault or password')
-      return
-    }
-
-    const supabase = getSupabase()
-    if (!supabase) {
-      setError('Database connection failed')
-      return
-    }
+    if (!selectedVault || !masterPassword) return
 
     setError(null)
     setSaving(true)
-    console.log('[handleAddSecret] Set saving=true')
 
     try {
-      // Check secret limit
-      const currentSecretCount = secrets.length
+      // Check secret limit (client-side pre-check)
       const tierLimits = getTierLimits(profile?.tier)
-      console.log('[handleAddSecret] Tier limits:', tierLimits, 'Current count:', currentSecretCount)
-
-      if (tierLimits.secret_limit !== -1 && currentSecretCount >= tierLimits.secret_limit) {
+      if (tierLimits.secret_limit !== -1 && secrets.length >= tierLimits.secret_limit) {
         setError(`You've reached your secret limit (${tierLimits.secret_limit}). Upgrade to add more.`)
         setSaving(false)
         return
       }
 
-      // Check if crypto.subtle is available
-      if (typeof crypto === 'undefined' || !crypto.subtle) {
-        throw new Error('Web Crypto API not available. Please use HTTPS.')
-      }
-      console.log('[handleAddSecret] Crypto API available, starting encryption...')
-
       // Encrypt the secret client-side
       const encrypted = await encryptSecret(newSecretValue, masterPassword)
-      console.log('[handleAddSecret] Encryption complete')
 
-      // Save to database
-      // Verify we have required data
-      if (!selectedVault) {
-        throw new Error('No vault selected')
-      }
-
-      console.log('[handleAddSecret] Calling API to create secret...')
-
-      // Use API route instead of client-side Supabase
+      // Create via API
       const response = await fetch('/api/secrets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -247,27 +185,15 @@ export default function DashboardPage() {
       })
 
       const data = await response.json()
-      console.log('[handleAddSecret] API response:', response.status, data)
 
       if (!response.ok) {
         setError(data.error || 'Failed to create secret')
       } else {
-        // Secret created successfully - refresh the list
-        try {
-          const supabase = getSupabase()
-          if (supabase) {
-            const { data: fullSecrets } = await supabase
-              .from('secrets')
-              .select('*')
-              .eq('vault_id', selectedVault)
-              .order('created_at', { ascending: false })
-            if (fullSecrets) {
-              setSecrets(fullSecrets)
-            }
-          }
-        } catch {
-          // If refresh fails, the secret is still created - page refresh will show it
-          console.log('Secret created but refresh failed - reload page to see it')
+        // Refresh secrets list via API
+        const refreshResponse = await fetch(`/api/secrets?vault_id=${selectedVault}`)
+        if (refreshResponse.ok) {
+          const refreshData = await refreshResponse.json()
+          setSecrets(refreshData.secrets || [])
         }
 
         setNewSecretName('')
@@ -349,32 +275,23 @@ export default function DashboardPage() {
     }
   }
 
-  // Delete secret
+  // Delete secret via API
   const handleDeleteSecret = async (secretId: string, secretName: string) => {
     if (!confirm(`Delete secret "${secretName}"? This cannot be undone.`)) return
 
-    const supabase = getSupabase()
-    if (!supabase) {
-      setError('Database connection failed')
-      return
-    }
-
-    const { error: deleteError } = await supabase
-      .from('secrets')
-      .delete()
-      .eq('id', secretId)
-
-    if (deleteError) {
-      setError(deleteError.message)
-    } else {
-      setSecrets(secrets.filter((s) => s.id !== secretId))
-
-      // Log the action
-      await supabase.from('audit_logs').insert({
-        user_id: user?.id,
-        action: 'SECRET_DELETE',
-        target: secretName,
+    try {
+      const response = await fetch(`/api/secrets/${secretId}`, {
+        method: 'DELETE',
       })
+
+      if (!response.ok) {
+        const data = await response.json()
+        setError(data.error || 'Failed to delete secret')
+      } else {
+        setSecrets(secrets.filter((s) => s.id !== secretId))
+      }
+    } catch {
+      setError('Failed to delete secret')
     }
   }
 

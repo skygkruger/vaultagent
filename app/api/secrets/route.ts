@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   const supabase = await createClient()
   let query = supabase
     .from('secrets')
-    .select('id, vault_id, name, created_at, updated_at, last_accessed_at')
+    .select('id, vault_id, name, encrypted_value, iv, salt, created_at, updated_at, last_accessed_at')
     .eq('user_id', userProfile.user.id)
     .order('created_at', { ascending: false })
 

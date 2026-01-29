@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { createClient } from '@/lib/supabase'
 import { SUPPORTED_AGENTS } from '@/lib/agents'
 
 // ═══════════════════════════════════════════════════════════════
@@ -54,43 +53,43 @@ export default function SessionsPage() {
   const [newSessionToken, setNewSessionToken] = useState<string | null>(null)
   const [copiedNewToken, setCopiedNewToken] = useState(false)
 
-  const supabase = createClient()
-
-  // Fetch sessions, vaults, and secrets
+  // Fetch sessions, vaults, and secrets via API
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return
 
-      // Fetch sessions
-      const { data: sessionsData, error: sessionsError } = await supabase
-        .from('sessions')
-        .select('*, vaults(name)')
-        .order('created_at', { ascending: false })
+      try {
+        // Fetch all data in parallel via API routes
+        const [sessionsRes, vaultsRes, secretsRes] = await Promise.all([
+          fetch('/api/sessions'),
+          fetch('/api/vaults'),
+          fetch('/api/secrets'),
+        ])
 
-      if (sessionsError) {
-        setError(sessionsError.message)
-      } else {
-        setSessions(sessionsData || [])
+        if (sessionsRes.ok) {
+          const data = await sessionsRes.json()
+          setSessions(data.sessions || [])
+        } else {
+          const data = await sessionsRes.json()
+          setError(data.error || 'Failed to load sessions')
+        }
+
+        if (vaultsRes.ok) {
+          const data = await vaultsRes.json()
+          setVaults(data.vaults || [])
+          if (data.vaults?.length > 0 && !selectedVault) {
+            setSelectedVault(data.vaults[0].id)
+          }
+        }
+
+        if (secretsRes.ok) {
+          const data = await secretsRes.json()
+          setSecrets(data.secrets || [])
+        }
+      } catch (err) {
+        console.error('Failed to fetch data:', err)
+        setError('Failed to load data')
       }
-
-      // Fetch vaults
-      const { data: vaultsData } = await supabase
-        .from('vaults')
-        .select('id, name')
-        .order('name')
-
-      setVaults(vaultsData || [])
-      if (vaultsData && vaultsData.length > 0 && !selectedVault) {
-        setSelectedVault(vaultsData[0].id)
-      }
-
-      // Fetch all secrets
-      const { data: secretsData } = await supabase
-        .from('secrets')
-        .select('id, name, vault_id')
-        .order('name')
-
-      setSecrets(secretsData || [])
 
       setLoading(false)
     }
@@ -130,13 +129,12 @@ export default function SessionsPage() {
           setError(data.error || 'Failed to create session')
         }
       } else {
-        // Refresh sessions list
-        const { data: sessionsData } = await supabase
-          .from('sessions')
-          .select('*, vaults(name)')
-          .order('created_at', { ascending: false })
-
-        setSessions(sessionsData || [])
+        // Refresh sessions list via API
+        const refreshRes = await fetch('/api/sessions')
+        if (refreshRes.ok) {
+          const refreshData = await refreshRes.json()
+          setSessions(refreshData.sessions || [])
+        }
 
         setNewSessionToken(data.session.token)
         setCopiedNewToken(false)

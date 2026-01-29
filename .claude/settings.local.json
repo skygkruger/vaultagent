@@ -14,7 +14,20 @@
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(npx vercel ls --limit 3)"
+      "Bash(npx vercel ls --limit 3)",
+      "Bash(dir:*)",
+      "Bash(npx next build)",
+      "Bash(node --check:*)",
+      "Bash(npm whoami:*)",
+      "Bash(npm view:*)",
+      "Bash(npm login)",
+      "Bash(npm login:*)",
+      "Bash(npm publish:*)",
+      "Bash(npm pkg:*)",
+      "Bash(vaultagent --version:*)",
+      "Bash(vaultagent:*)",
+      "Bash(npm i:*)",
+      "Bash(del \"C:\\\\Users\\\\skyle\\\\Documents\\\\my-saas-projects\\\\vaultagent\\\\nul\")"
     ]
   }
 }
