@@ -45,7 +45,7 @@ export interface Session {
   vault_id: string
   agent_name: string
   allowed_secrets: string[]  // Array of secret names
-  token: string
+  token_hash: string
   expires_at: string
   created_at: string
   revoked_at: string | null
@@ -55,7 +55,7 @@ export interface AuditLog {
   id: string
   user_id: string
   session_id: string | null
-  action: 'SECRET_CREATE' | 'SECRET_ACCESS' | 'SECRET_DELETE' | 'SESSION_CREATE' | 'SESSION_EXPIRE' | 'SESSION_REVOKE'
+  action: 'SECRET_CREATE' | 'SECRET_ACCESS' | 'SECRET_UPDATE' | 'SECRET_DELETE' | 'SESSION_CREATE' | 'SESSION_EXPIRE' | 'SESSION_REVOKE' | 'VAULT_CREATE' | 'VAULT_DELETE'
   target: string
   agent_name: string | null
   ip_address: string | null

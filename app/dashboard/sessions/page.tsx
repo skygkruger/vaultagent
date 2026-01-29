@@ -26,9 +26,9 @@ interface Session {
   vault_id: string
   agent_name: string
   allowed_secrets: string[]
-  token: string
   expires_at: string
   created_at: string
+  revoked_at?: string | null
   vaults?: { name: string }
 }
 
@@ -50,8 +50,9 @@ export default function SessionsPage() {
   const [expiresIn, setExpiresIn] = useState('24') // hours
   const [creating, setCreating] = useState(false)
 
-  // Copy token state
-  const [copiedToken, setCopiedToken] = useState<string | null>(null)
+  // One-time token display after creation
+  const [newSessionToken, setNewSessionToken] = useState<string | null>(null)
+  const [copiedNewToken, setCopiedNewToken] = useState(false)
 
   const supabase = createClient()
 
@@ -137,7 +138,9 @@ export default function SessionsPage() {
 
         setSessions(sessionsData || [])
 
-        setSuccess(`Session created! Token: ${data.session.token}`)
+        setNewSessionToken(data.session.token)
+        setCopiedNewToken(false)
+        setSuccess(null)
         setShowCreateSession(false)
         setAgentName(SUPPORTED_AGENTS[0].id)
         setCustomAgentName('')
@@ -174,11 +177,12 @@ export default function SessionsPage() {
     }
   }
 
-  // Copy token to clipboard
-  const handleCopyToken = (token: string) => {
-    navigator.clipboard.writeText(token)
-    setCopiedToken(token)
-    setTimeout(() => setCopiedToken(null), 2000)
+  // Copy new session token to clipboard
+  const handleCopyNewToken = () => {
+    if (!newSessionToken) return
+    navigator.clipboard.writeText(newSessionToken)
+    setCopiedNewToken(true)
+    setTimeout(() => setCopiedNewToken(false), 2000)
   }
 
   // Toggle secret selection
@@ -271,6 +275,59 @@ export default function SessionsPage() {
           }}
         >
           [✓] {success}
+        </div>
+      )}
+
+      {/* One-time token display */}
+      {newSessionToken && (
+        <div
+          className="p-4 mb-6"
+          style={{
+            backgroundColor: '#1a2e1a',
+            border: '2px solid #a8d8b9',
+          }}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-bold" style={{ color: '#a8d8b9' }}>
+              [!] SESSION TOKEN — COPY NOW, SHOWN ONCE ONLY
+            </span>
+            <button
+              onClick={() => setNewSessionToken(null)}
+              className="text-xs px-2 py-1"
+              style={{ color: '#5f5d64' }}
+            >
+              [x] DISMISS
+            </button>
+          </div>
+          <div
+            className="p-3 mb-3 flex items-center justify-between gap-2"
+            style={{
+              backgroundColor: '#141a17',
+              border: '1px solid #5f5d64',
+            }}
+          >
+            <code
+              className="text-xs break-all"
+              style={{ color: '#e8e3e3' }}
+            >
+              {newSessionToken}
+            </code>
+            <button
+              onClick={handleCopyNewToken}
+              className="text-xs px-3 py-1 flex-shrink-0"
+              style={{
+                border: '1px solid #a8d8b9',
+                color: copiedNewToken ? '#a8d8b9' : '#e8e3e3',
+                backgroundColor: copiedNewToken ? '#1a2e1a' : 'transparent',
+              }}
+            >
+              {copiedNewToken ? '[✓] COPIED' : '[>] COPY'}
+            </button>
+          </div>
+          <p className="text-xs" style={{ color: '#5f5d64', lineHeight: '1.5' }}>
+            This token will not be shown again. Use it with the CLI:{' '}
+            <code style={{ color: '#a8d8b9' }}>vaultagent run {newSessionToken} -- claude</code>
+          </p>
         </div>
       )}
 
@@ -475,25 +532,13 @@ export default function SessionsPage() {
                     >
                       {formatTimeRemaining(session.expires_at)} remaining
                     </span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleCopyToken(session.token)}
-                        className="text-xs px-2 py-1"
-                        style={{
-                          border: '1px solid #5f5d64',
-                          color: copiedToken === session.token ? '#a8d8b9' : '#5f5d64',
-                        }}
-                      >
-                        {copiedToken === session.token ? '[✓] COPIED' : '[>] COPY'}
-                      </button>
-                      <button
-                        onClick={() => handleRevokeSession(session.id, session.agent_name)}
-                        className="text-xs px-2 py-1"
-                        style={{ color: '#eb6f92' }}
-                      >
-                        [x] REVOKE
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleRevokeSession(session.id, session.agent_name)}
+                      className="text-xs px-2 py-1"
+                      style={{ color: '#eb6f92' }}
+                    >
+                      [x] REVOKE
+                    </button>
                   </div>
                 </div>
                 {/* Secrets Tags */}

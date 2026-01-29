@@ -126,8 +126,8 @@ function PricingContent() {
         { text: 'Unlimited sessions', included: true },
         { text: 'Full audit log', included: true },
         { text: 'Audit export + API', included: true },
-        { text: 'Team sharing', included: true },
-        { text: 'Role-based access', included: true },
+        { text: 'Team sharing (coming soon)', included: true },
+        { text: 'Role-based access (coming soon)', included: true },
         { text: 'Priority support', included: true },
       ],
       ctaStyle: 'secondary',
@@ -144,10 +144,10 @@ function PricingContent() {
         { text: 'Unlimited secrets', included: true },
         { text: 'Unlimited sessions', included: true },
         { text: 'Advanced audit + compliance', included: true },
-        { text: 'SSO integration (SAML/OIDC)', included: true },
-        { text: 'Custom retention policies', included: true },
+        { text: 'SSO integration (coming soon)', included: true },
+        { text: 'Custom retention (coming soon)', included: true },
         { text: 'Dedicated support', included: true },
-        { text: 'Self-hosted option', included: true },
+        { text: 'Self-hosted option (coming soon)', included: true },
       ],
       ctaStyle: 'enterprise',
     },
@@ -172,7 +172,7 @@ function PricingContent() {
     },
     {
       question: 'Is there a free trial for paid plans?',
-      answer: 'Yes, all paid plans come with a 14-day free trial. No credit card required to start.',
+      answer: 'The free tier gives you full access to core features with generous limits. Upgrade when you need more secrets, vaults, or sessions.',
     },
     {
       question: 'What happens to my secrets if I downgrade?',
@@ -697,7 +697,7 @@ function PricingContent() {
           <pre style={{ margin: '0 0 16px 0', overflow: 'visible' }}>════════════════════════════════════════════════════════════════════════════════</pre>
           <div style={{ marginBottom: '16px' }}>
             <div>SECURED WITH &lt;3 IN THE TERMINAL</div>
-            <div style={{ marginTop: '8px' }}>(c) 2025 VAULTAGENT</div>
+            <div style={{ marginTop: '8px' }}>(c) 2026 VAULTAGENT</div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
             <Link href="/" className="hover:text-[#a8d8b9] transition-colors" style={{ color: colors.muted, textDecoration: 'none' }}>[HOME]</Link>

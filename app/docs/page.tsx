@@ -372,17 +372,13 @@ Master password: ********
                 and client projects.
               </p>
               <CodeBlock>
-{`$ vaultagent vault create "client-acme"
-[/] Vault 'client-acme' created
-
-$ vaultagent vault list
-┌────────────────┬──────────┬─────────────┐
-│ VAULT          │ SECRETS  │ LAST ACCESS │
-├────────────────┼──────────┼─────────────┤
-│ default        │ 5        │ 2 min ago   │
-│ client-acme    │ 0        │ never       │
-│ side-projects  │ 12       │ 1 hour ago  │
-└────────────────┴──────────┴─────────────┘`}
+{`# Create and manage vaults from your dashboard:
+# https://vaultagent.io/dashboard
+#
+# Vaults organize secrets by project:
+#   default        → 5 secrets
+#   client-acme    → 3 secrets
+#   side-projects  → 12 secrets`}
               </CodeBlock>
             </div>
 
@@ -393,15 +389,16 @@ $ vaultagent vault list
                 When the session expires, access is automatically revoked.
               </p>
               <CodeBlock>
-{`$ vaultagent session create \\
-    --agent cursor \\
-    --duration 4h \\
-    --secrets OPENAI_API_KEY,SUPABASE_URL
+{`# 1. Create a session from the dashboard
+#    Pick agent, vault, secrets, and duration
 
-[/] Session created
-[/] Token: va_sess_abc123...
-[/] Expires: 4 hours
-[/] Secrets: 2 of 5 accessible`}
+# 2. Copy the one-time token: va_sess_abc123...
+
+# 3. Inject secrets and launch your agent:
+$ vaultagent run va_sess_abc123 -- cursor .
+[/] Session: cursor (240 min remaining)
+[/] Decrypting 2 secret(s)...
+[/] 2 secret(s) injected. Launching: cursor`}
               </CodeBlock>
             </div>
 
@@ -412,61 +409,61 @@ $ vaultagent vault list
                 Know exactly what was accessed and when.
               </p>
               <CodeBlock>
-{`$ vaultagent audit --last 10
-┌──────────┬────────────────┬─────────────┬──────────────────┐
-│ TIME     │ ACTION         │ AGENT       │ SECRET           │
-├──────────┼────────────────┼─────────────┼──────────────────┤
-│ 14:32:01 │ SESSION_CREATE │ claude-code │ -                │
-│ 14:32:05 │ SECRET_ACCESS  │ claude-code │ OPENAI_API_KEY   │
-│ 14:33:12 │ SECRET_ACCESS  │ claude-code │ DATABASE_URL     │
-│ 14:47:22 │ SESSION_EXPIRE │ claude-code │ -                │
-└──────────┴────────────────┴─────────────┴──────────────────┘`}
+{`# View audit logs in your dashboard:
+# https://vaultagent.io/dashboard/audit
+#
+# Every access is logged with:
+#   TIME       ACTION          AGENT        SECRET
+#   14:32:01   SESSION_CREATE  claude-code  -
+#   14:32:05   SECRET_ACCESS   claude-code  OPENAI_API_KEY
+#   14:33:12   SECRET_ACCESS   claude-code  DATABASE_URL
+#   14:47:22   SESSION_EXPIRE  claude-code  -`}
               </CodeBlock>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ color: colors.lavender, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                [&gt;] Team Sharing
+              <h3 style={{ color: colors.muted, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                [~] Team Sharing
                 <span style={{
                   color: colors.bgLight,
-                  background: colors.lavender,
+                  background: colors.muted,
                   padding: '2px 8px',
                   fontSize: '11px',
-                }}>TEAM</span>
+                }}>COMING SOON</span>
               </h3>
-              <p style={{ color: colors.text, lineHeight: '1.7' }}>
+              <p style={{ color: colors.muted, lineHeight: '1.7' }}>
                 Share vaults with team members using role-based access control. Grant
                 read-only or full access to specific vaults.
               </p>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ color: colors.lavender, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                [&gt;] Audit Export
+              <h3 style={{ color: colors.muted, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                [~] Audit Export
                 <span style={{
                   color: colors.bgLight,
-                  background: colors.lavender,
+                  background: colors.muted,
                   padding: '2px 8px',
                   fontSize: '11px',
-                }}>TEAM</span>
+                }}>COMING SOON</span>
               </h3>
-              <p style={{ color: colors.text, lineHeight: '1.7' }}>
-                Export audit logs for compliance reporting. Supports JSON and CSV formats.
+              <p style={{ color: colors.muted, lineHeight: '1.7' }}>
+                Export audit logs for compliance reporting. JSON and CSV formats.
               </p>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ color: colors.lavender, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                [&gt;] SSO Integration
+              <h3 style={{ color: colors.muted, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                [~] SSO Integration
                 <span style={{
                   color: colors.bgLight,
-                  background: colors.coral,
+                  background: colors.muted,
                   padding: '2px 8px',
                   fontSize: '11px',
-                }}>ENTERPRISE</span>
+                }}>COMING SOON</span>
               </h3>
-              <p style={{ color: colors.text, lineHeight: '1.7' }}>
-                Integrate with your existing identity provider. Supports SAML 2.0 and OIDC.
+              <p style={{ color: colors.muted, lineHeight: '1.7' }}>
+                Integrate with your existing identity provider. SAML 2.0 and OIDC support.
               </p>
             </div>
           </div>
@@ -567,14 +564,14 @@ Environment variables:
             <h2 style={{ color: colors.mint, marginTop: 0 }}>┌─ API Reference ─┐</h2>
 
             <p style={{ color: colors.text, lineHeight: '1.7' }}>
-              The VaultAgent API allows you to programmatically manage vaults, secrets,
-              and sessions. All endpoints require authentication via API key.
+              The VaultAgent API allows agents to retrieve encrypted secrets using
+              scoped session tokens. Decryption happens client-side via the CLI.
             </p>
 
             <h3 style={{ color: colors.lavender }}>Authentication</h3>
 
             <CodeBlock title="request header">
-{`Authorization: Bearer va_key_xxxxxxxxxxxxxxxxxxxxxxxx`}
+{`Authorization: Bearer va_sess_xK7m9pL2qR4tN8vB3cD6fH1j`}
             </CodeBlock>
 
             <h3 style={{ color: colors.lavender }}>Base URL</h3>
