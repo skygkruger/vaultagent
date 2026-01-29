@@ -234,22 +234,31 @@ export default function DashboardPage() {
         throw new Error('No vault selected')
       }
 
-      console.log('[handleAddSecret] Starting Supabase insert...', {
+      const secretData = {
         vault_id: selectedVault,
         user_id: user.id,
         name: newSecretName.toUpperCase().replace(/\s+/g, '_'),
+        encrypted_value: encrypted.encrypted,
+        iv: encrypted.iv,
+        salt: encrypted.salt,
+      }
+      console.log('[handleAddSecret] Starting Supabase insert with data:', {
+        vault_id: secretData.vault_id,
+        user_id: secretData.user_id,
+        name: secretData.name,
+        encrypted_length: secretData.encrypted_value.length,
       })
 
-      const { error: insertError } = await supabase
+      // Add timeout to prevent hanging forever
+      const insertPromise = supabase
         .from('secrets')
-        .insert({
-          vault_id: selectedVault,
-          user_id: user?.id,
-          name: newSecretName.toUpperCase().replace(/\s+/g, '_'),
-          encrypted_value: encrypted.encrypted,
-          iv: encrypted.iv,
-          salt: encrypted.salt,
-        })
+        .insert(secretData)
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Supabase insert timed out after 10 seconds')), 10000)
+      )
+
+      const { error: insertError } = await Promise.race([insertPromise, timeoutPromise]) as { error: Error | null }
 
       console.log('[handleAddSecret] Insert complete, error:', insertError)
 
