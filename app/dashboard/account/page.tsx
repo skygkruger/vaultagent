@@ -96,25 +96,40 @@ export default function AccountPage() {
   const [secretCount, setSecretCount] = useState(0)
   const [sessionCount, setSessionCount] = useState(0)
 
+  // Fetch usage counts via API
   useEffect(() => {
     if (!user) return
-    try {
-      const supabase = createClient()
-      supabase.from('vaults').select('id', { count: 'exact', head: true }).then(({ count }) => {
-        setVaultCount(count ?? 0)
-      })
-      supabase.from('secrets').select('id', { count: 'exact', head: true }).then(({ count }) => {
-        setSecretCount(count ?? 0)
-      })
-      // Count sessions created today
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      supabase.from('sessions').select('id', { count: 'exact', head: true })
-        .gte('created_at', today.toISOString())
-        .then(({ count }) => {
-          setSessionCount(count ?? 0)
-        })
-    } catch {}
+
+    const fetchCounts = async () => {
+      try {
+        const [vaultsRes, secretsRes, sessionsRes] = await Promise.all([
+          fetch('/api/vaults'),
+          fetch('/api/secrets'),
+          fetch('/api/sessions?status=all'),
+        ])
+
+        if (vaultsRes.ok) {
+          const data = await vaultsRes.json()
+          setVaultCount(data.vaults?.length ?? 0)
+        }
+        if (secretsRes.ok) {
+          const data = await secretsRes.json()
+          setSecretCount(data.secrets?.length ?? 0)
+        }
+        if (sessionsRes.ok) {
+          const data = await sessionsRes.json()
+          // Count sessions created today
+          const today = new Date()
+          today.setHours(0, 0, 0, 0)
+          const todaySessions = data.sessions?.filter(
+            (s: { created_at: string }) => new Date(s.created_at) >= today
+          )
+          setSessionCount(todaySessions?.length ?? 0)
+        }
+      } catch {}
+    }
+
+    fetchCounts()
   }, [user])
 
   const tierInfo = TIER_INFO[profile?.tier || 'free']
