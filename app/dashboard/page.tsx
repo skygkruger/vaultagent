@@ -227,63 +227,50 @@ export default function DashboardPage() {
 
       // Save to database
       // Verify we have required data
-      if (!user?.id) {
-        throw new Error('No user ID available')
-      }
       if (!selectedVault) {
         throw new Error('No vault selected')
       }
 
-      const secretData = {
-        vault_id: selectedVault,
-        user_id: user.id,
-        name: newSecretName.toUpperCase().replace(/\s+/g, '_'),
-        encrypted_value: encrypted.encrypted,
-        iv: encrypted.iv,
-        salt: encrypted.salt,
-      }
-      console.log('[handleAddSecret] Starting Supabase insert with data:', {
-        vault_id: secretData.vault_id,
-        user_id: secretData.user_id,
-        name: secretData.name,
-        encrypted_length: secretData.encrypted_value.length,
+      console.log('[handleAddSecret] Calling API to create secret...')
+
+      // Use API route instead of client-side Supabase
+      const response = await fetch('/api/secrets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vault_id: selectedVault,
+          name: newSecretName,
+          encrypted_value: encrypted.encrypted,
+          iv: encrypted.iv,
+          salt: encrypted.salt,
+        }),
       })
 
-      // Add timeout to prevent hanging forever
-      const insertPromise = supabase
-        .from('secrets')
-        .insert(secretData)
+      const data = await response.json()
+      console.log('[handleAddSecret] API response:', response.status, data)
 
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Supabase insert timed out after 10 seconds')), 10000)
-      )
-
-      const { error: insertError } = await Promise.race([insertPromise, timeoutPromise]) as { error: Error | null }
-
-      console.log('[handleAddSecret] Insert complete, error:', insertError)
-
-      if (insertError) {
-        setError(insertError.message)
+      if (!response.ok) {
+        setError(data.error || 'Failed to create secret')
       } else {
-        // Refresh secrets
-        const { data } = await supabase
-          .from('secrets')
-          .select('*')
-          .eq('vault_id', selectedVault)
-          .order('created_at', { ascending: false })
+        // Refresh secrets from API
+        const secretsResponse = await fetch(`/api/secrets?vault_id=${selectedVault}`)
+        const secretsData = await secretsResponse.json()
 
-        setSecrets(data || [])
+        // We need full secret data for display, fetch from client
+        const supabase = getSupabase()
+        if (supabase) {
+          const { data: fullSecrets } = await supabase
+            .from('secrets')
+            .select('*')
+            .eq('vault_id', selectedVault)
+            .order('created_at', { ascending: false })
+          setSecrets(fullSecrets || [])
+        }
+
         setNewSecretName('')
         setNewSecretValue('')
         setMasterPassword('')
         setShowAddSecret(false)
-
-        // Log the action
-        await supabase.from('audit_logs').insert({
-          user_id: user?.id,
-          action: 'SECRET_CREATE',
-          target: newSecretName.toUpperCase().replace(/\s+/g, '_'),
-        })
       }
     } catch (err) {
       console.error('Secret creation error:', err)
