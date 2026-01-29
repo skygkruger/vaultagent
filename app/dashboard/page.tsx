@@ -252,19 +252,22 @@ export default function DashboardPage() {
       if (!response.ok) {
         setError(data.error || 'Failed to create secret')
       } else {
-        // Refresh secrets from API
-        const secretsResponse = await fetch(`/api/secrets?vault_id=${selectedVault}`)
-        const secretsData = await secretsResponse.json()
-
-        // We need full secret data for display, fetch from client
-        const supabase = getSupabase()
-        if (supabase) {
-          const { data: fullSecrets } = await supabase
-            .from('secrets')
-            .select('*')
-            .eq('vault_id', selectedVault)
-            .order('created_at', { ascending: false })
-          setSecrets(fullSecrets || [])
+        // Secret created successfully - refresh the list
+        try {
+          const supabase = getSupabase()
+          if (supabase) {
+            const { data: fullSecrets } = await supabase
+              .from('secrets')
+              .select('*')
+              .eq('vault_id', selectedVault)
+              .order('created_at', { ascending: false })
+            if (fullSecrets) {
+              setSecrets(fullSecrets)
+            }
+          }
+        } catch {
+          // If refresh fails, the secret is still created - page refresh will show it
+          console.log('Secret created but refresh failed - reload page to see it')
         }
 
         setNewSecretName('')

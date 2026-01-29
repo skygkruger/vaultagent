@@ -86,8 +86,8 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // Create secret
-  const { data, error } = await supabase
+  // Create secret with timeout
+  const insertPromise = supabase
     .from('secrets')
     .insert({
       vault_id,
@@ -99,6 +99,12 @@ export async function POST(request: NextRequest) {
     })
     .select('id, vault_id, name, created_at')
     .single()
+
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error('Database operation timed out')), 15000)
+  )
+
+  const { data, error } = await Promise.race([insertPromise, timeoutPromise]) as Awaited<typeof insertPromise>
 
   if (error) {
     if (error.code === '23505') {
