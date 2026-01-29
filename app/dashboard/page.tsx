@@ -226,6 +226,20 @@ export default function DashboardPage() {
       console.log('[handleAddSecret] Encryption complete')
 
       // Save to database
+      // Verify we have required data
+      if (!user?.id) {
+        throw new Error('No user ID available')
+      }
+      if (!selectedVault) {
+        throw new Error('No vault selected')
+      }
+
+      console.log('[handleAddSecret] Starting Supabase insert...', {
+        vault_id: selectedVault,
+        user_id: user.id,
+        name: newSecretName.toUpperCase().replace(/\s+/g, '_'),
+      })
+
       const { error: insertError } = await supabase
         .from('secrets')
         .insert({
@@ -236,6 +250,8 @@ export default function DashboardPage() {
           iv: encrypted.iv,
           salt: encrypted.salt,
         })
+
+      console.log('[handleAddSecret] Insert complete, error:', insertError)
 
       if (insertError) {
         setError(insertError.message)

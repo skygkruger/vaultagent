@@ -58,7 +58,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Fetch profile helper
   const fetchProfile = async (userId: string, client: SupabaseClient): Promise<Profile | null> => {
     try {
-      console.log('[AuthContext] Fetching profile for user:', userId)
+      console.log('[AuthContext] ====== PROFILE FETCH ======')
+      console.log('[AuthContext] User ID:', userId)
+
+      // Also log auth.uid for comparison
+      const { data: { user: authUser } } = await client.auth.getUser()
+      console.log('[AuthContext] Auth UID:', authUser?.id)
+      console.log('[AuthContext] IDs match:', userId === authUser?.id)
+
       const { data, error } = await client
         .from('profiles')
         .select('*')
@@ -67,10 +74,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         console.error('[AuthContext] Profile fetch error:', error)
+        console.error('[AuthContext] This likely means no profile row exists for this user')
         return null
       }
-      console.log('[AuthContext] Profile fetched:', data)
+      console.log('[AuthContext] Profile fetched successfully')
       console.log('[AuthContext] Profile tier:', data?.tier)
+      console.log('[AuthContext] Full profile:', JSON.stringify(data, null, 2))
       return data as Profile
     } catch (err) {
       console.error('[AuthContext] Profile fetch exception:', err)
