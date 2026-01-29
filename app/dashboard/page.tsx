@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { createClient } from '@/lib/supabase'
 import { encryptSecret, maskSecret } from '@/lib/encryption'
+import { getTierLimits } from '@/lib/tier-limits'
 
 // Helper to safely create Supabase client
 function getSupabase() {
@@ -199,9 +200,9 @@ export default function DashboardPage() {
     try {
       // Check secret limit
       const currentSecretCount = secrets.length
-      const limit = profile?.secret_limit || 10
-      if (limit !== -1 && currentSecretCount >= limit) {
-        setError(`You've reached your secret limit (${limit}). Upgrade to add more.`)
+      const tierLimits = getTierLimits(profile?.tier)
+      if (tierLimits.secret_limit !== -1 && currentSecretCount >= tierLimits.secret_limit) {
+        setError(`You've reached your secret limit (${tierLimits.secret_limit}). Upgrade to add more.`)
         setSaving(false)
         return
       }
@@ -245,10 +246,11 @@ export default function DashboardPage() {
         })
       }
     } catch (err) {
-      setError('Failed to encrypt secret')
+      console.error('Secret creation error:', err)
+      setError(err instanceof Error ? err.message : 'Failed to encrypt secret')
+    } finally {
+      setSaving(false)
     }
-
-    setSaving(false)
   }
 
   // Create new vault
