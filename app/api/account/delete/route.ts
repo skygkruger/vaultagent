@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
-import { getUserProfile } from '@/lib/supabase-server'
+import { createClient as createServerSupabase } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
 
 // ═══════════════════════════════════════════════════════════════
@@ -15,12 +15,30 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
   }
 
-  const userProfile = await getUserProfile()
-  if (!userProfile) {
+  // Get authenticated user with detailed error handling
+  const supabase = await createServerSupabase()
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+  if (authError) {
+    console.error('[Account Delete] Auth error:', authError.message)
+    return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
+  }
+
+  if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { user, profile } = userProfile
+  // Fetch profile
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single()
+
+  if (profileError || !profile) {
+    console.error('[Account Delete] Profile error:', profileError?.message)
+    return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
+  }
 
   // Rate limit: 3 delete attempts per minute per user
   const { limited } = rateLimit(`delete:${user.id}`, 3, 60_000)

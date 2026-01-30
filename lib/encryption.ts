@@ -12,45 +12,33 @@ export async function deriveKey(
   password: string,
   salt: Uint8Array
 ): Promise<CryptoKey> {
-  console.log('[deriveKey] Starting key derivation...')
+  const encoder = new TextEncoder()
+  const passwordBuffer = encoder.encode(password)
 
-  try {
-    const encoder = new TextEncoder()
-    const passwordBuffer = encoder.encode(password)
+  // Import password as key material
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    passwordBuffer,
+    'PBKDF2',
+    false,
+    ['deriveBits', 'deriveKey']
+  )
 
-    // Import password as key material
-    console.log('[deriveKey] Importing key material...')
-    const keyMaterial = await crypto.subtle.importKey(
-      'raw',
-      passwordBuffer,
-      'PBKDF2',
-      false,
-      ['deriveBits', 'deriveKey']
-    )
-    console.log('[deriveKey] Key material imported')
-
-    // Derive the actual encryption key
-    // Create a proper ArrayBuffer from the salt to avoid TypeScript issues
-    const saltBuffer = new Uint8Array(salt).buffer
-    console.log('[deriveKey] Starting PBKDF2 derivation (this may take a moment)...')
-    const result = await crypto.subtle.deriveKey(
-      {
-        name: 'PBKDF2',
-        salt: saltBuffer,
-        iterations: 100000,
-        hash: 'SHA-256'
-      },
-      keyMaterial,
-      { name: 'AES-GCM', length: 256 },
-      false,
-      ['encrypt', 'decrypt']
-    )
-    console.log('[deriveKey] Key derived successfully')
-    return result
-  } catch (err) {
-    console.error('[deriveKey] FAILED:', err)
-    throw err
-  }
+  // Derive the actual encryption key
+  // Create a proper ArrayBuffer from the salt to avoid TypeScript issues
+  const saltBuffer = new Uint8Array(salt).buffer
+  return crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt: saltBuffer,
+      iterations: 100000,
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  )
 }
 
 /**
@@ -61,45 +49,34 @@ export async function encryptSecret(
   plaintext: string,
   password: string
 ): Promise<{ encrypted: string; iv: string; salt: string }> {
-  console.log('[encrypt] Starting encryption...')
+  // Check crypto availability
+  if (typeof crypto === 'undefined' || !crypto.subtle) {
+    throw new Error('Web Crypto API not available')
+  }
 
-  try {
-    // Check crypto availability
-    if (typeof crypto === 'undefined' || !crypto.subtle) {
-      throw new Error('Web Crypto API not available')
-    }
+  // Generate random salt and IV
+  const salt = crypto.getRandomValues(new Uint8Array(16))
+  const iv = crypto.getRandomValues(new Uint8Array(12))
 
-    // Generate random salt and IV
-    const salt = crypto.getRandomValues(new Uint8Array(16))
-    const iv = crypto.getRandomValues(new Uint8Array(12))
-    console.log('[encrypt] Generated salt and IV')
+  // Derive key from password
+  const key = await deriveKey(password, salt)
 
-    // Derive key from password
-    const key = await deriveKey(password, salt)
-    console.log('[encrypt] Key derived')
+  // Encrypt the plaintext
+  const encoder = new TextEncoder()
+  const plaintextBuffer = encoder.encode(plaintext)
 
-    // Encrypt the plaintext
-    const encoder = new TextEncoder()
-    const plaintextBuffer = encoder.encode(plaintext)
+  const ivBuffer = new Uint8Array(iv).buffer
+  const encryptedBuffer = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv: ivBuffer },
+    key,
+    plaintextBuffer
+  )
 
-    console.log('[encrypt] Starting AES-GCM encryption...')
-    const ivBuffer = new Uint8Array(iv).buffer
-    const encryptedBuffer = await crypto.subtle.encrypt(
-      { name: 'AES-GCM', iv: ivBuffer },
-      key,
-      plaintextBuffer
-    )
-    console.log('[encrypt] Encryption complete')
-
-    // Convert to base64 for storage
-    return {
-      encrypted: bufferToBase64(encryptedBuffer),
-      iv: bufferToBase64(iv),
-      salt: bufferToBase64(salt)
-    }
-  } catch (err) {
-    console.error('[encrypt] FAILED:', err)
-    throw err
+  // Convert to base64 for storage
+  return {
+    encrypted: bufferToBase64(encryptedBuffer),
+    iv: bufferToBase64(iv),
+    salt: bufferToBase64(salt)
   }
 }
 
