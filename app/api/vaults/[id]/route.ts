@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, getUserProfile } from '@/lib/supabase-server'
+import { rateLimitAsync } from '@/lib/rate-limit'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - VAULT DETAIL API
@@ -100,7 +101,8 @@ export async function DELETE(
     .eq('user_id', userProfile.user.id)
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[Vaults] Delete error:', error.message)
+    return NextResponse.json({ error: 'Failed to delete vault' }, { status: 500 })
   }
 
   // Log the action

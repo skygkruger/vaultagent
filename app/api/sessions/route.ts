@@ -54,7 +54,8 @@ export async function GET(request: NextRequest) {
   const { data, error } = await query
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[Sessions] Query error:', error.message)
+    return NextResponse.json({ error: 'Failed to fetch sessions' }, { status: 500 })
   }
 
   // Calculate session status for each
@@ -166,7 +167,8 @@ export async function POST(request: NextRequest) {
     .single()
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[Sessions] Create error:', error.message)
+    return NextResponse.json({ error: 'Failed to create session' }, { status: 500 })
   }
 
   // Log the action

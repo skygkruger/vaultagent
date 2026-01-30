@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, getUserProfile, TIER_LIMITS } from '@/lib/supabase-server'
+import { rateLimitAsync } from '@/lib/rate-limit'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - AUDIT LOG API
@@ -14,6 +15,12 @@ export async function GET(request: NextRequest) {
   }
 
   const { user, profile } = userProfile
+
+  // Rate limit: 30 reads per minute per user
+  const { limited } = await rateLimitAsync(`audit:read:${user.id}`, 30, 60_000)
+  if (limited) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  }
   const { searchParams } = new URL(request.url)
 
   // Validate and sanitize query params
@@ -59,7 +66,8 @@ export async function GET(request: NextRequest) {
   const { data, error, count } = await query
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[Audit] Query error:', error.message)
+    return NextResponse.json({ error: 'Failed to fetch audit logs' }, { status: 500 })
   }
 
   return NextResponse.json({
@@ -71,7 +79,7 @@ export async function GET(request: NextRequest) {
   })
 }
 
-// GET /api/audit/export - Export audit logs (Pro+ only)
+// POST /api/audit - Export audit logs (Pro+ only)
 export async function POST(request: NextRequest) {
   const userProfile = await getUserProfile()
   if (!userProfile) {
@@ -79,6 +87,13 @@ export async function POST(request: NextRequest) {
   }
 
   const { user, profile } = userProfile
+
+  // Rate limit: 5 exports per minute per user
+  const { limited } = await rateLimitAsync(`audit:export:${user.id}`, 5, 60_000)
+  if (limited) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  }
+
   const tierLimits = TIER_LIMITS[profile.tier as keyof typeof TIER_LIMITS]
 
   // Check if export is allowed
@@ -122,7 +137,8 @@ export async function POST(request: NextRequest) {
   const { data, error } = await query
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[Audit] Export error:', error.message)
+    return NextResponse.json({ error: 'Failed to export audit logs' }, { status: 500 })
   }
 
   if (format === 'csv') {

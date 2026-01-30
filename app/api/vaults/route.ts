@@ -31,7 +31,8 @@ export async function GET() {
     .order('created_at', { ascending: true })
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[Vaults] Query error:', error.message)
+    return NextResponse.json({ error: 'Failed to fetch vaults' }, { status: 500 })
   }
 
   return NextResponse.json({ vaults: data })
@@ -92,7 +93,8 @@ export async function POST(request: NextRequest) {
     if (error.code === '23505') {
       return NextResponse.json({ error: 'A vault with this name already exists' }, { status: 409 })
     }
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('[Vaults] Create error:', error.message)
+    return NextResponse.json({ error: 'Failed to create vault' }, { status: 500 })
   }
 
   // Log the action
