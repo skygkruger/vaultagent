@@ -1012,7 +1012,7 @@ export default function VaultAgentRetro() {
             <div className="sm:hidden border-t mb-4" style={{ borderColor: '#5f5d64' }}></div>
             <div style={{ margin: '16px 0' }}>
               <div>SECURED WITH &lt;3 IN THE TERMINAL</div>
-              <div style={{ marginTop: '16px' }}>(c) 2025 VAULTAGENT</div>
+              <div style={{ marginTop: '16px' }}>(c) 2026 VAULTAGENT · A VERIDIAN TOOLS PRODUCT</div>
             </div>
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4" style={{ fontFamily: 'inherit', marginTop: '16px', marginBottom: '16px' }}>
               <Link href="/" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[HOME]</Link>
@@ -1021,6 +1021,15 @@ export default function VaultAgentRetro() {
               <a href="https://github.com/skygkruger" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[GITHUB]</a>
               <a href="https://x.com/run_veridian" target="_blank" rel="noopener noreferrer" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[X]</a>
               <a href="mailto:sky@veridian.run" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[CONTACT]</a>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4" style={{ fontFamily: 'inherit', marginBottom: '16px' }}>
+              <Link href="/terms" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[TERMS]</Link>
+              <Link href="/privacy" className="hover:text-[#a8d8b9] hover-text-glow transition-all">[PRIVACY]</Link>
+            </div>
+            {/* VERIDIAN Solidarity Footer */}
+            <div className="max-w-md mx-auto p-4 border mb-4" style={{ borderColor: '#5f5d64' }}>
+              <p className="mb-2" style={{ color: '#a8d8b9' }}>15% of revenue supports free emotional tech sanctuaries</p>
+              <p className="text-[10px]">VERIDIAN believes technology should heal, not extract.</p>
             </div>
             <pre className="hidden sm:block" style={{ margin: 0, overflow: 'visible', textAlign: 'center' }}>════════════════════════════════════════════════════════════════════════════════</pre>
             <div className="sm:hidden border-t mt-4" style={{ borderColor: '#5f5d64' }}></div>
