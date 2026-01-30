@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, getUserProfile, TIER_LIMITS } from '@/lib/supabase-server'
+import { rateLimitAsync } from '@/lib/rate-limit'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - VAULTS API
@@ -11,6 +12,12 @@ export async function GET() {
   const userProfile = await getUserProfile()
   if (!userProfile) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Rate limit: 60 reads per minute per user
+  const { limited } = await rateLimitAsync(`vaults:read:${userProfile.user.id}`, 60, 60_000)
+  if (limited) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
   }
 
   const supabase = await createClient()
@@ -38,6 +45,13 @@ export async function POST(request: NextRequest) {
   }
 
   const { user, profile } = userProfile
+
+  // Rate limit: 10 creates per minute per user
+  const { limited } = await rateLimitAsync(`vaults:create:${user.id}`, 10, 60_000)
+  if (limited) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  }
+
   const body = await request.json()
   const { name, description } = body
 

@@ -3,6 +3,7 @@ import { createHash } from 'crypto'
 import { createClient, getUserProfile, TIER_LIMITS } from '@/lib/supabase-server'
 import { generateSessionToken } from '@/lib/encryption'
 import { isKnownAgent } from '@/lib/agents'
+import { rateLimitAsync } from '@/lib/rate-limit'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - SESSIONS API
@@ -14,6 +15,12 @@ export async function GET(request: NextRequest) {
   const userProfile = await getUserProfile()
   if (!userProfile) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Rate limit: 60 reads per minute per user
+  const { limited } = await rateLimitAsync(`sessions:read:${userProfile.user.id}`, 60, 60_000)
+  if (limited) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
   }
 
   const { searchParams } = new URL(request.url)
@@ -71,6 +78,13 @@ export async function POST(request: NextRequest) {
   }
 
   const { user, profile } = userProfile
+
+  // Rate limit: 20 creates per minute per user
+  const { limited } = await rateLimitAsync(`sessions:create:${user.id}`, 20, 60_000)
+  if (limited) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  }
+
   const body = await request.json()
   const { vault_id, agent_name, allowed_secrets, duration_hours } = body
 

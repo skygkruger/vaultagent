@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 import { getUserProfile } from '@/lib/supabase-server'
-import { rateLimit } from '@/lib/rate-limit'
+import { rateLimitAsync } from '@/lib/rate-limit'
 
 // ═══════════════════════════════════════════════════════════════
 //  VAULTAGENT - STRIPE CUSTOMER PORTAL API
@@ -28,7 +28,7 @@ export async function POST() {
   const { user, profile } = userProfile
 
   // Rate limit: 5 portal sessions per minute per user
-  const { limited } = rateLimit(`portal:${user.id}`, 5, 60_000)
+  const { limited } = await rateLimitAsync(`portal:${user.id}`, 5, 60_000)
   if (limited) {
     return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
   }
