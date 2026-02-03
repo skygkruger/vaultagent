@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase'
 //  VAULTAGENT - SIGN IN PAGE
 // ═══════════════════════════════════════════════════════════════
 
-export default function SignInPage() {
+function SignInForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -189,5 +189,30 @@ export default function SignInPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+function SignInLoading() {
+  return (
+    <div className="w-full max-w-md">
+      <pre
+        className="text-xs mb-8 text-center"
+        style={{ color: '#a8d8b9', overflow: 'visible' }}
+      >
+{`┌──────────────────────────────────────────┐
+│                                          │
+│            [~] LOADING...                │
+│                                          │
+└──────────────────────────────────────────┘`}
+      </pre>
+    </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<SignInLoading />}>
+      <SignInForm />
+    </Suspense>
   )
 }
