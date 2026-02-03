@@ -28,6 +28,19 @@ function getPriceIds(): Record<string, Record<string, string | undefined>> {
       monthly: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY,
       yearly: process.env.STRIPE_PRICE_ENTERPRISE_ANNUAL || process.env.STRIPE_PRICE_ENTERPRISE_YEARLY,
     },
+    // AI Security Stack Bundle (VaultAgent + AgentLeash)
+    'bundle-pro': {
+      monthly: process.env.STRIPE_PRICE_BUNDLE_PRO_MONTHLY,
+      yearly: process.env.STRIPE_PRICE_BUNDLE_PRO_ANNUAL || process.env.STRIPE_PRICE_BUNDLE_PRO_YEARLY,
+    },
+    'bundle-team': {
+      monthly: process.env.STRIPE_PRICE_BUNDLE_TEAM_MONTHLY,
+      yearly: process.env.STRIPE_PRICE_BUNDLE_TEAM_ANNUAL || process.env.STRIPE_PRICE_BUNDLE_TEAM_YEARLY,
+    },
+    'bundle-enterprise': {
+      monthly: process.env.STRIPE_PRICE_BUNDLE_ENTERPRISE_MONTHLY,
+      yearly: process.env.STRIPE_PRICE_BUNDLE_ENTERPRISE_ANNUAL || process.env.STRIPE_PRICE_BUNDLE_ENTERPRISE_YEARLY,
+    },
   }
 }
 

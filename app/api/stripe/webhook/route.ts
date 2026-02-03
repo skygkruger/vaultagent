@@ -34,6 +34,7 @@ function getSupabaseAdmin() {
 // Map Stripe price IDs to tiers (loaded at runtime)
 function getPriceToTier(): Record<string, keyof typeof TIER_LIMITS> {
   const entries: [string | undefined, keyof typeof TIER_LIMITS][] = [
+    // Individual VaultAgent plans
     [process.env.STRIPE_PRICE_PRO_MONTHLY, 'pro'],
     [process.env.STRIPE_PRICE_TEAM_MONTHLY, 'team'],
     [process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY, 'enterprise'],
@@ -43,6 +44,16 @@ function getPriceToTier(): Record<string, keyof typeof TIER_LIMITS> {
     [process.env.STRIPE_PRICE_PRO_YEARLY, 'pro'],
     [process.env.STRIPE_PRICE_TEAM_YEARLY, 'team'],
     [process.env.STRIPE_PRICE_ENTERPRISE_YEARLY, 'enterprise'],
+    // AI Security Stack Bundle (VaultAgent + AgentLeash)
+    [process.env.STRIPE_PRICE_BUNDLE_PRO_MONTHLY, 'pro'],
+    [process.env.STRIPE_PRICE_BUNDLE_PRO_ANNUAL, 'pro'],
+    [process.env.STRIPE_PRICE_BUNDLE_PRO_YEARLY, 'pro'],
+    [process.env.STRIPE_PRICE_BUNDLE_TEAM_MONTHLY, 'team'],
+    [process.env.STRIPE_PRICE_BUNDLE_TEAM_ANNUAL, 'team'],
+    [process.env.STRIPE_PRICE_BUNDLE_TEAM_YEARLY, 'team'],
+    [process.env.STRIPE_PRICE_BUNDLE_ENTERPRISE_MONTHLY, 'enterprise'],
+    [process.env.STRIPE_PRICE_BUNDLE_ENTERPRISE_ANNUAL, 'enterprise'],
+    [process.env.STRIPE_PRICE_BUNDLE_ENTERPRISE_YEARLY, 'enterprise'],
   ]
   const result: Record<string, keyof typeof TIER_LIMITS> = {}
   for (const [priceId, tier] of entries) {

@@ -161,6 +161,53 @@ function PricingContent() {
     return `UPGRADE TO ${planKey.toUpperCase()}`;
   };
 
+  // AI Security Stack Bundle Plans
+  const bundlePlans = [
+    {
+      name: 'STACK PRO',
+      key: 'bundle-pro',
+      price: { monthly: 20, yearly: 192 },
+      savings: { monthly: 8, yearly: 96 },
+      description: 'VaultAgent Pro + AgentLeash Pro',
+      color: colors.mint,
+      recommended: true,
+      features: [
+        { product: 'VaultAgent', text: '5 vaults, 100 secrets' },
+        { product: 'AgentLeash', text: 'Unlimited file monitoring' },
+        { text: 'Both products, one price' },
+        { text: 'Save 29% vs. individual plans' },
+      ],
+    },
+    {
+      name: 'STACK TEAM',
+      key: 'bundle-team',
+      price: { monthly: 55, yearly: 528 },
+      savings: { monthly: 23, yearly: 252 },
+      description: 'VaultAgent Team + AgentLeash Team',
+      color: colors.lavender,
+      features: [
+        { product: 'VaultAgent', text: '20 vaults, 500 secrets' },
+        { product: 'AgentLeash', text: 'Team file monitoring' },
+        { text: 'Role-based access control' },
+        { text: 'Save 29% vs. individual plans' },
+      ],
+    },
+    {
+      name: 'STACK ENTERPRISE',
+      key: 'bundle-enterprise',
+      price: { monthly: 140, yearly: 1344 },
+      savings: { monthly: 58, yearly: 624 },
+      description: 'VaultAgent Enterprise + AgentLeash Enterprise',
+      color: colors.cream,
+      features: [
+        { product: 'VaultAgent', text: 'Unlimited everything' },
+        { product: 'AgentLeash', text: 'Enterprise file security' },
+        { text: 'SSO, compliance, dedicated support' },
+        { text: 'Save 29% vs. individual plans' },
+      ],
+    },
+  ];
+
   const faqs = [
     {
       question: 'Can I change plans at any time?',
@@ -177,6 +224,10 @@ function PricingContent() {
     {
       question: 'What happens to my secrets if I downgrade?',
       answer: 'Your secrets remain encrypted and safe. If you exceed the new plan\'s limits, you\'ll need to remove some before adding new ones.',
+    },
+    {
+      question: 'What is the AI Security Stack bundle?',
+      answer: 'The AI Security Stack combines VaultAgent (secret management) and AgentLeash (file access monitoring) at a 29% discount. Both products work together to secure your AI coding agents.',
     },
   ];
 
@@ -486,6 +537,194 @@ function PricingContent() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Bundle Pricing Section */}
+        <div style={{ marginBottom: '48px' }} className="sm:mb-16">
+          <pre className="hidden sm:block" style={{
+            color: colors.mint,
+            fontSize: '12px',
+            textAlign: 'center',
+            margin: '0 0 24px 0',
+            overflow: 'visible',
+          }}>
+{`╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║       [+] AI SECURITY STACK — BUNDLE & SAVE 29%               ║
+║                                                               ║
+║       VaultAgent + AgentLeash = Complete AI Agent Security    ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝`}
+          </pre>
+          <div className="sm:hidden text-center mb-6">
+            <h2 style={{ color: colors.mint, fontSize: '16px', marginBottom: '8px' }}>[+] AI SECURITY STACK</h2>
+            <p style={{ color: colors.text, fontSize: '12px' }}>Bundle & Save 29%</p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '24px',
+          }}>
+            {bundlePlans.map((plan) => (
+              <div
+                key={plan.name}
+                style={{
+                  border: plan.recommended ? `2px solid ${plan.color}` : `1px solid ${colors.muted}`,
+                  background: `linear-gradient(135deg, ${colors.bgLight} 0%, #1a2420 100%)`,
+                  position: 'relative',
+                }}
+              >
+                {plan.recommended && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '-12px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: plan.color,
+                    color: colors.bg,
+                    padding: '4px 12px',
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                  }}>
+                    BEST VALUE
+                  </div>
+                )}
+
+                <div style={{ padding: '24px' }}>
+                  {/* Bundle Header */}
+                  <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                    <div style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '8px 16px',
+                      border: `2px solid ${plan.color}`,
+                      color: plan.color,
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      marginBottom: '12px',
+                    }}>
+                      STACK
+                    </div>
+                    <h3 style={{ color: plan.color, margin: '0 0 4px 0', fontSize: '18px' }}>
+                      {plan.name}
+                    </h3>
+                    <p style={{ color: colors.muted, margin: 0, fontSize: '11px' }}>
+                      {plan.description}
+                    </p>
+                  </div>
+
+                  {/* Price */}
+                  <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '4px' }}>
+                      <span style={{ color: colors.muted, fontSize: '14px' }}>$</span>
+                      <span style={{ color: colors.text, fontSize: '32px', fontWeight: 'bold' }}>
+                        {billingCycle === 'monthly' ? plan.price.monthly : Math.floor(plan.price.yearly / 12)}
+                      </span>
+                      <span style={{ color: colors.muted, fontSize: '12px' }}>/mo</span>
+                    </div>
+                    <div style={{
+                      color: colors.mint,
+                      fontSize: '11px',
+                      marginTop: '4px',
+                      padding: '4px 8px',
+                      background: 'rgba(168, 216, 185, 0.1)',
+                      display: 'inline-block',
+                    }}>
+                      Save ${billingCycle === 'monthly' ? plan.savings.monthly : plan.savings.yearly}/{billingCycle === 'monthly' ? 'mo' : 'yr'}
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <div style={{ marginBottom: '20px' }}>
+                    {plan.features.map((feature, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          padding: '6px 0',
+                          borderBottom: i < plan.features.length - 1 ? `1px solid ${colors.bg}` : 'none',
+                        }}
+                      >
+                        <span style={{ color: colors.mint }}>[/]</span>
+                        <span style={{ color: colors.text, fontSize: '12px' }}>
+                          {'product' in feature ? (
+                            <><span style={{ color: colors.muted }}>{feature.product}:</span> {feature.text}</>
+                          ) : (
+                            feature.text
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA Button */}
+                  {plan.key === 'bundle-enterprise' ? (
+                    <a
+                      href="mailto:sky@veridian.run?subject=AI Security Stack Enterprise Inquiry"
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        padding: '12px',
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                        fontFamily: 'inherit',
+                        fontSize: '12px',
+                        cursor: 'pointer',
+                        border: `1px solid ${plan.color}`,
+                        background: 'transparent',
+                        color: plan.color,
+                      }}
+                    >
+                      [&gt;] CONTACT SALES
+                    </a>
+                  ) : (
+                    <button
+                      onClick={() => handleUpgrade(plan.key)}
+                      disabled={loading === plan.key}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        padding: '12px',
+                        textAlign: 'center',
+                        fontFamily: 'inherit',
+                        fontSize: '12px',
+                        cursor: loading === plan.key ? 'wait' : 'pointer',
+                        border: `1px solid ${plan.color}`,
+                        background: plan.recommended ? plan.color : 'transparent',
+                        color: plan.recommended ? colors.bg : plan.color,
+                        opacity: loading === plan.key ? 0.7 : 1,
+                      }}
+                    >
+                      {loading === plan.key ? '[~] LOADING...' : '[>] GET THE STACK'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bundle Info */}
+          <div style={{
+            marginTop: '24px',
+            padding: '16px',
+            border: `1px solid ${colors.muted}`,
+            background: colors.bgLight,
+            textAlign: 'center',
+            fontSize: '12px',
+          }}>
+            <span style={{ color: colors.mint }}>[i]</span>
+            <span style={{ color: colors.text, marginLeft: '8px' }}>
+              Bundle purchases unlock both VaultAgent and{' '}
+              <a href="https://agentleash.io" target="_blank" rel="noopener noreferrer" style={{ color: colors.mint, textDecoration: 'underline' }}>
+                AgentLeash
+              </a>
+              {' '}instantly. 15% of revenue supports free emotional tech sanctuaries.
+            </span>
+          </div>
         </div>
 
         {/* Feature Comparison */}
